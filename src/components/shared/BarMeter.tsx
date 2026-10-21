@@ -5,9 +5,9 @@ type Props = {
 };
 
 const widthMap: Record<NonNullable<Props["labelWidth"]>, string> = {
-  sm: "grid-cols-[60px_1fr] sm:grid-cols-[80px_1fr]",
+  sm: "grid-cols-[55px_1fr] sm:grid-cols-[70px_1fr] md:grid-cols-[80px_1fr]",
   md: "grid-cols-[70px_1fr] sm:grid-cols-[100px_1fr] md:grid-cols-[140px_1fr]",
-  lg: "grid-cols-[110px_1fr] sm:grid-cols-[150px_1fr] md:grid-cols-[200px_1fr]",
+  lg: "grid-cols-[140px_1fr] sm:grid-cols-[160px_1fr] md:grid-cols-[200px_1fr]",
 };
 
 export function BarMeter({ label, value, labelWidth = "md" }: Props) {

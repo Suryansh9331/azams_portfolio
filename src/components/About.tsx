@@ -53,7 +53,7 @@ export function About() {
           </div>
 
           <div
-            className="relative order-first h-[70vh] w-full sm:h-[80vh] lg:order-last lg:h-auto lg:min-h-full"
+            className="relative order-first h-[55vh] w-full sm:h-[65vh] md:h-[75vh] lg:order-last lg:h-auto lg:min-h-full"
             style={{
               marginRight:
                 "var(--about-image-bleed, 0px)",

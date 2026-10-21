@@ -31,7 +31,7 @@ export function Contact() {
         </div>
 
         <div className="flex flex-1 flex-col justify-center py-12 md:py-16">
-          <h2 className="font-contact text-5xl leading-[1.02] font-bold tracking-[-0.015em] text-silver uppercase sm:text-6xl md:text-7xl lg:text-[88px] xl:text-[104px]">
+          <h2 className="font-contact text-4xl leading-[1.02] font-bold tracking-[-0.015em] text-silver uppercase sm:text-5xl md:text-6xl lg:text-[80px] xl:text-[104px]">
             <span className="block">Azam Says</span>
             <span className="block bg-linear-to-b from-silver via-silver/90 to-silver/25 bg-clip-text text-transparent">
               Contact
@@ -142,9 +142,11 @@ function SocialLink({
       target="_blank"
       rel="noopener noreferrer"
       aria-label={label}
-      className="inline-flex h-5 w-5 items-center justify-center text-silver transition-colors hover:text-white"
+      className="inline-flex h-9 w-9 items-center justify-center text-silver transition-colors hover:text-white sm:h-7 sm:w-7"
     >
-      {children}
+      <span className="inline-flex h-5 w-5 items-center justify-center">
+        {children}
+      </span>
     </a>
   );
 }

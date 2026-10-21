@@ -7,8 +7,8 @@ type Props = {
 export function StatBlock({ value, label, size = "md" }: Props) {
   const valueClass =
     size === "lg"
-      ? "text-5xl md:text-7xl"
-      : "text-3xl md:text-5xl";
+      ? "text-4xl sm:text-5xl md:text-6xl lg:text-7xl"
+      : "text-2xl sm:text-3xl md:text-4xl lg:text-5xl";
   return (
     <div className="flex flex-col gap-2">
       <span

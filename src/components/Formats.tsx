@@ -21,7 +21,7 @@ export function Formats() {
         {formats.map((f) => (
           <div
             key={f.n}
-            className="group grid grid-cols-[auto_1fr] items-baseline gap-x-5 gap-y-3 border-b border-line py-6 transition-colors hover:bg-line-soft sm:py-8 md:grid-cols-[60px_1.4fr_2fr] md:gap-x-10 md:py-10 lg:grid-cols-[80px_1.2fr_2fr]"
+            className="group grid grid-cols-[auto_1fr] items-baseline gap-x-3 gap-y-3 border-b border-line py-6 transition-colors hover:bg-line-soft sm:gap-x-5 sm:py-8 md:grid-cols-[60px_1.4fr_2fr] md:gap-x-8 md:py-10 lg:grid-cols-[80px_1.2fr_2fr] lg:gap-x-10"
           >
             <span className="text-[11px] tracking-[0.3em] text-muted">
               {f.n}
