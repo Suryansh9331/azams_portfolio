@@ -11,19 +11,15 @@ export function Contact() {
         src={contactBg}
         alt=""
         aria-hidden
-        className="pointer-events-none absolute inset-0 h-full w-full object-cover object-right blur-[2px]"
+        className="pointer-events-none absolute inset-0 h-full w-full object-cover object-right"
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 bg-ink-950/45"
+        className="pointer-events-none absolute inset-0 bg-linear-to-r from-ink-950 via-ink-950/85 to-transparent sm:via-ink-950/70 md:via-ink-950/55 lg:via-ink-950/40"
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 bg-linear-to-r from-ink-950 via-ink-950/90 to-ink-950/25 sm:via-ink-950/80 md:via-ink-950/65 lg:via-ink-950/50"
-      />
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-1/3 bg-linear-to-t from-ink-950 via-ink-950/80 to-transparent"
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-1/3 bg-linear-to-t from-ink-950 via-ink-950/60 to-transparent"
       />
 
       <div className="relative mx-auto flex min-h-screen w-full max-w-[1680px] flex-col px-5 py-14 sm:px-6 sm:py-16 md:px-8 md:py-20 lg:px-10 lg:py-24 xl:px-14">
@@ -41,7 +37,7 @@ export function Contact() {
               Contact
             </span>
           </h2>
-          <p className="mt-6 max-w-lg text-[10px] tracking-[0.3em] text-silver-dim uppercase sm:mt-8 sm:text-[11px]">
+          <p className="mt-6 text-[10px] tracking-[0.3em] text-silver-dim uppercase sm:mt-8 sm:text-[11px]">
             For availability, brand activations and stage programming
           </p>
         </div>
