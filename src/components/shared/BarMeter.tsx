@@ -1,13 +1,22 @@
 type Props = {
   label: string;
   value: number;
+  labelWidth?: "sm" | "md" | "lg";
 };
 
-export function BarMeter({ label, value }: Props) {
+const widthMap: Record<NonNullable<Props["labelWidth"]>, string> = {
+  sm: "grid-cols-[60px_1fr] sm:grid-cols-[80px_1fr]",
+  md: "grid-cols-[70px_1fr] sm:grid-cols-[100px_1fr] md:grid-cols-[140px_1fr]",
+  lg: "grid-cols-[110px_1fr] sm:grid-cols-[150px_1fr] md:grid-cols-[200px_1fr]",
+};
+
+export function BarMeter({ label, value, labelWidth = "md" }: Props) {
   const pct = Math.max(0, Math.min(100, value));
   return (
-    <div className="grid grid-cols-[70px_1fr] items-center gap-3 sm:grid-cols-[100px_1fr] sm:gap-4 md:grid-cols-[140px_1fr] md:gap-6">
-      <span className="text-[11px] tracking-[0.1em] text-silver-dim uppercase sm:text-xs md:text-sm">
+    <div
+      className={`grid items-center gap-4 sm:gap-5 md:gap-6 ${widthMap[labelWidth]}`}
+    >
+      <span className="text-[11px] tracking-[0.1em] whitespace-nowrap text-silver-dim uppercase sm:text-xs md:text-sm">
         {label}
       </span>
       <div className="relative h-[3px] w-full overflow-hidden rounded-full bg-line-soft">
