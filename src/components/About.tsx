@@ -97,9 +97,9 @@ export function About() {
               className="about-img absolute inset-0 h-full w-full object-cover object-center"
               style={{
                 WebkitMaskImage:
-                  "radial-gradient(ellipse 62% 78% at 58% 48%, #000 0%, #000 32%, rgba(0,0,0,0.65) 65%, rgba(0,0,0,0.15) 88%, transparent 100%)",
+                  "radial-gradient(ellipse 55% 72% at 52% 48%, #000 0%, #000 28%, rgba(0,0,0,0.6) 60%, rgba(0,0,0,0.12) 85%, transparent 100%)",
                 maskImage:
-                  "radial-gradient(ellipse 62% 78% at 58% 48%, #000 0%, #000 32%, rgba(0,0,0,0.65) 65%, rgba(0,0,0,0.15) 88%, transparent 100%)",
+                  "radial-gradient(ellipse 55% 72% at 52% 48%, #000 0%, #000 28%, rgba(0,0,0,0.6) 60%, rgba(0,0,0,0.12) 85%, transparent 100%)",
               }}
             />
             <div
@@ -107,6 +107,13 @@ export function About() {
               style={{
                 backgroundImage:
                   "linear-gradient(90deg, rgba(5,7,12,1) 0%, rgba(5,7,12,0.7) 40%, rgba(5,7,12,0.2) 75%, rgba(5,7,12,0) 100%)",
+              }}
+            />
+            <div
+              className="pointer-events-none absolute inset-y-0 right-0 w-[32%]"
+              style={{
+                backgroundImage:
+                  "linear-gradient(90deg, rgba(5,7,12,0) 0%, rgba(5,7,12,0.25) 40%, rgba(5,7,12,0.75) 75%, rgba(5,7,12,1) 100%)",
               }}
             />
           </div>

@@ -87,13 +87,13 @@ export function Contact() {
                   <SocialLink href="https://facebook.com/Azaam.Magic" label="Facebook">
                     <FacebookIcon />
                   </SocialLink>
-                  <SocialLink href="https://tiktok.com/@azam.magic" label="TikTok">
+                  <SocialLink href="https://www.tiktok.com/@azam.magic10" label="TikTok">
                     <TikTokIcon />
                   </SocialLink>
                   <SocialLink href="https://youtube.com/@azammagic" label="YouTube">
                     <YouTubeIcon />
                   </SocialLink>
-                  <SocialLink href="https://snapchat.com/add/azam.magic" label="Snapchat">
+                  <SocialLink href="https://t.snapchat.com/TCmCz4AB" label="Snapchat">
                     <SnapchatIcon />
                   </SocialLink>
                   <SocialLink href="https://x.com/azammagic" label="X">

@@ -1,6 +1,7 @@
 import { SectionShell } from "./shared/SectionShell";
 import { LogoTile } from "./shared/LogoTile";
 import type { BrandGroup } from "../data/brands";
+import { getLogo } from "../data/logos";
 
 // Flex-basis per breakpoint. The basis math assumes gap-4 (1rem) on the
 // container so a full row of N items fills exactly 100% width; a partial
@@ -17,9 +18,9 @@ export function BrandGrid({ group }: { group: BrandGroup }) {
   return (
     <SectionShell id={group.id} label={group.label} page={group.page}>
       <div className="flex flex-wrap justify-center gap-4">
-        {group.items.map((name) => (
-          <div key={name} className={`${basis} shrink-0 grow-0`}>
-            <LogoTile name={name} />
+        {group.items.map((item) => (
+          <div key={item.slug} className={`${basis} shrink-0 grow-0`}>
+            <LogoTile name={item.name} src={getLogo(group.folder, item.slug)} />
           </div>
         ))}
       </div>

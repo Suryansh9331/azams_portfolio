@@ -1,10 +1,15 @@
 import { useEffect, useRef, useState } from "react";
 
+type Options = IntersectionObserverInit & {
+  once?: boolean;
+};
+
 export function useInView<T extends HTMLElement = HTMLElement>(
-  options?: IntersectionObserverInit,
+  options?: Options,
 ) {
   const ref = useRef<T | null>(null);
   const [inView, setInView] = useState(false);
+  const once = options?.once ?? false;
 
   useEffect(() => {
     const el = ref.current;
@@ -14,15 +19,21 @@ export function useInView<T extends HTMLElement = HTMLElement>(
       ([entry]) => {
         if (entry.isIntersecting) {
           setInView(true);
-          observer.disconnect();
+          if (once) observer.disconnect();
+        } else if (!once) {
+          setInView(false);
         }
       },
-      { threshold: 0.18, rootMargin: "0px 0px -10% 0px", ...options },
+      {
+        threshold: options?.threshold ?? 0.18,
+        rootMargin: options?.rootMargin ?? "0px 0px -10% 0px",
+        root: options?.root,
+      },
     );
 
     observer.observe(el);
     return () => observer.disconnect();
-  }, []);
+  }, [once, options?.threshold, options?.rootMargin, options?.root]);
 
   return { ref, inView };
 }

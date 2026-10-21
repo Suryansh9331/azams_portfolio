@@ -1,9 +1,9 @@
 export const socials = [
   { platform: "Facebook", followers: "5.5M", href: "https://facebook.com/Azaam.Magic" },
   { platform: "Instagram", followers: "500K", href: "https://instagram.com/azam.magic" },
-  { platform: "TikTok", followers: "500K", href: "https://tiktok.com/@azam.magic" },
+  { platform: "TikTok", followers: "500K", href: "https://www.tiktok.com/@azam.magic10" },
   { platform: "YouTube", followers: "300K", href: "https://youtube.com/@azammagic" },
-  { platform: "Snapchat", followers: "100K", href: "https://snapchat.com/add/azam.magic" },
+  { platform: "Snapchat", followers: "100K", href: "https://t.snapchat.com/TCmCz4AB" },
 ];
 
 export const ageGroups = [
