@@ -23,7 +23,7 @@ export function SectionShell({ id, label, page, children, className = "" }: Prop
 
       <div className="flex min-h-0 flex-col justify-center">{children}</div>
 
-      <div className="pointer-events-none absolute right-5 bottom-5 flex flex-col items-end gap-1 text-[10px] tracking-[0.3em] text-muted uppercase sm:right-8 md:right-12 md:bottom-8 lg:right-16 lg:bottom-10">
+      <div className="pointer-events-none absolute right-4 bottom-5 flex flex-col items-end gap-1 text-[10px] tracking-[0.3em] text-muted uppercase sm:right-5 md:right-6 md:bottom-8 lg:right-8 lg:bottom-10">
         <span className="font-display text-sm tracking-[0.4em] text-silver-dim">
           AZAM
         </span>
