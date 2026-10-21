@@ -8,6 +8,7 @@ import { Creates } from "./components/Creates";
 import { Formats } from "./components/Formats";
 import { Process } from "./components/Process";
 import { Contact } from "./components/Contact";
+import { Reels } from "./components/Reels";
 import { ScrollToTop } from "./components/ScrollToTop";
 import { brandGroups } from "./data/brands";
 
@@ -23,6 +24,7 @@ function App() {
       ))}
       <WhyBrands />
       <Creates />
+      <Reels />
       <Formats />
       <Process />
       <Contact />
