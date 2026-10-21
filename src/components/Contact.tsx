@@ -30,7 +30,7 @@ export function Contact() {
 
       <div className="relative mx-auto flex min-h-screen w-full max-w-[1680px] flex-col px-4 py-14 sm:px-5 sm:py-16 md:px-6 md:py-20 lg:px-8 lg:py-24 xl:px-10">
         <div className="contact-head">
-          <p className="text-[10px] font-medium tracking-[0.24em] text-muted uppercase sm:text-[11px]">
+          <p className="text-[13px] font-medium tracking-[0.24em] text-muted uppercase sm:text-[14px] md:text-[15px] lg:text-[16px]">
             Book Azam
           </p>
           <div className="contact-head-rail mt-3 h-px w-24 bg-line sm:w-32" />

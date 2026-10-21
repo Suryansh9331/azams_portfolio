@@ -20,7 +20,7 @@ export function About() {
         <div className="grid grid-cols-1 items-stretch gap-10 lg:min-h-[100svh] lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-16">
           <div className="relative flex flex-col justify-center pt-6 pb-10 md:pt-10 lg:order-first lg:py-24">
             <div className="mb-10 md:mb-12">
-              <p className="about-label text-[10px] font-medium tracking-[0.24em] text-muted uppercase sm:text-[11px]">
+              <p className="about-label text-[13px] font-medium tracking-[0.24em] text-muted uppercase sm:text-[14px] md:text-[15px] lg:text-[16px]">
                 Who is Azam?
               </p>
               <div className="about-rail mt-3 h-px w-24 bg-line sm:w-32" />

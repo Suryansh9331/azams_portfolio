@@ -16,7 +16,7 @@ export function Social() {
         className="relative mx-auto grid min-h-screen w-full max-w-[1680px] grid-rows-[auto_1fr] px-5 py-20 sm:px-6 md:px-8 md:py-24 lg:px-10 lg:py-32 xl:px-14"
       >
         <div className="mb-12 md:mb-16 lg:mb-20">
-          <p className="social-section-label text-[10px] font-medium tracking-[0.24em] text-muted uppercase sm:text-[11px]">
+          <p className="social-section-label text-[13px] font-medium tracking-[0.24em] text-muted uppercase sm:text-[14px] md:text-[15px] lg:text-[16px]">
             Audience & Social Presence
           </p>
           <div className="social-rail mt-3 h-px w-24 bg-line sm:w-32" />
