@@ -31,10 +31,11 @@ export function Contact() {
         </div>
 
         <div className="flex flex-1 flex-col justify-center py-12 md:py-16">
-          <h2 className="font-display text-5xl leading-[1.02] font-medium tracking-[0.01em] text-silver uppercase sm:text-6xl md:text-7xl lg:text-[88px] xl:text-[104px]">
-            Azam Says
-            <br />
-            Contact
+          <h2 className="font-contact text-5xl leading-[1.02] font-bold tracking-[-0.015em] text-silver uppercase sm:text-6xl md:text-7xl lg:text-[88px] xl:text-[104px]">
+            <span className="block">Azam Says</span>
+            <span className="block bg-linear-to-b from-silver via-silver/90 to-silver/25 bg-clip-text text-transparent">
+              Contact
+            </span>
           </h2>
           <p className="mt-6 max-w-lg text-[10px] tracking-[0.3em] text-silver-dim uppercase sm:mt-8 sm:text-[11px]">
             For availability, brand activations and stage programming
