@@ -27,7 +27,7 @@ export function BrandGrid({ group }: { group: BrandGroup }) {
           <div
             key={item.slug}
             className={`brand-cell ${basis} shrink-0 grow-0`}
-            style={{ "--brand-delay": `${i * 60}ms` } as React.CSSProperties}
+            style={{ "--brand-delay": `${i * 43}ms` } as React.CSSProperties}
           >
             <LogoTile name={item.name} src={getLogo(group.folder, item.slug)} />
           </div>

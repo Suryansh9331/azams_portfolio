@@ -184,52 +184,52 @@ section[id] {
 
 .hero-image {
   animation:
-    hero-iris 2.6s cubic-bezier(0.76, 0, 0.24, 1) 0.15s both,
-    hero-drift 24s ease-out 2.8s forwards;
+    hero-iris 1.87s cubic-bezier(0.76, 0, 0.24, 1) 0.108s both,
+    hero-drift 24s ease-out 2.02s forwards;
   transform-origin: center center;
   will-change: transform, clip-path, filter;
 }
 
 .hero-overlay {
   opacity: 0;
-  animation: hero-overlay-fade 1.12s ease-out 0.98s forwards;
+  animation: hero-overlay-fade 0.806s ease-out 0.706s forwards;
   will-change: opacity;
 }
 
 .hero-tagline {
-  animation: hero-wipe-right 1.12s cubic-bezier(0.76, 0, 0.24, 1) 1.12s both;
+  animation: hero-wipe-right 0.806s cubic-bezier(0.76, 0, 0.24, 1) 0.806s both;
   will-change: clip-path, opacity;
 }
 
 .hero-rail-left {
   transform-origin: right center;
-  animation: hero-rail-draw 0.91s cubic-bezier(0.76, 0, 0.24, 1) 1.33s both;
+  animation: hero-rail-draw 0.655s cubic-bezier(0.76, 0, 0.24, 1) 0.958s both;
   will-change: transform, opacity;
 }
 
 .hero-rail-right {
   transform-origin: left center;
-  animation: hero-rail-draw 0.91s cubic-bezier(0.76, 0, 0.24, 1) 1.33s both;
+  animation: hero-rail-draw 0.655s cubic-bezier(0.76, 0, 0.24, 1) 0.958s both;
   will-change: transform, opacity;
 }
 
 .hero-headline {
   position: relative;
   display: inline-block;
-  animation: hero-focus-pull 1.68s cubic-bezier(0.6, 0.04, 0.3, 1) 1.47s both;
+  animation: hero-focus-pull 1.21s cubic-bezier(0.6, 0.04, 0.3, 1) 1.06s both;
   transform-origin: center center;
   will-change: opacity, filter, transform, letter-spacing;
 }
 
 .hero-foot-left {
   opacity: 0;
-  animation: hero-rise-soft 0.77s cubic-bezier(0.22, 1, 0.36, 1) 2.1s forwards;
+  animation: hero-rise-soft 0.554s cubic-bezier(0.22, 1, 0.36, 1) 1.51s forwards;
   will-change: opacity, transform;
 }
 
 .hero-foot-right {
   opacity: 0;
-  animation: hero-rise-soft 0.77s cubic-bezier(0.22, 1, 0.36, 1) 2.2s forwards;
+  animation: hero-rise-soft 0.554s cubic-bezier(0.22, 1, 0.36, 1) 1.58s forwards;
   will-change: opacity, transform;
 }
 
@@ -369,79 +369,79 @@ section[id] {
 /* On enter: cascade everything */
 .about-reveal.in-view .about-img {
   animation:
-    about-image-curtain 2.1s cubic-bezier(0.76, 0, 0.24, 1) 0.05s both,
-    about-image-drift 22s ease-out 2.3s forwards;
+    about-image-curtain 1.51s cubic-bezier(0.76, 0, 0.24, 1) 0.036s both,
+    about-image-drift 22s ease-out 1.66s forwards;
   will-change: transform, clip-path, filter;
 }
 
 .about-reveal.in-view .about-label {
-  animation: about-fade-up 0.63s cubic-bezier(0.22, 1, 0.36, 1) 0.14s both;
+  animation: about-fade-up 0.454s cubic-bezier(0.22, 1, 0.36, 1) 0.101s both;
 }
 
 .about-reveal.in-view .about-rail {
-  animation: about-rail-draw 0.63s cubic-bezier(0.76, 0, 0.24, 1) 0.28s both;
+  animation: about-rail-draw 0.454s cubic-bezier(0.76, 0, 0.24, 1) 0.202s both;
 }
 
 /* Headline words — staggered via :nth-child */
 .about-reveal.in-view .about-word {
-  animation: about-word-rise 0.84s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: about-word-rise 0.605s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 .about-reveal.in-view .about-word:nth-child(1) {
-  animation-delay: 0.385s;
+  animation-delay: 0.277s;
 }
 .about-reveal.in-view .about-word:nth-child(2) {
-  animation-delay: 0.455s;
+  animation-delay: 0.328s;
 }
 .about-reveal.in-view .about-word:nth-child(3) {
-  animation-delay: 0.525s;
+  animation-delay: 0.378s;
 }
 .about-reveal.in-view .about-word:nth-child(4) {
-  animation-delay: 0.595s;
+  animation-delay: 0.428s;
 }
 .about-reveal.in-view .about-word:nth-child(5) {
-  animation-delay: 0.665s;
+  animation-delay: 0.479s;
 }
 .about-reveal.in-view .about-word:nth-child(6) {
-  animation-delay: 0.77s;
+  animation-delay: 0.554s;
 }
 .about-reveal.in-view .about-word:nth-child(7) {
-  animation-delay: 0.84s;
+  animation-delay: 0.605s;
 }
 .about-reveal.in-view .about-word:nth-child(8) {
-  animation-delay: 0.91s;
+  animation-delay: 0.655s;
 }
 
 /* Body paragraphs — stagger */
 .about-reveal.in-view .about-body > *:nth-child(1) {
-  animation: about-fade-up 0.77s cubic-bezier(0.22, 1, 0.36, 1) 0.98s both;
+  animation: about-fade-up 0.554s cubic-bezier(0.22, 1, 0.36, 1) 0.706s both;
 }
 .about-reveal.in-view .about-body > *:nth-child(2) {
-  animation: about-fade-up 0.77s cubic-bezier(0.22, 1, 0.36, 1) 1.08s both;
+  animation: about-fade-up 0.554s cubic-bezier(0.22, 1, 0.36, 1) 0.778s both;
 }
 
 .about-reveal.in-view .about-divider {
-  animation: about-divider-draw 0.7s cubic-bezier(0.76, 0, 0.24, 1) 1.19s both;
+  animation: about-divider-draw 0.504s cubic-bezier(0.76, 0, 0.24, 1) 0.857s both;
 }
 
 .about-reveal.in-view .about-quote {
-  animation: about-fade-up 0.77s cubic-bezier(0.22, 1, 0.36, 1) 1.33s both;
+  animation: about-fade-up 0.554s cubic-bezier(0.22, 1, 0.36, 1) 0.958s both;
 }
 
 /* Stats — stagger */
 .about-reveal.in-view .about-stat {
-  animation: about-stat-rise 0.84s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: about-stat-rise 0.605s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 .about-reveal.in-view .about-stat:nth-child(1) {
-  animation-delay: 1.47s;
+  animation-delay: 1.06s;
 }
 .about-reveal.in-view .about-stat:nth-child(2) {
-  animation-delay: 1.55s;
+  animation-delay: 1.12s;
 }
 .about-reveal.in-view .about-stat:nth-child(3) {
-  animation-delay: 1.64s;
+  animation-delay: 1.18s;
 }
 .about-reveal.in-view .about-stat:nth-child(4) {
-  animation-delay: 1.72s;
+  animation-delay: 1.24s;
 }
 
 /* === Proof (section 3) — DEPTH + COUNTER choreography === */
@@ -589,73 +589,73 @@ section[id] {
 
 /* Backdrop & setup */
 .proof-reveal.in-view .proof-backdrop {
-  animation: proof-backdrop-pull 1.54s cubic-bezier(0.76, 0, 0.24, 1) 0.07s both;
+  animation: proof-backdrop-pull 1.11s cubic-bezier(0.76, 0, 0.24, 1) 0.05s both;
   will-change: transform, opacity, filter;
 }
 .proof-reveal.in-view .proof-section-label {
-  animation: proof-fade-up 0.63s cubic-bezier(0.22, 1, 0.36, 1) 0.245s both;
+  animation: proof-fade-up 0.454s cubic-bezier(0.22, 1, 0.36, 1) 0.176s both;
 }
 .proof-reveal.in-view .proof-rail {
-  animation: proof-rail-draw 0.63s cubic-bezier(0.76, 0, 0.24, 1) 0.385s both;
+  animation: proof-rail-draw 0.454s cubic-bezier(0.76, 0, 0.24, 1) 0.277s both;
 }
 
 /* Each stat item flies in from depth with stagger */
 .proof-reveal.in-view .proof-item:nth-child(1) {
-  animation: proof-depth-in 1.05s cubic-bezier(0.22, 1, 0.36, 1) 0.525s both;
+  animation: proof-depth-in 0.756s cubic-bezier(0.22, 1, 0.36, 1) 0.378s both;
 }
 .proof-reveal.in-view .proof-item:nth-child(2) {
-  animation: proof-depth-in 1.05s cubic-bezier(0.22, 1, 0.36, 1) 0.665s both;
+  animation: proof-depth-in 0.756s cubic-bezier(0.22, 1, 0.36, 1) 0.479s both;
 }
 .proof-reveal.in-view .proof-item:nth-child(3) {
-  animation: proof-depth-in 1.05s cubic-bezier(0.22, 1, 0.36, 1) 0.805s both;
+  animation: proof-depth-in 0.756s cubic-bezier(0.22, 1, 0.36, 1) 0.58s both;
 }
 
 /* Glow pulses right as counter settles */
 .proof-reveal.in-view .proof-item:nth-child(1) .proof-value {
-  animation: proof-glow-pulse 1.12s cubic-bezier(0.5, 0, 0.5, 1) 1.33s both;
+  animation: proof-glow-pulse 0.806s cubic-bezier(0.5, 0, 0.5, 1) 0.958s both;
 }
 .proof-reveal.in-view .proof-item:nth-child(2) .proof-value {
-  animation: proof-glow-pulse 1.12s cubic-bezier(0.5, 0, 0.5, 1) 1.47s both;
+  animation: proof-glow-pulse 0.806s cubic-bezier(0.5, 0, 0.5, 1) 1.06s both;
 }
 .proof-reveal.in-view .proof-item:nth-child(3) .proof-value {
-  animation: proof-glow-pulse 1.12s cubic-bezier(0.5, 0, 0.5, 1) 1.61s both;
+  animation: proof-glow-pulse 0.806s cubic-bezier(0.5, 0, 0.5, 1) 1.16s both;
 }
 
 /* Tails fade in slightly after their item lands */
 .proof-reveal.in-view .proof-item:nth-child(1) .proof-tail {
-  animation: proof-fade-up 0.63s cubic-bezier(0.22, 1, 0.36, 1) 1.05s both;
+  animation: proof-fade-up 0.454s cubic-bezier(0.22, 1, 0.36, 1) 0.756s both;
 }
 .proof-reveal.in-view .proof-item:nth-child(2) .proof-tail {
-  animation: proof-fade-up 0.63s cubic-bezier(0.22, 1, 0.36, 1) 1.19s both;
+  animation: proof-fade-up 0.454s cubic-bezier(0.22, 1, 0.36, 1) 0.857s both;
 }
 .proof-reveal.in-view .proof-item:nth-child(3) .proof-tail {
-  animation: proof-fade-up 0.63s cubic-bezier(0.22, 1, 0.36, 1) 1.33s both;
+  animation: proof-fade-up 0.454s cubic-bezier(0.22, 1, 0.36, 1) 0.958s both;
 }
 
 /* Thin underline draws beneath each stat after counter completes */
 .proof-reveal.in-view .proof-item:nth-child(1) .proof-underline {
-  animation: proof-underline-draw 0.84s cubic-bezier(0.76, 0, 0.24, 1) 1.75s both;
+  animation: proof-underline-draw 0.605s cubic-bezier(0.76, 0, 0.24, 1) 1.26s both;
 }
 .proof-reveal.in-view .proof-item:nth-child(2) .proof-underline {
-  animation: proof-underline-draw 0.84s cubic-bezier(0.76, 0, 0.24, 1) 1.89s both;
+  animation: proof-underline-draw 0.605s cubic-bezier(0.76, 0, 0.24, 1) 1.36s both;
 }
 .proof-reveal.in-view .proof-item:nth-child(3) .proof-underline {
-  animation: proof-underline-draw 0.84s cubic-bezier(0.76, 0, 0.24, 1) 2.03s both;
+  animation: proof-underline-draw 0.605s cubic-bezier(0.76, 0, 0.24, 1) 1.46s both;
 }
 
 /* Labels slide in horizontally with letter-spacing collapse */
 .proof-reveal.in-view .proof-item:nth-child(1) .proof-stat-label {
-  animation: proof-label-slide 0.77s cubic-bezier(0.22, 1, 0.36, 1) 1.96s both;
+  animation: proof-label-slide 0.554s cubic-bezier(0.22, 1, 0.36, 1) 1.41s both;
 }
 .proof-reveal.in-view .proof-item:nth-child(2) .proof-stat-label {
-  animation: proof-label-slide 0.77s cubic-bezier(0.22, 1, 0.36, 1) 2.1s both;
+  animation: proof-label-slide 0.554s cubic-bezier(0.22, 1, 0.36, 1) 1.51s both;
 }
 .proof-reveal.in-view .proof-item:nth-child(3) .proof-stat-label {
-  animation: proof-label-slide 0.77s cubic-bezier(0.22, 1, 0.36, 1) 2.24s both;
+  animation: proof-label-slide 0.554s cubic-bezier(0.22, 1, 0.36, 1) 1.61s both;
 }
 
 .proof-reveal.in-view .proof-description {
-  animation: proof-fade-up 0.84s cubic-bezier(0.22, 1, 0.36, 1) 2.38s both;
+  animation: proof-fade-up 0.605s cubic-bezier(0.22, 1, 0.36, 1) 1.71s both;
 }
 
 /* === Social (section 4) — SPOTLIGHT SWEEP choreography === */
@@ -866,194 +866,194 @@ section[id] {
 
 /* === Trigger cascade on in-view === */
 .social-reveal.in-view .social-section-label {
-  animation: social-fade-up 0.63s cubic-bezier(0.22, 1, 0.36, 1) 0.07s both;
+  animation: social-fade-up 0.454s cubic-bezier(0.22, 1, 0.36, 1) 0.05s both;
 }
 .social-reveal.in-view .social-rail {
-  animation: social-rail-draw 0.63s cubic-bezier(0.76, 0, 0.24, 1) 0.21s both;
+  animation: social-rail-draw 0.454s cubic-bezier(0.76, 0, 0.24, 1) 0.151s both;
 }
 
 /* Spotlight sweeps across the row */
 .social-reveal.in-view .social-spotlight {
-  animation: social-spotlight-sweep 1.54s cubic-bezier(0.65, 0, 0.35, 1) 0.35s both;
+  animation: social-spotlight-sweep 1.11s cubic-bezier(0.65, 0, 0.35, 1) 0.252s both;
   will-change: transform, opacity;
 }
 
 /* Cards flash as the spotlight passes */
 .social-reveal.in-view .social-card {
-  animation: social-card-flash 0.77s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: social-card-flash 0.554s cubic-bezier(0.22, 1, 0.36, 1) both;
   will-change: transform, opacity, filter;
 }
 .social-reveal.in-view .social-card:nth-child(2) {
-  animation-delay: 0.42s;
+  animation-delay: 0.302s;
 }
 .social-reveal.in-view .social-card:nth-child(3) {
-  animation-delay: 0.63s;
+  animation-delay: 0.454s;
 }
 .social-reveal.in-view .social-card:nth-child(4) {
-  animation-delay: 0.84s;
+  animation-delay: 0.605s;
 }
 .social-reveal.in-view .social-card:nth-child(5) {
-  animation-delay: 1.05s;
+  animation-delay: 0.756s;
 }
 .social-reveal.in-view .social-card:nth-child(6) {
-  animation-delay: 1.26s;
+  animation-delay: 0.907s;
 }
 
 /* Icons pop in after their card flashes */
 .social-reveal.in-view .social-card .social-icon {
-  animation: social-icon-pop 0.455s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  animation: social-icon-pop 0.328s cubic-bezier(0.34, 1.56, 0.64, 1) both;
 }
 .social-reveal.in-view .social-card:nth-child(2) .social-icon {
-  animation-delay: 0.595s;
+  animation-delay: 0.428s;
 }
 .social-reveal.in-view .social-card:nth-child(3) .social-icon {
-  animation-delay: 0.805s;
+  animation-delay: 0.58s;
 }
 .social-reveal.in-view .social-card:nth-child(4) .social-icon {
-  animation-delay: 1.01s;
+  animation-delay: 0.727s;
 }
 .social-reveal.in-view .social-card:nth-child(5) .social-icon {
-  animation-delay: 1.22s;
+  animation-delay: 0.878s;
 }
 .social-reveal.in-view .social-card:nth-child(6) .social-icon {
-  animation-delay: 1.43s;
+  animation-delay: 1.03s;
 }
 
 /* Numbers wipe left-to-right after their card settles */
 .social-reveal.in-view .social-card .social-number {
-  animation: social-number-wipe 0.665s cubic-bezier(0.76, 0, 0.24, 1) both;
+  animation: social-number-wipe 0.479s cubic-bezier(0.76, 0, 0.24, 1) both;
 }
 .social-reveal.in-view .social-card:nth-child(2) .social-number {
-  animation-delay: 0.7s;
+  animation-delay: 0.504s;
 }
 .social-reveal.in-view .social-card:nth-child(3) .social-number {
-  animation-delay: 0.91s;
+  animation-delay: 0.655s;
 }
 .social-reveal.in-view .social-card:nth-child(4) .social-number {
-  animation-delay: 1.12s;
+  animation-delay: 0.806s;
 }
 .social-reveal.in-view .social-card:nth-child(5) .social-number {
-  animation-delay: 1.33s;
+  animation-delay: 0.958s;
 }
 .social-reveal.in-view .social-card:nth-child(6) .social-number {
-  animation-delay: 1.54s;
+  animation-delay: 1.11s;
 }
 
 /* Sublabels fade up last on each card */
 .social-reveal.in-view .social-card .social-sublabel {
-  animation: social-fade-up 0.56s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: social-fade-up 0.403s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 .social-reveal.in-view .social-card:nth-child(2) .social-sublabel {
-  animation-delay: 0.84s;
+  animation-delay: 0.605s;
 }
 .social-reveal.in-view .social-card:nth-child(3) .social-sublabel {
-  animation-delay: 1.05s;
+  animation-delay: 0.756s;
 }
 .social-reveal.in-view .social-card:nth-child(4) .social-sublabel {
-  animation-delay: 1.26s;
+  animation-delay: 0.907s;
 }
 .social-reveal.in-view .social-card:nth-child(5) .social-sublabel {
-  animation-delay: 1.47s;
+  animation-delay: 1.06s;
 }
 .social-reveal.in-view .social-card:nth-child(6) .social-sublabel {
-  animation-delay: 1.68s;
+  animation-delay: 1.21s;
 }
 
 /* Stats row — labels fade up together */
 .social-reveal.in-view .social-engagement-label,
 .social-reveal.in-view .social-group-label {
-  animation: social-fade-up 0.63s cubic-bezier(0.22, 1, 0.36, 1) 1.96s both;
+  animation: social-fade-up 0.454s cubic-bezier(0.22, 1, 0.36, 1) 1.41s both;
 }
 
 /* 92 — iris-close + glow burst */
 .social-reveal.in-view .social-engagement-value {
-  animation: social-engagement-reveal 1.12s cubic-bezier(0.22, 1, 0.36, 1) 2.1s both;
+  animation: social-engagement-reveal 0.806s cubic-bezier(0.22, 1, 0.36, 1) 1.51s both;
   display: inline-block;
   will-change: transform, opacity, filter, text-shadow, letter-spacing;
 }
 
 .social-reveal.in-view .social-engagement-percent {
-  animation: social-fade-up 0.63s cubic-bezier(0.22, 1, 0.36, 1) 2.55s both;
+  animation: social-fade-up 0.454s cubic-bezier(0.22, 1, 0.36, 1) 1.84s both;
 }
 
 .social-reveal.in-view .social-countries-panel {
-  animation: social-fade-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) 2.06s both;
+  animation: social-fade-up 0.504s cubic-bezier(0.22, 1, 0.36, 1) 1.48s both;
 }
 
 /* Age Group bars — 4 rows, stagger via nth-child */
 .social-reveal.in-view .social-ag-bar {
-  animation: social-bar-track 0.49s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: social-bar-track 0.353s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 .social-reveal.in-view .social-ag-bar:nth-child(1) {
-  animation-delay: 2.2s;
+  animation-delay: 1.58s;
 }
 .social-reveal.in-view .social-ag-bar:nth-child(2) {
-  animation-delay: 2.27s;
+  animation-delay: 1.63s;
 }
 .social-reveal.in-view .social-ag-bar:nth-child(3) {
-  animation-delay: 2.34s;
+  animation-delay: 1.68s;
 }
 .social-reveal.in-view .social-ag-bar:nth-child(4) {
-  animation-delay: 2.42s;
+  animation-delay: 1.74s;
 }
 .social-reveal.in-view .social-ag-bar .relative > div {
-  animation: social-bar-fill 0.91s cubic-bezier(0.65, 0, 0.35, 1) both;
+  animation: social-bar-fill 0.655s cubic-bezier(0.65, 0, 0.35, 1) both;
 }
 .social-reveal.in-view .social-ag-bar:nth-child(1) .relative > div {
-  animation-delay: 2.31s;
+  animation-delay: 1.66s;
 }
 .social-reveal.in-view .social-ag-bar:nth-child(2) .relative > div {
-  animation-delay: 2.38s;
+  animation-delay: 1.71s;
 }
 .social-reveal.in-view .social-ag-bar:nth-child(3) .relative > div {
-  animation-delay: 2.45s;
+  animation-delay: 1.76s;
 }
 .social-reveal.in-view .social-ag-bar:nth-child(4) .relative > div {
-  animation-delay: 2.52s;
+  animation-delay: 1.81s;
 }
 
 /* Country bars — 6 rows */
 .social-reveal.in-view .social-cn-bar {
-  animation: social-bar-track 0.49s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: social-bar-track 0.353s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 .social-reveal.in-view .social-cn-bar:nth-child(1) {
-  animation-delay: 2.27s;
+  animation-delay: 1.63s;
 }
 .social-reveal.in-view .social-cn-bar:nth-child(2) {
-  animation-delay: 2.34s;
+  animation-delay: 1.68s;
 }
 .social-reveal.in-view .social-cn-bar:nth-child(3) {
-  animation-delay: 2.42s;
+  animation-delay: 1.74s;
 }
 .social-reveal.in-view .social-cn-bar:nth-child(4) {
-  animation-delay: 2.48s;
+  animation-delay: 1.79s;
 }
 .social-reveal.in-view .social-cn-bar:nth-child(5) {
-  animation-delay: 2.55s;
+  animation-delay: 1.84s;
 }
 .social-reveal.in-view .social-cn-bar:nth-child(6) {
-  animation-delay: 2.62s;
+  animation-delay: 1.89s;
 }
 .social-reveal.in-view .social-cn-bar .relative > div {
-  animation: social-bar-fill 0.91s cubic-bezier(0.65, 0, 0.35, 1) both;
+  animation: social-bar-fill 0.655s cubic-bezier(0.65, 0, 0.35, 1) both;
 }
 .social-reveal.in-view .social-cn-bar:nth-child(1) .relative > div {
-  animation-delay: 2.38s;
+  animation-delay: 1.71s;
 }
 .social-reveal.in-view .social-cn-bar:nth-child(2) .relative > div {
-  animation-delay: 2.45s;
+  animation-delay: 1.76s;
 }
 .social-reveal.in-view .social-cn-bar:nth-child(3) .relative > div {
-  animation-delay: 2.52s;
+  animation-delay: 1.81s;
 }
 .social-reveal.in-view .social-cn-bar:nth-child(4) .relative > div {
-  animation-delay: 2.59s;
+  animation-delay: 1.86s;
 }
 .social-reveal.in-view .social-cn-bar:nth-child(5) .relative > div {
-  animation-delay: 2.66s;
+  animation-delay: 1.92s;
 }
 .social-reveal.in-view .social-cn-bar:nth-child(6) .relative > div {
-  animation-delay: 2.73s;
+  animation-delay: 1.97s;
 }
 
 /* === Why Brands (section 10) — CURTAIN DROP + 3D SPIN choreography === */
@@ -1262,43 +1262,43 @@ section[id] {
 
 /* === Triggers === */
 .why-reveal.in-view .why-section-label {
-  animation: why-fade-up 0.63s cubic-bezier(0.22, 1, 0.36, 1) 0.07s both;
+  animation: why-fade-up 0.454s cubic-bezier(0.22, 1, 0.36, 1) 0.05s both;
 }
 .why-reveal.in-view .why-rail {
-  animation: why-rail-draw 0.63s cubic-bezier(0.76, 0, 0.24, 1) 0.21s both;
+  animation: why-rail-draw 0.454s cubic-bezier(0.76, 0, 0.24, 1) 0.151s both;
 }
 
 .why-reveal.in-view .why-top-line {
   animation-name: why-top-line-draw;
-  animation-duration: 0.63s;
+  animation-duration: 0.454s;
   animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
   animation-fill-mode: both;
 }
 .why-reveal.in-view .why-content {
   animation-name: why-curtain-drop;
-  animation-duration: 0.84s;
+  animation-duration: 0.605s;
   animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1);
   animation-fill-mode: both;
 }
 .why-reveal.in-view .why-card::after {
-  animation: why-shine-sweep 0.84s cubic-bezier(0.76, 0, 0.24, 1) both;
+  animation: why-shine-sweep 0.605s cubic-bezier(0.76, 0, 0.24, 1) both;
 }
 .why-reveal.in-view .why-number {
   animation-name: why-number-glow;
-  animation-duration: 0.98s;
+  animation-duration: 0.706s;
   animation-timing-function: cubic-bezier(0.5, 0, 0.5, 1);
   animation-fill-mode: both;
   will-change: text-shadow;
 }
 .why-reveal.in-view .why-bottom-divider {
   animation-name: why-divider-expand;
-  animation-duration: 0.77s;
+  animation-duration: 0.554s;
   animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
   animation-fill-mode: both;
 }
 .why-reveal.in-view .why-stat-value {
   animation-name: why-stat-spin;
-  animation-duration: 1.05s;
+  animation-duration: 0.756s;
   animation-timing-function: cubic-bezier(0.34, 1.3, 0.64, 1);
   animation-fill-mode: both;
   will-change: transform, opacity, filter, text-shadow;
@@ -1307,13 +1307,13 @@ section[id] {
 }
 .why-reveal.in-view .why-stat-label {
   animation-name: why-fade-up;
-  animation-duration: 0.63s;
+  animation-duration: 0.454s;
   animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
   animation-fill-mode: both;
 }
 .why-reveal.in-view .why-vertical-divider {
   animation-name: why-vertical-draw;
-  animation-duration: 0.56s;
+  animation-duration: 0.403s;
   animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
   animation-fill-mode: both;
 }
@@ -1341,11 +1341,11 @@ section[id] {
 }
 
 .scroll-top-btn {
-  animation: scroll-top-in 0.315s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: scroll-top-in 0.227s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .scroll-top-btn:hover .scroll-top-arrow {
-  animation: scroll-arrow-nudge 0.77s ease-in-out infinite;
+  animation: scroll-arrow-nudge 0.554s ease-in-out infinite;
 }
 
 /* === Process section — "collaboration" timeline reveal === */
@@ -1490,49 +1490,49 @@ section[id] {
 /* In-view sequence */
 /* 1. Headline words rise, staggered — ~0.2s each */
 .process-reveal.in-view .process-word {
-  animation: process-word-mask-rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: process-word-mask-rise 0.504s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
-.process-reveal.in-view .process-word-mask:nth-child(1) .process-word { animation-delay: 0.105s; }
-.process-reveal.in-view .process-word-mask:nth-child(2) .process-word { animation-delay: 0.21s; }
-.process-reveal.in-view .process-word-mask:nth-child(3) .process-word { animation-delay: 0.315s; }
-.process-reveal.in-view .process-word-mask:nth-child(4) .process-word { animation-delay: 0.42s; }
+.process-reveal.in-view .process-word-mask:nth-child(1) .process-word { animation-delay: 0.076s; }
+.process-reveal.in-view .process-word-mask:nth-child(2) .process-word { animation-delay: 0.151s; }
+.process-reveal.in-view .process-word-mask:nth-child(3) .process-word { animation-delay: 0.227s; }
+.process-reveal.in-view .process-word-mask:nth-child(4) .process-word { animation-delay: 0.302s; }
 
 /* 2. The rail draws (vertical on mobile 0.9s–2.1s, horizontal on md+ same window) */
 .process-reveal.in-view .process-rail {
-  animation: process-rail-draw-vertical 0.98s cubic-bezier(0.76, 0, 0.24, 1) 0.63s forwards;
+  animation: process-rail-draw-vertical 0.706s cubic-bezier(0.76, 0, 0.24, 1) 0.454s forwards;
 }
 @media (min-width: 768px) {
   .process-reveal.in-view .process-rail {
-    animation: process-rail-draw-horizontal 1.12s cubic-bezier(0.76, 0, 0.24, 1) 0.63s forwards;
+    animation: process-rail-draw-horizontal 0.806s cubic-bezier(0.76, 0, 0.24, 1) 0.454s forwards;
   }
 }
 
 /* 3. Dots pop one by one, synced to the rail reaching each position. */
 /*    Each step has --step-delay (dot) and --step-text-delay (number/title/body). */
 .process-reveal.in-view .process-dot {
-  animation: process-dot-pop 0.525s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  animation: process-dot-pop 0.378s cubic-bezier(0.34, 1.56, 0.64, 1) both;
   animation-delay: var(--step-delay, 0.63s);
 }
 
 .process-reveal.in-view .process-dot-ring {
-  animation: process-dot-ring-pulse 0.77s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: process-dot-ring-pulse 0.554s cubic-bezier(0.22, 1, 0.36, 1) both;
   animation-delay: var(--step-delay, 0.63s);
 }
 
 /* 4. Number, title, body cascade after each dot activates */
 .process-reveal.in-view .process-num {
-  animation: process-num-reveal 0.49s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: process-num-reveal 0.353s cubic-bezier(0.22, 1, 0.36, 1) both;
   animation-delay: var(--step-text-delay, 0.77s);
 }
 
 .process-reveal.in-view .process-title {
-  animation: process-text-rise 0.595s cubic-bezier(0.22, 1, 0.36, 1) both;
-  animation-delay: calc(var(--step-text-delay, 0.77s) + 0.056s);
+  animation: process-text-rise 0.428s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(var(--step-text-delay, 0.554s) + 0.056s);
 }
 
 .process-reveal.in-view .process-body {
-  animation: process-text-rise 0.595s cubic-bezier(0.22, 1, 0.36, 1) both;
-  animation-delay: calc(var(--step-text-delay, 0.77s) + 0.126s);
+  animation: process-text-rise 0.428s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(var(--step-text-delay, 0.554s) + 0.126s);
 }
 
 /* === Formats section — "editorial reel" reveal === */
@@ -1670,43 +1670,43 @@ section[id] {
 
 /* In-view sequence — rails draw first, then row content assembles */
 .format-reveal.in-view .format-rail {
-  animation: format-rail-draw 0.63s cubic-bezier(0.76, 0, 0.24, 1) both;
+  animation: format-rail-draw 0.454s cubic-bezier(0.76, 0, 0.24, 1) both;
   animation-delay: var(--rail-delay, 0.105s);
   transform-origin: left center;
 }
 
 .format-reveal.in-view .format-rail::after {
-  animation: format-rail-shimmer 0.63s cubic-bezier(0.4, 0.2, 0.2, 1) both;
+  animation: format-rail-shimmer 0.454s cubic-bezier(0.4, 0.2, 0.2, 1) both;
   animation-delay: var(--rail-delay, 0.105s);
 }
 
 /* Row-level staggers driven by --row-delay */
 .format-reveal.in-view .format-row .format-num {
-  animation: format-num-slide 0.595s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: format-num-slide 0.428s cubic-bezier(0.22, 1, 0.36, 1) both;
   animation-delay: var(--row-delay, 0.245s);
 }
 
 .format-reveal.in-view .format-row .format-title {
-  animation: format-title-rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
-  animation-delay: calc(var(--row-delay, 0.245s) + 0.056s);
+  animation: format-title-rise 0.504s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(var(--row-delay, 0.176s) + 0.056s);
 }
 
 .format-reveal.in-view .format-row .format-body {
-  animation: format-body-drift 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
-  animation-delay: calc(var(--row-delay, 0.245s) + 0.126s);
+  animation: format-body-drift 0.504s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(var(--row-delay, 0.176s) + 0.126s);
 }
 
 /* Hover on a row briefly accents the number */
 .format-reveal .format-row:hover .format-num {
   color: var(--color-silver);
-  transition: color 0.3s ease-out;
+  transition: color 0.216s ease-out;
 }
 
 /* Footnote fades in after the last row has settled */
 .format-reveal.in-view ~ .format-footnote,
 .format-reveal.in-view .format-footnote {
-  animation: format-footnote-fade 0.63s cubic-bezier(0.22, 1, 0.36, 1) both;
-  animation-delay: 1.54s;
+  animation: format-footnote-fade 0.454s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: 1.11s;
 }
 
 /* === Contact section reveal — cinematic iris/aperture open === */
@@ -1808,48 +1808,48 @@ section[id] {
 
 .contact-reveal.in-view .contact-bg {
   animation:
-    contact-aperture-open 2.4s cubic-bezier(0.76, 0, 0.24, 1) 0.1s forwards,
-    contact-bg-drift 24s ease-out 2.6s forwards;
+    contact-aperture-open 1.73s cubic-bezier(0.76, 0, 0.24, 1) 0.072s forwards,
+    contact-bg-drift 24s ease-out 1.87s forwards;
   transform-origin: center center;
 }
 
 .contact-reveal.in-view .contact-wash {
-  animation: contact-wash-in 0.98s ease-out 0.35s forwards;
+  animation: contact-wash-in 0.706s ease-out 0.252s forwards;
 }
 
 .contact-reveal.in-view .contact-head > *:nth-child(1) {
-  animation: contact-rise 0.63s cubic-bezier(0.22, 1, 0.36, 1) 0.42s forwards;
+  animation: contact-rise 0.454s cubic-bezier(0.22, 1, 0.36, 1) 0.302s forwards;
 }
 
 .contact-reveal.in-view .contact-head-rail {
   opacity: 1;
-  animation: contact-rail-draw 0.63s cubic-bezier(0.76, 0, 0.24, 1) 0.56s forwards;
+  animation: contact-rail-draw 0.454s cubic-bezier(0.76, 0, 0.24, 1) 0.403s forwards;
 }
 
 .contact-reveal.in-view .contact-title-line:nth-of-type(1) {
-  animation: contact-title-in 0.98s cubic-bezier(0.22, 0.61, 0.36, 1) 0.63s forwards;
+  animation: contact-title-in 0.706s cubic-bezier(0.22, 0.61, 0.36, 1) 0.454s forwards;
 }
 
 .contact-reveal.in-view .contact-title-line:nth-of-type(2) {
-  animation: contact-title-in 0.98s cubic-bezier(0.22, 0.61, 0.36, 1) 0.805s forwards;
+  animation: contact-title-in 0.706s cubic-bezier(0.22, 0.61, 0.36, 1) 0.58s forwards;
 }
 
 .contact-reveal.in-view .contact-sub {
-  animation: contact-rise 0.63s cubic-bezier(0.22, 1, 0.36, 1) 1.05s forwards;
+  animation: contact-rise 0.454s cubic-bezier(0.22, 1, 0.36, 1) 0.756s forwards;
 }
 
 .contact-reveal.in-view .contact-divider {
   opacity: 1;
-  animation: contact-rail-draw 0.77s cubic-bezier(0.76, 0, 0.24, 1) 1.19s forwards;
+  animation: contact-rail-draw 0.554s cubic-bezier(0.76, 0, 0.24, 1) 0.857s forwards;
 }
 
 .contact-reveal.in-view .contact-col {
-  animation: contact-rise 0.63s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: contact-rise 0.454s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
-.contact-reveal.in-view .contact-col:nth-child(1) { animation-delay: 1.29s; }
-.contact-reveal.in-view .contact-col:nth-child(2) { animation-delay: 1.39s; }
-.contact-reveal.in-view .contact-col:nth-child(3) { animation-delay: 1.48s; }
-.contact-reveal.in-view .contact-col:nth-child(4) { animation-delay: 1.57s; }
+.contact-reveal.in-view .contact-col:nth-child(1) { animation-delay: 0.929s; }
+.contact-reveal.in-view .contact-col:nth-child(2) { animation-delay: 1s; }
+.contact-reveal.in-view .contact-col:nth-child(3) { animation-delay: 1.07s; }
+.contact-reveal.in-view .contact-col:nth-child(4) { animation-delay: 1.13s; }
 
 /* === Brand logo grid — magician card deal === */
 /* Tiles drop from above with slight rotation (as if dealt onto a table), */
@@ -1923,12 +1923,12 @@ section[id] {
 }
 
 .brand-reveal.in-view .brand-cell:nth-child(odd) {
-  animation: brand-card-deal-left 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: brand-card-deal-left 0.504s cubic-bezier(0.22, 1, 0.36, 1) both;
   animation-delay: var(--brand-delay, 0ms);
 }
 
 .brand-reveal.in-view .brand-cell:nth-child(even) {
-  animation: brand-card-deal-right 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: brand-card-deal-right 0.504s cubic-bezier(0.22, 1, 0.36, 1) both;
   animation-delay: var(--brand-delay, 0ms);
 }
 
@@ -1937,8 +1937,8 @@ section[id] {
   position: relative;
   overflow: hidden;
   transition:
-    transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 0.45s ease-out;
+    transform 0.324s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.324s ease-out;
 }
 
 .brand-reveal .brand-cell > div::after {
@@ -1959,7 +1959,7 @@ section[id] {
 
 /* One-off sheen sweep after the tile lands */
 .brand-reveal.in-view .brand-cell > div::after {
-  animation: brand-sheen 0.91s cubic-bezier(0.4, 0.2, 0.2, 1) both;
+  animation: brand-sheen 0.655s cubic-bezier(0.4, 0.2, 0.2, 1) both;
   animation-delay: calc(var(--brand-delay, 0ms) + 0.63s);
 }
 

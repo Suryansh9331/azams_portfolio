@@ -27,7 +27,7 @@ export function Formats() {
       >
         <div
           className="format-rail h-px w-full origin-left bg-line"
-          style={{ "--rail-delay": "0.15s" } as React.CSSProperties}
+          style={{ "--rail-delay": "0.11s" } as React.CSSProperties}
         />
         {formats.map((f, i) => (
           <Fragment key={f.n}>
@@ -35,7 +35,7 @@ export function Formats() {
               className="format-row group relative grid grid-cols-[auto_1fr] items-baseline gap-x-3 gap-y-3 py-6 transition-colors hover:bg-line-soft sm:gap-x-5 sm:py-8 md:grid-cols-[60px_1.4fr_2fr] md:gap-x-8 md:py-10 lg:grid-cols-[80px_1.2fr_2fr] lg:gap-x-10"
               style={
                 {
-                  "--row-delay": `${0.35 + i * 0.22}s`,
+                  "--row-delay": `${(0.35 + i * 0.22) * 0.72}s`,
                 } as React.CSSProperties
               }
             >
@@ -55,7 +55,7 @@ export function Formats() {
               className="format-rail h-px w-full origin-left bg-line"
               style={
                 {
-                  "--rail-delay": `${0.55 + i * 0.22}s`,
+                  "--rail-delay": `${(0.55 + i * 0.22) * 0.72}s`,
                 } as React.CSSProperties
               }
             />

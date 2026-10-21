@@ -53,8 +53,8 @@ export function Process() {
                 className="process-step relative pl-10 md:pl-0"
                 style={
                   {
-                    "--step-delay": `${0.9 + i * 0.3}s`,
-                    "--step-text-delay": `${1.1 + i * 0.3}s`,
+                    "--step-delay": `${(0.9 + i * 0.3) * 0.72}s`,
+                    "--step-text-delay": `${(1.1 + i * 0.3) * 0.72}s`,
                   } as React.CSSProperties
                 }
               >

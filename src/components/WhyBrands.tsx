@@ -23,7 +23,7 @@ export function WhyBrands() {
         <div className="flex min-h-0 flex-col justify-center">
           <div className="grid grid-cols-1 gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-3 lg:gap-x-10 lg:gap-y-14">
             {whyBrands.map((item, i) => {
-              const cardDelay = 0.5 + i * 0.14;
+              const cardDelay = 0.35 + i * 0.1;
               return (
                 <div key={item.n} className="why-card flex flex-col gap-4">
                   <div
@@ -33,11 +33,11 @@ export function WhyBrands() {
 
                   <div
                     className="why-content flex flex-col gap-4"
-                    style={{ animationDelay: `${cardDelay + 0.4}s` }}
+                    style={{ animationDelay: `${cardDelay + 0.28}s` }}
                   >
                     <span
                       className="why-number text-[11px] tracking-[0.3em] text-muted"
-                      style={{ animationDelay: `${cardDelay + 0.55}s` }}
+                      style={{ animationDelay: `${cardDelay + 0.38}s` }}
                     >
                       {item.n}
                     </span>
@@ -51,7 +51,7 @@ export function WhyBrands() {
 
                   <style>{`
                     .why-reveal.in-view .why-card:nth-child(${i + 1})::after {
-                      animation-delay: ${cardDelay + 0.3}s;
+                      animation-delay: ${cardDelay + 0.2}s;
                     }
                   `}</style>
                 </div>
@@ -62,37 +62,37 @@ export function WhyBrands() {
           <div className="mt-16 sm:mt-20">
             <div
               className="why-bottom-divider h-px w-full bg-line"
-              style={{ animationDelay: "1.95s" }}
+              style={{ animationDelay: "1.36s" }}
             />
             <div className="mt-10 flex flex-col items-start gap-8 sm:flex-row sm:items-center sm:gap-10 lg:gap-14">
               <div className="flex items-baseline gap-4 sm:gap-5">
                 <span
                   className="why-stat-value font-display text-4xl leading-none font-normal text-silver sm:text-5xl lg:text-6xl"
-                  style={{ animationDelay: "2.15s" }}
+                  style={{ animationDelay: "1.5s" }}
                 >
                   7M+
                 </span>
                 <span
                   className="why-stat-label text-[11px] tracking-[0.22em] text-muted uppercase"
-                  style={{ animationDelay: "2.65s" }}
+                  style={{ animationDelay: "1.85s" }}
                 >
                   Social Media Followers
                 </span>
               </div>
               <div
                 className="why-vertical-divider hidden h-12 w-px bg-line sm:block lg:h-14"
-                style={{ animationDelay: "2.35s" }}
+                style={{ animationDelay: "1.65s" }}
               />
               <div className="flex items-baseline gap-4 sm:gap-5">
                 <span
                   className="why-stat-value font-display text-4xl leading-none font-normal text-silver sm:text-5xl lg:text-6xl"
-                  style={{ animationDelay: "2.4s" }}
+                  style={{ animationDelay: "1.68s" }}
                 >
                   UAE
                 </span>
                 <span
                   className="why-stat-label text-[11px] tracking-[0.22em] text-muted uppercase"
-                  style={{ animationDelay: "2.9s" }}
+                  style={{ animationDelay: "2.03s" }}
                 >
                   Golden Visa Holder
                 </span>
