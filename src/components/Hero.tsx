@@ -32,7 +32,7 @@ export function Hero() {
         }}
       />
 
-      <div className="relative z-10 flex min-h-[100svh] w-full max-w-[1400px] flex-col px-5 sm:px-8 md:px-12 lg:px-16">
+      <div className="relative z-10 flex min-h-[100svh] w-full max-w-[1400px] flex-col px-4 sm:px-5 md:px-8 lg:px-10">
         <div className="flex items-center justify-center pt-6 sm:pt-8 md:pt-10">
           <div className="flex items-center gap-2 text-center text-[9px] tracking-[0.22em] text-silver-dim uppercase sm:gap-4 sm:text-[10px] sm:tracking-[0.3em] md:text-xs md:tracking-[0.4em] md:whitespace-nowrap">
             <span className="hidden h-px w-8 bg-silver-dim/40 sm:block md:w-10" />

@@ -7,7 +7,7 @@ export function About() {
       id="about"
       className="relative w-full overflow-hidden bg-ink-950 pt-16 sm:pt-20 md:pt-24 lg:pt-32"
     >
-      <div className="relative mx-auto w-full max-w-[1680px] px-5 sm:px-6 md:px-8 lg:px-10 xl:px-14">
+      <div className="relative mx-auto w-full max-w-[1680px] px-4 sm:px-5 md:px-6 lg:px-8 xl:px-10">
         <div className="grid grid-cols-1 items-stretch gap-10 lg:min-h-[100svh] lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-16">
           <div className="relative flex flex-col justify-center pt-6 pb-10 md:pt-10 lg:order-first lg:py-24">
             <div className="mb-10 md:mb-12">

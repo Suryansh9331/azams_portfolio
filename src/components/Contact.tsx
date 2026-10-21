@@ -22,7 +22,7 @@ export function Contact() {
         className="pointer-events-none absolute inset-x-0 bottom-0 h-1/3 bg-linear-to-t from-ink-950 via-ink-950/60 to-transparent"
       />
 
-      <div className="relative mx-auto flex min-h-screen w-full max-w-[1680px] flex-col px-5 py-14 sm:px-6 sm:py-16 md:px-8 md:py-20 lg:px-10 lg:py-24 xl:px-14">
+      <div className="relative mx-auto flex min-h-screen w-full max-w-[1680px] flex-col px-4 py-14 sm:px-5 sm:py-16 md:px-6 md:py-20 lg:px-8 lg:py-24 xl:px-10">
         <div>
           <p className="text-[10px] font-medium tracking-[0.24em] text-muted uppercase sm:text-[11px]">
             Book Azam
