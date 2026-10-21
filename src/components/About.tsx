@@ -95,33 +95,18 @@ export function About() {
               src={secondSectionImg}
               alt="Azam holding an Ace of Spades"
               className="about-img absolute inset-0 h-full w-full object-cover object-center"
-            />
-            <div
-              className="pointer-events-none absolute inset-y-0 left-0 w-[55%]"
               style={{
-                backgroundImage:
-                  "linear-gradient(90deg, rgba(5,7,12,1) 0%, rgba(5,7,12,0.95) 20%, rgba(5,7,12,0.6) 55%, rgba(5,7,12,0.15) 85%, rgba(5,7,12,0) 100%)",
+                WebkitMaskImage:
+                  "radial-gradient(ellipse 62% 78% at 58% 48%, #000 0%, #000 32%, rgba(0,0,0,0.65) 65%, rgba(0,0,0,0.15) 88%, transparent 100%)",
+                maskImage:
+                  "radial-gradient(ellipse 62% 78% at 58% 48%, #000 0%, #000 32%, rgba(0,0,0,0.65) 65%, rgba(0,0,0,0.15) 88%, transparent 100%)",
               }}
             />
             <div
-              className="pointer-events-none absolute inset-y-0 right-0 w-[32%] md:w-[26%] lg:w-[22%]"
+              className="pointer-events-none absolute inset-y-0 left-0 w-[45%]"
               style={{
                 backgroundImage:
-                  "linear-gradient(90deg, rgba(5,7,12,0) 0%, rgba(5,7,12,0.4) 35%, rgba(5,7,12,0.85) 70%, rgba(5,7,12,1) 100%)",
-              }}
-            />
-            <div
-              className="pointer-events-none absolute inset-x-0 top-0 h-[32%]"
-              style={{
-                backgroundImage:
-                  "linear-gradient(180deg, rgba(5,7,12,1) 0%, rgba(5,7,12,0.85) 30%, rgba(5,7,12,0.35) 70%, rgba(5,7,12,0) 100%)",
-              }}
-            />
-            <div
-              className="pointer-events-none absolute inset-x-0 bottom-0 h-[38%]"
-              style={{
-                backgroundImage:
-                  "linear-gradient(180deg, rgba(5,7,12,0) 0%, rgba(5,7,12,0.35) 30%, rgba(5,7,12,0.85) 70%, rgba(5,7,12,1) 100%)",
+                  "linear-gradient(90deg, rgba(5,7,12,1) 0%, rgba(5,7,12,0.7) 40%, rgba(5,7,12,0.2) 75%, rgba(5,7,12,0) 100%)",
               }}
             />
           </div>
