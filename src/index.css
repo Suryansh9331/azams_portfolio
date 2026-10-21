@@ -1413,7 +1413,9 @@ section[id] {
   -ms-overflow-style: none;
   scroll-behavior: auto;
   -webkit-overflow-scrolling: touch;
-  touch-action: pan-x;
+  /* Allow horizontal pan on this element AND let vertical gestures bubble
+     up to the page so users can keep scrolling past the Reels section on mobile. */
+  touch-action: pan-x pan-y pinch-zoom;
   cursor: grab;
 }
 .reels-scroller::-webkit-scrollbar {

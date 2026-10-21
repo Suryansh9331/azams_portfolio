@@ -268,7 +268,8 @@ function ReelCard({
   }, [inView, isUnmuted]);
 
   const handleCardClick = () => {
-    if (ariaHidden) return;
+    // Duplicate cards (ariaHidden) are also clickable — the marquee loop
+    // frequently puts them in the viewport, so every visible card must respond.
     onToggleMute(cardKey);
   };
 
@@ -283,11 +284,7 @@ function ReelCard({
       tabIndex={ariaHidden ? -1 : 0}
       aria-hidden={ariaHidden}
       aria-label={
-        ariaHidden
-          ? undefined
-          : isUnmuted
-            ? `Mute ${reel.caption}`
-            : `Unmute ${reel.caption}`
+        isUnmuted ? `Mute ${reel.caption}` : `Unmute ${reel.caption}`
       }
       onClick={handleCardClick}
       onKeyDown={(e) => {
