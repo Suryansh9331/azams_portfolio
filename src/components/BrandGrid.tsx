@@ -4,11 +4,14 @@ import type { BrandGroup } from "../data/brands";
 import { getLogo } from "../data/logos";
 import { useInView } from "../hooks/useInView";
 
+// Mobile uses 3 columns + a smaller 0.5rem gap so tiles are compact and the
+// section doesn't require endless scrolling. Larger breakpoints keep the
+// original density per `group.columns`.
 const basisClassMap: Record<number, string> = {
-  3: "basis-[calc((100%-1rem)/2)] sm:basis-[calc((100%-2rem)/3)]",
-  4: "basis-[calc((100%-1rem)/2)] sm:basis-[calc((100%-2rem)/3)] md:basis-[calc((100%-3rem)/4)]",
-  5: "basis-[calc((100%-1rem)/2)] sm:basis-[calc((100%-2rem)/3)] md:basis-[calc((100%-3rem)/4)] lg:basis-[calc((100%-4rem)/5)]",
-  6: "basis-[calc((100%-1rem)/2)] sm:basis-[calc((100%-2rem)/3)] md:basis-[calc((100%-3rem)/4)] lg:basis-[calc((100%-5rem)/6)]",
+  3: "basis-[calc((100%-1rem)/3)] sm:basis-[calc((100%-2rem)/3)]",
+  4: "basis-[calc((100%-1rem)/3)] sm:basis-[calc((100%-3rem)/4)] md:basis-[calc((100%-3rem)/4)]",
+  5: "basis-[calc((100%-1rem)/3)] sm:basis-[calc((100%-3rem)/4)] md:basis-[calc((100%-3rem)/4)] lg:basis-[calc((100%-4rem)/5)]",
+  6: "basis-[calc((100%-1rem)/3)] sm:basis-[calc((100%-3rem)/4)] md:basis-[calc((100%-3rem)/4)] lg:basis-[calc((100%-5rem)/6)]",
 };
 
 export function BrandGrid({ group }: { group: BrandGroup }) {
@@ -19,7 +22,7 @@ export function BrandGrid({ group }: { group: BrandGroup }) {
     <SectionShell id={group.id} label={group.label} page={group.page}>
       <div
         ref={ref}
-        className={`brand-reveal flex flex-wrap justify-center gap-4 ${
+        className={`brand-reveal flex flex-wrap justify-center gap-2 sm:gap-4 ${
           inView ? "in-view" : ""
         }`}
       >
