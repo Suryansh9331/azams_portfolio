@@ -781,8 +781,8 @@ section[id] {
 
 .contact-reveal.in-view .contact-bg {
   animation:
-    contact-bg-in 2s cubic-bezier(0.22, 0.61, 0.36, 1) 0.1s forwards,
-    contact-bg-drift 22s ease-out 2.1s forwards;
+    contact-aperture-open 2.4s cubic-bezier(0.76, 0, 0.24, 1) 0.1s forwards,
+    contact-bg-drift 24s ease-out 2.6s forwards;
   transform-origin: center center;
 }
 
@@ -824,42 +824,123 @@ section[id] {
 .contact-reveal.in-view .contact-col:nth-child(3) { animation-delay: 2.11s; }
 .contact-reveal.in-view .contact-col:nth-child(4) { animation-delay: 2.24s; }
 
-/* === Brand logo grid reveal === */
-@keyframes brand-cell-in {
+/* === Brand logo grid — magician card deal === */
+/* Tiles drop from above with slight rotation (as if dealt onto a table), */
+/* then settle with a soft overshoot. Odd/even tiles rotate opposite ways. */
+.brand-reveal {
+  perspective: 1400px;
+}
+
+@keyframes brand-card-deal-left {
   0% {
     opacity: 0;
-    transform: translateY(16px) scale(0.94);
-    filter: blur(6px);
+    transform: translateY(-60px) translateX(-14px) rotate(-10deg) rotateX(28deg)
+      scale(0.9);
+    filter: blur(4px) brightness(0.6);
   }
-  60% {
-    filter: blur(0);
+  55% {
+    opacity: 1;
+    filter: blur(0) brightness(1);
+  }
+  78% {
+    transform: translateY(4px) translateX(0) rotate(1.2deg) rotateX(-2deg)
+      scale(1.015);
   }
   100% {
     opacity: 1;
-    transform: translateY(0) scale(1);
-    filter: blur(0);
+    transform: translateY(0) translateX(0) rotate(0) rotateX(0) scale(1);
+    filter: blur(0) brightness(1);
+  }
+}
+
+@keyframes brand-card-deal-right {
+  0% {
+    opacity: 0;
+    transform: translateY(-60px) translateX(14px) rotate(10deg) rotateX(28deg)
+      scale(0.9);
+    filter: blur(4px) brightness(0.6);
+  }
+  55% {
+    opacity: 1;
+    filter: blur(0) brightness(1);
+  }
+  78% {
+    transform: translateY(4px) translateX(0) rotate(-1.2deg) rotateX(-2deg)
+      scale(1.015);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) translateX(0) rotate(0) rotateX(0) scale(1);
+    filter: blur(0) brightness(1);
+  }
+}
+
+@keyframes brand-sheen {
+  0% {
+    transform: translateX(-120%) skewX(-20deg);
+    opacity: 0;
+  }
+  40% {
+    opacity: 0.9;
+  }
+  100% {
+    transform: translateX(220%) skewX(-20deg);
+    opacity: 0;
   }
 }
 
 .brand-reveal .brand-cell {
   opacity: 0;
+  transform-origin: center top;
   will-change: opacity, transform, filter;
 }
 
-.brand-reveal.in-view .brand-cell {
-  animation: brand-cell-in 0.85s cubic-bezier(0.22, 1, 0.36, 1) both;
+.brand-reveal.in-view .brand-cell:nth-child(odd) {
+  animation: brand-card-deal-left 1s cubic-bezier(0.22, 1, 0.36, 1) both;
   animation-delay: var(--brand-delay, 0ms);
 }
 
+.brand-reveal.in-view .brand-cell:nth-child(even) {
+  animation: brand-card-deal-right 1s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: var(--brand-delay, 0ms);
+}
+
+/* The white logo card itself — sheen sweep + hover lift */
 .brand-reveal .brand-cell > div {
+  position: relative;
+  overflow: hidden;
   transition:
-    transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 0.4s ease-out;
+    transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.45s ease-out;
+}
+
+.brand-reveal .brand-cell > div::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    110deg,
+    transparent 20%,
+    rgba(255, 255, 255, 0.55) 50%,
+    transparent 80%
+  );
+  mix-blend-mode: screen;
+  transform: translateX(-120%) skewX(-20deg);
+  opacity: 0;
+}
+
+/* One-off sheen sweep after the tile lands */
+.brand-reveal.in-view .brand-cell > div::after {
+  animation: brand-sheen 1.3s cubic-bezier(0.4, 0.2, 0.2, 1) both;
+  animation-delay: calc(var(--brand-delay, 0ms) + 0.9s);
 }
 
 .brand-reveal .brand-cell:hover > div {
-  transform: translateY(-3px) scale(1.03);
-  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
+  transform: translateY(-4px) scale(1.035);
+  box-shadow:
+    0 12px 32px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(255, 255, 255, 0.06);
 }
 
 @media (prefers-reduced-motion: reduce) {

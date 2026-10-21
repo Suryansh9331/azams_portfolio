@@ -24,21 +24,18 @@ export function Social() {
 
         <div className="flex min-h-0 flex-col justify-center">
           <div className="social-cards-grid grid grid-cols-2 divide-x divide-y divide-line border-t border-b border-line sm:grid-cols-3 lg:grid-cols-5 lg:divide-y-0">
-            {socials.map((s, i) => (
+            <div className="social-spotlight" aria-hidden="true" />
+            {socials.map((s) => (
               <a
                 key={s.platform}
                 href={s.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                style={{ ["--i" as string]: String(i) }}
-                className="social-card group relative flex flex-col gap-5 px-5 py-7 transition-colors hover:bg-line-soft sm:px-6 sm:py-8 lg:gap-7 lg:px-7 lg:py-9"
+                className="social-card group relative z-[1] flex flex-col gap-5 px-5 py-7 transition-colors hover:bg-line-soft sm:px-6 sm:py-8 lg:gap-7 lg:px-7 lg:py-9"
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2.5">
-                    <span
-                      className="social-icon inline-flex"
-                      style={{ ["--i" as string]: String(i) }}
-                    >
+                    <span className="social-icon inline-flex">
                       <SocialIcon
                         platform={s.platform}
                         className="h-5 w-5 text-silver sm:h-[22px] sm:w-[22px]"
@@ -53,16 +50,10 @@ export function Social() {
                   </span>
                 </div>
                 <div className="flex flex-col gap-2">
-                  <span
-                    className="social-number font-display text-4xl leading-none font-medium text-silver sm:text-5xl lg:text-6xl"
-                    style={{ ["--i" as string]: String(i) }}
-                  >
+                  <span className="social-number font-display text-4xl leading-none font-medium text-silver sm:text-5xl lg:text-6xl">
                     {s.followers}
                   </span>
-                  <span
-                    className="social-sublabel text-[10px] tracking-[0.22em] text-muted uppercase"
-                    style={{ ["--i" as string]: String(i) }}
-                  >
+                  <span className="social-sublabel text-[10px] tracking-[0.22em] text-muted uppercase">
                     Followers
                   </span>
                 </div>
@@ -90,12 +81,8 @@ export function Social() {
                 Age Groups
               </p>
               <div className="flex flex-col gap-4 sm:gap-5">
-                {ageGroups.map((g, i) => (
-                  <div
-                    key={g.label}
-                    className="social-bar"
-                    style={{ ["--bi" as string]: String(i) }}
-                  >
+                {ageGroups.map((g) => (
+                  <div key={g.label} className="social-ag-bar social-bar">
                     <BarMeter label={g.label} value={g.value} labelWidth="sm" />
                   </div>
                 ))}
@@ -107,12 +94,8 @@ export function Social() {
                 Top Countries
               </p>
               <div className="flex flex-col gap-3 sm:gap-4">
-                {topCountries.map((c, i) => (
-                  <div
-                    key={c.label}
-                    className="social-bar"
-                    style={{ ["--bi" as string]: String(i + 4) }}
-                  >
+                {topCountries.map((c) => (
+                  <div key={c.label} className="social-cn-bar social-bar">
                     <BarMeter label={c.label} value={c.value} labelWidth="lg" />
                   </div>
                 ))}
