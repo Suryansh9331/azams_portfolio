@@ -32,19 +32,9 @@ export function Reels() {
           className="reels-marquee-track flex w-max gap-4 sm:gap-5 md:gap-6"
           style={{ ["--marquee-duration" as string]: "70s" }}
         >
-          <div
-            className="reels-spacer flex-shrink-0"
-            style={{ width: "var(--section-left-gap, 1.25rem)" }}
-            aria-hidden
-          />
           {reels.map((reel, i) => (
             <ReelCard key={`a-${reel.id}-${i}`} reel={reel} />
           ))}
-          <div
-            className="reels-spacer flex-shrink-0"
-            style={{ width: "var(--section-left-gap, 1.25rem)" }}
-            aria-hidden
-          />
           {reels.map((reel, i) => (
             <ReelCard
               key={`b-${reel.id}-${i}`}
@@ -55,11 +45,12 @@ export function Reels() {
         </div>
 
         <div
-          className="pointer-events-none absolute inset-y-0 right-0 z-10 w-16 sm:w-24 md:w-32 lg:w-40"
+          className="pointer-events-none absolute inset-y-0 left-0 z-10"
           aria-hidden
           style={{
+            width: "var(--section-left-gap, 1.25rem)",
             backgroundImage:
-              "linear-gradient(to left, rgba(5,7,12,1) 0%, rgba(5,7,12,0.7) 45%, rgba(5,7,12,0) 100%)",
+              "linear-gradient(to right, rgba(5,7,12,1) 0%, rgba(5,7,12,1) 55%, rgba(5,7,12,0) 100%)",
           }}
         />
       </div>
