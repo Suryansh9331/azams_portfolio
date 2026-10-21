@@ -236,15 +236,16 @@ section[id] {
 /* === About (section 2) scroll-triggered reveal === */
 @keyframes about-image-curtain {
   0% {
-    clip-path: inset(0 0 100% 0);
-    transform: scale(1.18);
-    filter: blur(14px) brightness(0.6);
+    opacity: 0;
+    transform: scale(1.14);
+    filter: blur(18px) brightness(0.55);
   }
-  65% {
-    filter: blur(2px) brightness(0.95);
+  55% {
+    opacity: 1;
+    filter: blur(4px) brightness(0.95);
   }
   100% {
-    clip-path: inset(0 0 0 0);
+    opacity: 1;
     transform: scale(1);
     filter: blur(0) brightness(1);
   }
@@ -347,10 +348,6 @@ section[id] {
   opacity: 0;
 }
 
-/* Image mask ring reserve */
-.about-reveal .about-img {
-  clip-path: inset(0 0 100% 0);
-}
 
 .about-reveal .about-word-mask {
   display: inline-block;
