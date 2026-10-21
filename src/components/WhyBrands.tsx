@@ -36,7 +36,7 @@ export function WhyBrands() {
                     style={{ animationDelay: `${cardDelay + 0.28}s` }}
                   >
                     <span
-                      className="why-number text-[12px] tracking-[0.3em] text-muted sm:text-[13px]"
+                      className="why-number text-[12px] tracking-[0.12em] text-muted sm:text-[13px] sm:tracking-[0.3em]"
                       style={{ animationDelay: `${cardDelay + 0.38}s` }}
                     >
                       {item.n}

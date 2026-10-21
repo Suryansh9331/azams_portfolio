@@ -31,13 +31,10 @@ export function Process() {
         ref={ref}
         className={`process-reveal relative ${inView ? "in-view" : ""}`}
       >
-        <h2 className="process-headline font-display text-2xl leading-[1.15] font-normal text-silver sm:text-3xl md:text-4xl">
+        <h2 className="process-headline font-display flex flex-wrap gap-x-[0.3em] gap-y-1 text-2xl leading-[1.15] font-normal text-silver sm:text-3xl md:text-4xl">
           {headlineWords.map((w, i) => (
             <span key={i} className="process-word-mask">
-              <span className="process-word">
-                {w}
-                {i < headlineWords.length - 1 ? " " : ""}
-              </span>
+              <span className="process-word">{w}</span>
             </span>
           ))}
         </h2>
@@ -58,7 +55,7 @@ export function Process() {
                   } as React.CSSProperties
                 }
               >
-                <span className="process-num block text-[12px] tracking-[0.3em] text-muted sm:text-[13px]">
+                <span className="process-num block text-[12px] tracking-[0.12em] text-muted sm:text-[13px] sm:tracking-[0.3em]">
                   {s.n}
                 </span>
 

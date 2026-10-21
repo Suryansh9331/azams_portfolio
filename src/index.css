@@ -1,10 +1,10 @@
-@import url("https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,500..900;1,6..96,500..900&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Inter:wght@300;400;500;600&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,500..900;1,6..96,500..900&family=Fraunces:ital,opsz,wght@0,9..144,500..900;1,9..144,500..900&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Inter:wght@300;400;500;600&display=swap");
 @import "tailwindcss";
 
 @theme {
   --font-display: "Playfair Display", ui-serif, Georgia, serif;
   --font-contact: "Bodoni Moda", "Playfair Display", ui-serif, Georgia, serif;
-  --font-numeric: "Bodoni Moda", "Playfair Display", ui-serif, Georgia, serif;
+  --font-numeric: "Fraunces", "Playfair Display", ui-serif, Georgia, serif;
   --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
 
   --color-ink-950: #05070c;
@@ -81,11 +81,14 @@ section[id] {
   color: #fff;
 }
 
-/* All big stat numerals get Bodoni-style lining figures + equal column widths
-   so they read as clean modern data (not Playfair's old-style descending digits). */
+/* All big stat numerals use Fraunces — modern revival serif with uniform
+   lining figures, equal column widths, and a thicker "+" that stays legible
+   at mobile sizes. Optical sizing lets the font self-adjust per text size. */
 .font-numeric {
-  font-feature-settings: "lnum" 1, "tnum" 1;
+  font-feature-settings: "lnum" 1, "tnum" 1, "ss01" 1;
   font-variant-numeric: lining-nums tabular-nums;
+  font-optical-sizing: auto;
+  font-synthesis: none;
 }
 
 /* === Hero landing animations === */

@@ -39,7 +39,7 @@ export function Formats() {
                 } as React.CSSProperties
               }
             >
-              <span className="format-num text-[12px] tracking-[0.3em] text-muted sm:text-[13px]">
+              <span className="format-num text-[12px] tracking-[0.12em] text-muted sm:text-[13px] sm:tracking-[0.3em]">
                 {f.n}
               </span>
               <h3 className="format-title-mask overflow-hidden">
