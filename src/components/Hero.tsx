@@ -1,8 +1,6 @@
 import heroBanner from "../assets/hero-banner.png";
 import heroBannerMobile from "../assets/hero-banner-mobile.png";
 
-const headlineWords = ["Open", "the", "impossible"];
-
 export function Hero() {
   return (
     <section className="relative flex min-h-svh w-full items-center justify-center overflow-hidden bg-ink-950">
@@ -50,18 +48,8 @@ export function Hero() {
         </div>
 
         <div className="flex flex-1 flex-col items-center justify-end pb-20 sm:pb-24 md:pb-28 lg:pb-32">
-          <h1
-            aria-label="Open the impossible"
-            className="hero-headline font-display text-center text-[clamp(2.25rem,6.5vw,5.5rem)] leading-[1.1] font-medium italic text-silver drop-shadow-[0_4px_28px_rgba(0,0,0,0.75)]"
-          >
-            {headlineWords.map((word, i) => (
-              <span key={word} className="hero-word-mask">
-                <span className="hero-word">
-                  {word}
-                  {i < headlineWords.length - 1 ? " " : ""}
-                </span>
-              </span>
-            ))}
+          <h1 className="hero-headline font-display text-center text-[clamp(2.25rem,6.5vw,5.5rem)] leading-[1.1] font-medium italic text-silver drop-shadow-[0_4px_28px_rgba(0,0,0,0.75)]">
+            Open the impossible
           </h1>
         </div>
 

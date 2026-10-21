@@ -147,15 +147,27 @@ section[id] {
   }
 }
 
-/* Word rises from behind a mask — the signature premium reveal */
-@keyframes hero-word-rise {
+/* Cinematic focus pull — text resolves from heavy blur into sharp focus */
+@keyframes hero-focus-pull {
   0% {
     opacity: 0;
-    transform: translateY(110%);
+    filter: blur(28px);
+    transform: scale(1.12);
+    letter-spacing: 0.08em;
+  }
+  40% {
+    opacity: 0.65;
+  }
+  70% {
+    opacity: 1;
+    filter: blur(4px);
+    letter-spacing: 0.02em;
   }
   100% {
     opacity: 1;
-    transform: translateY(0);
+    filter: blur(0);
+    transform: scale(1);
+    letter-spacing: 0;
   }
 }
 
@@ -167,16 +179,6 @@ section[id] {
   to {
     opacity: 1;
     transform: translateY(0);
-  }
-}
-
-/* Shimmer sweep across the headline on first paint */
-@keyframes hero-shimmer {
-  0% {
-    background-position: -200% 0;
-  }
-  100% {
-    background-position: 200% 0;
   }
 }
 
@@ -211,48 +213,12 @@ section[id] {
   will-change: transform, opacity;
 }
 
-.hero-word-mask {
-  display: inline-block;
-  overflow: hidden;
-  vertical-align: bottom;
-}
-
-.hero-word {
-  display: inline-block;
-  animation: hero-word-rise 1.2s cubic-bezier(0.22, 1, 0.36, 1) both;
-  will-change: transform, opacity;
-}
-
-.hero-word:nth-child(1) {
-  animation-delay: 2.2s;
-}
-.hero-word:nth-child(2) {
-  animation-delay: 2.35s;
-}
-.hero-word:nth-child(3) {
-  animation-delay: 2.5s;
-}
-
 .hero-headline {
   position: relative;
-}
-
-.hero-headline::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background: linear-gradient(
-    110deg,
-    transparent 20%,
-    rgba(255, 255, 255, 0.22) 48%,
-    rgba(255, 255, 255, 0.08) 52%,
-    transparent 80%
-  );
-  background-size: 200% 100%;
-  background-position: -200% 0;
-  mix-blend-mode: overlay;
-  animation: hero-shimmer 2.4s cubic-bezier(0.5, 0, 0.5, 1) 3.4s;
+  display: inline-block;
+  animation: hero-focus-pull 2.4s cubic-bezier(0.6, 0.04, 0.3, 1) 2.1s both;
+  transform-origin: center center;
+  will-change: opacity, filter, transform, letter-spacing;
 }
 
 .hero-foot-left {
