@@ -12,7 +12,7 @@ export function StatBlock({ value, label, size = "md" }: Props) {
   return (
     <div className="flex flex-col gap-2">
       <span
-        className={`font-display font-medium text-silver ${valueClass}`}
+        className={`font-numeric font-medium text-silver ${valueClass}`}
       >
         {value}
       </span>

@@ -4,6 +4,7 @@
 @theme {
   --font-display: "Playfair Display", ui-serif, Georgia, serif;
   --font-contact: "Bodoni Moda", "Playfair Display", ui-serif, Georgia, serif;
+  --font-numeric: "Bodoni Moda", "Playfair Display", ui-serif, Georgia, serif;
   --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
 
   --color-ink-950: #05070c;
@@ -78,6 +79,13 @@ section[id] {
 ::selection {
   background: rgba(138, 160, 255, 0.3);
   color: #fff;
+}
+
+/* All big stat numerals get Bodoni-style lining figures + equal column widths
+   so they read as clean modern data (not Playfair's old-style descending digits). */
+.font-numeric {
+  font-feature-settings: "lnum" 1, "tnum" 1;
+  font-variant-numeric: lining-nums tabular-nums;
 }
 
 /* === Hero landing animations === */

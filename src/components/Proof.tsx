@@ -77,7 +77,7 @@ function ProofItem({
   return (
     <div className={`proof-item flex flex-col gap-5 ${pad}`}>
       <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-        <span className="proof-value font-display text-5xl leading-none font-medium text-silver sm:text-6xl md:text-5xl lg:text-6xl xl:text-[88px]">
+        <span className="proof-value font-numeric text-5xl leading-none font-medium text-silver sm:text-6xl md:text-5xl lg:text-6xl xl:text-[88px]">
           {item.numeric !== undefined ? (
             <CounterValue
               target={item.numeric}

@@ -50,7 +50,7 @@ export function Social() {
                   </span>
                 </div>
                 <div className="flex flex-col gap-2">
-                  <span className="social-number font-display text-4xl leading-none font-medium text-silver sm:text-5xl lg:text-6xl">
+                  <span className="social-number font-numeric text-4xl leading-none font-medium text-silver sm:text-5xl lg:text-6xl">
                     {s.followers}
                   </span>
                   <span className="social-sublabel text-[10px] tracking-[0.22em] text-muted uppercase">
@@ -67,10 +67,10 @@ export function Social() {
                 Engagement Rate
               </p>
               <div className="flex items-end gap-2">
-                <span className="social-engagement-value font-display text-7xl leading-none font-medium text-silver sm:text-8xl lg:text-[160px]">
+                <span className="social-engagement-value font-numeric text-7xl leading-none font-medium text-silver sm:text-8xl lg:text-[160px]">
                   92
                 </span>
-                <span className="social-engagement-percent pb-4 font-display text-2xl font-normal text-silver-dim lg:text-3xl">
+                <span className="social-engagement-percent pb-4 font-numeric text-2xl font-normal text-silver-dim lg:text-3xl">
                   %
                 </span>
               </div>
