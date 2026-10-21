@@ -2,20 +2,25 @@ import { SectionShell } from "./shared/SectionShell";
 import { LogoTile } from "./shared/LogoTile";
 import type { BrandGroup } from "../data/brands";
 
-const colClassMap: Record<number, string> = {
-  3: "grid-cols-2 sm:grid-cols-3",
-  4: "grid-cols-2 sm:grid-cols-3 md:grid-cols-4",
-  5: "grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5",
-  6: "grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6",
+// Flex-basis per breakpoint. The basis math assumes gap-4 (1rem) on the
+// container so a full row of N items fills exactly 100% width; a partial
+// trailing row occupies less and is centered by `justify-center`.
+const basisClassMap: Record<number, string> = {
+  3: "basis-[calc((100%-1rem)/2)] sm:basis-[calc((100%-2rem)/3)]",
+  4: "basis-[calc((100%-1rem)/2)] sm:basis-[calc((100%-2rem)/3)] md:basis-[calc((100%-3rem)/4)]",
+  5: "basis-[calc((100%-1rem)/2)] sm:basis-[calc((100%-2rem)/3)] md:basis-[calc((100%-3rem)/4)] lg:basis-[calc((100%-4rem)/5)]",
+  6: "basis-[calc((100%-1rem)/2)] sm:basis-[calc((100%-2rem)/3)] md:basis-[calc((100%-3rem)/4)] lg:basis-[calc((100%-5rem)/6)]",
 };
 
 export function BrandGrid({ group }: { group: BrandGroup }) {
-  const cols = colClassMap[group.columns] ?? colClassMap[5];
+  const basis = basisClassMap[group.columns] ?? basisClassMap[5];
   return (
     <SectionShell id={group.id} label={group.label} page={group.page}>
-      <div className={`grid gap-3 sm:gap-4 md:gap-5 lg:gap-6 ${cols}`}>
+      <div className="flex flex-wrap justify-center gap-4">
         {group.items.map((name) => (
-          <LogoTile key={name} name={name} />
+          <div key={name} className={`${basis} shrink-0 grow-0`}>
+            <LogoTile name={name} />
+          </div>
         ))}
       </div>
     </SectionShell>

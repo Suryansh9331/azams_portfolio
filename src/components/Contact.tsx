@@ -5,7 +5,7 @@ export function Contact() {
   return (
     <section
       id="contact"
-      className="relative mx-auto w-full max-w-[1400px] overflow-hidden px-5 py-20 sm:px-8 md:px-12 md:py-24 lg:px-16 lg:py-32"
+      className="relative mx-auto w-full max-w-[1680px] overflow-hidden px-5 py-20 sm:px-6 md:px-8 md:py-24 lg:px-10 lg:py-32 xl:px-14"
     >
       <div className="mb-12 md:mb-16 lg:mb-20">
         <p className="text-[10px] font-medium tracking-[0.24em] text-muted uppercase sm:text-[11px]">

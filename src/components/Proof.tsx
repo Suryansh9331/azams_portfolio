@@ -1,4 +1,5 @@
 import { SectionShell } from "./shared/SectionShell";
+import thirdSectionImg from "../assets/third-section.png";
 
 type Item = {
   value: string;
@@ -71,101 +72,34 @@ function ProofItem({
 function ProofBackdrop() {
   return (
     <div className="pointer-events-none absolute inset-0" aria-hidden="true">
+      <img
+        src={thirdSectionImg}
+        alt=""
+        className="absolute inset-0 h-full w-full object-cover object-center opacity-80"
+      />
+
       <div
         className="absolute inset-0"
         style={{
           backgroundImage:
-            "radial-gradient(ellipse 60% 50% at 50% 40%, rgba(40,55,110,0.18) 0%, rgba(10,14,26,0) 60%)",
+            "linear-gradient(180deg, rgba(5,7,12,0.72) 0%, rgba(5,7,12,0.2) 30%, rgba(5,7,12,0.15) 55%, rgba(5,7,12,0.5) 88%, rgba(5,7,12,0.92) 100%)",
         }}
       />
 
       <div
-        className="absolute inset-0 opacity-[0.04] mix-blend-overlay"
+        className="absolute inset-y-0 left-0 w-[18%]"
         style={{
           backgroundImage:
-            "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>\")",
+            "linear-gradient(90deg, rgba(5,7,12,0.6) 0%, rgba(5,7,12,0) 100%)",
         }}
       />
-
-      <div className="absolute top-1/2 right-[6%] -translate-y-1/2 text-right opacity-[0.035] sm:opacity-[0.05]">
-        <div className="font-display text-6xl leading-[0.9] font-medium text-silver tracking-[0.2em] md:text-7xl lg:text-8xl">
-          LIVE
-        </div>
-        <div className="mt-1 font-display text-5xl leading-[0.9] font-medium text-silver italic md:text-6xl lg:text-7xl">
-          IMPOSSIBLE
-        </div>
-      </div>
-
-      <HandSilhouette />
-
       <div
-        className="absolute inset-x-0 bottom-0 h-[40%]"
+        className="absolute inset-y-0 right-0 w-[18%]"
         style={{
           backgroundImage:
-            "linear-gradient(180deg, rgba(5,7,12,0) 0%, rgba(5,7,12,0.75) 60%, rgba(5,7,12,1) 100%)",
+            "linear-gradient(270deg, rgba(5,7,12,0.6) 0%, rgba(5,7,12,0) 100%)",
         }}
       />
-    </div>
-  );
-}
-
-function HandSilhouette() {
-  return (
-    <div className="absolute right-0 bottom-0 left-[38%] h-[55%] opacity-[0.22] sm:opacity-25 md:opacity-30">
-      <svg
-        viewBox="0 0 500 400"
-        preserveAspectRatio="xMidYMax meet"
-        className="h-full w-full"
-        fill="none"
-        aria-hidden="true"
-      >
-        <defs>
-          <radialGradient id="hand-fade" cx="50%" cy="80%" r="60%">
-            <stop offset="0%" stopColor="rgba(140,170,255,0.35)" />
-            <stop offset="40%" stopColor="rgba(60,80,140,0.18)" />
-            <stop offset="100%" stopColor="rgba(10,14,26,0)" />
-          </radialGradient>
-          <linearGradient id="hand-body" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#0e1324" stopOpacity="0.85" />
-            <stop offset="100%" stopColor="#05070c" stopOpacity="1" />
-          </linearGradient>
-        </defs>
-
-        <ellipse cx="260" cy="360" rx="240" ry="90" fill="url(#hand-fade)" />
-
-        <path
-          d="M 180 400 L 190 320 Q 192 280, 210 260 Q 220 230, 232 215
-             L 240 195 Q 248 185, 258 190 L 262 220
-             L 278 200 Q 288 192, 296 198 L 294 230
-             L 310 215 Q 320 210, 326 220 L 320 250
-             L 334 240 Q 342 240, 344 252 L 334 280
-             Q 338 310, 326 340 Q 316 370, 300 400 Z"
-          fill="url(#hand-body)"
-        />
-        <path
-          d="M 180 400 L 190 320 Q 192 280, 210 260"
-          stroke="rgba(140,170,255,0.25)"
-          strokeWidth="1"
-          fill="none"
-        />
-        <path
-          d="M 300 400 Q 316 370, 326 340 Q 338 310, 334 280"
-          stroke="rgba(140,170,255,0.25)"
-          strokeWidth="1"
-          fill="none"
-        />
-
-        <rect
-          x="188"
-          y="310"
-          width="26"
-          height="14"
-          rx="2"
-          fill="#030508"
-          stroke="rgba(140,170,255,0.2)"
-          strokeWidth="0.6"
-        />
-      </svg>
     </div>
   );
 }

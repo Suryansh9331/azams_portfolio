@@ -11,7 +11,7 @@ export function WhyBrands() {
             <span className="text-[11px] tracking-[0.3em] text-muted">
               {item.n}
             </span>
-            <h3 className="font-display text-xl leading-tight font-medium text-silver sm:text-2xl lg:text-[26px]">
+            <h3 className="font-display text-xl leading-[1.15] font-normal tracking-[0.04em] text-silver uppercase sm:text-[22px] lg:text-[26px]">
               {item.title}
             </h3>
             <p className="max-w-sm text-sm leading-relaxed text-silver-dim">
@@ -21,22 +21,25 @@ export function WhyBrands() {
         ))}
       </div>
 
-      <div className="mt-20 grid grid-cols-1 items-end gap-8 border-t border-line pt-10 sm:grid-cols-2 sm:gap-10">
-        <div className="flex items-baseline gap-4 sm:gap-5">
-          <span className="font-display text-4xl leading-none font-medium text-silver sm:text-5xl lg:text-6xl">
-            7M+
-          </span>
-          <span className="text-[11px] tracking-[0.22em] text-muted uppercase">
-            Social Media Followers
-          </span>
-        </div>
-        <div className="flex items-baseline gap-4 sm:gap-5 sm:justify-center">
-          <span className="font-display text-4xl leading-none font-medium text-silver sm:text-5xl lg:text-6xl">
-            UAE
-          </span>
-          <span className="text-[11px] tracking-[0.22em] text-muted uppercase">
-            Golden Visa Holder
-          </span>
+      <div className="mt-16 border-t border-line pt-10 sm:mt-20">
+        <div className="flex flex-col items-start gap-8 sm:flex-row sm:items-center sm:gap-10 lg:gap-14">
+          <div className="flex items-baseline gap-4 sm:gap-5">
+            <span className="font-display text-4xl leading-none font-normal text-silver sm:text-5xl lg:text-6xl">
+              7M+
+            </span>
+            <span className="text-[11px] tracking-[0.22em] text-muted uppercase">
+              Social Media Followers
+            </span>
+          </div>
+          <div className="hidden h-12 w-px bg-line sm:block lg:h-14" />
+          <div className="flex items-baseline gap-4 sm:gap-5">
+            <span className="font-display text-4xl leading-none font-normal text-silver sm:text-5xl lg:text-6xl">
+              UAE
+            </span>
+            <span className="text-[11px] tracking-[0.22em] text-muted uppercase">
+              Golden Visa Holder
+            </span>
+          </div>
         </div>
       </div>
     </SectionShell>
