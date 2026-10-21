@@ -7,7 +7,7 @@ export function Formats() {
   const { ref, inView } = useInView<HTMLDivElement>({ threshold: 0.12 });
 
   return (
-    <SectionShell id="formats" label="Experience Formats" page="12">
+    <SectionShell id="formats" label="Experience Formats" page="13">
       <div
         className="pointer-events-none absolute inset-0 -z-0"
         aria-hidden="true"

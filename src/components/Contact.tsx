@@ -114,7 +114,7 @@ export function Contact() {
           </div>
 
           <div className="mt-10 flex justify-end text-[10px] tracking-[0.3em] text-muted uppercase">
-            <span>14</span>
+            <span>15</span>
           </div>
         </div>
       </div>

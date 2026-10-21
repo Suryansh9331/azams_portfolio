@@ -23,7 +23,7 @@ export const brandGroups: BrandGroup[] = [
   {
     id: "global-brands",
     label: "Global Brands",
-    page: "10",
+    page: "06",
     columns: 5,
     folder: "global-brands",
     items: [
@@ -46,7 +46,7 @@ export const brandGroups: BrandGroup[] = [
   {
     id: "hospitality",
     label: "Luxury Hospitality & Lifestyle",
-    page: "10",
+    page: "07",
     columns: 6,
     folder: "hospitality-lifestyle",
     items: [
@@ -72,7 +72,7 @@ export const brandGroups: BrandGroup[] = [
   {
     id: "real-estate",
     label: "Real Estate Companies",
-    page: "10",
+    page: "08",
     columns: 5,
     folder: "real-estate",
     items: [
@@ -94,7 +94,7 @@ export const brandGroups: BrandGroup[] = [
   {
     id: "events",
     label: "Governments & Major Events, Exhibitions",
-    page: "10",
+    page: "09",
     columns: 5,
     folder: "govt-events",
     items: [
