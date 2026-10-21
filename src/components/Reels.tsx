@@ -31,7 +31,7 @@ export function Reels() {
       {/* Row 1 — scrolls right → left (cards enter from right, dissolve into left gap) */}
       <div className="reels-marquee reels-row-1 group relative w-full overflow-hidden">
         <div
-          className="reels-marquee-track flex w-max gap-4 sm:gap-5 md:gap-6"
+          className="reels-marquee-track flex w-max gap-3 sm:gap-4 md:gap-5 lg:gap-6"
           style={{ ["--marquee-duration" as string]: "70s" }}
         >
           {reels.map((reel, i) => (
@@ -54,9 +54,9 @@ export function Reels() {
       </div>
 
       {/* Row 2 — scrolls left → right (cards enter from left, dissolve into right gap) */}
-      <div className="reels-marquee reels-marquee--reverse reels-row-2 group relative mt-4 w-full overflow-hidden sm:mt-5 md:mt-6">
+      <div className="reels-marquee reels-marquee--reverse reels-row-2 group relative mt-3 w-full overflow-hidden sm:mt-4 md:mt-5 lg:mt-6">
         <div
-          className="reels-marquee-track flex w-max gap-4 sm:gap-5 md:gap-6"
+          className="reels-marquee-track flex w-max gap-3 sm:gap-4 md:gap-5 lg:gap-6"
           style={{ ["--marquee-duration" as string]: "82s" }}
         >
           {reelsReverse.map((reel, i) => (
@@ -121,7 +121,7 @@ function ReelCard({
       tabIndex={ariaHidden ? -1 : undefined}
       className="reel-card group/card relative block flex-shrink-0 overflow-hidden rounded-lg border border-line/70 bg-ink-900 shadow-[0_18px_42px_rgba(0,0,0,0.6)] ring-1 ring-silver-dim/0 transition-all duration-500 ease-out hover:scale-[1.015] hover:ring-silver-dim/40"
     >
-      <div className="relative aspect-[9/16] w-[220px] sm:w-[240px] md:w-[270px] lg:w-[290px] xl:w-[310px]">
+      <div className="relative aspect-[9/16] w-[140px] sm:w-[165px] md:w-[190px] lg:w-[215px] xl:w-[235px]">
         <video
           ref={videoRef}
           src={reel.video}
@@ -147,28 +147,28 @@ function ReelCard({
           className="pointer-events-none absolute inset-0 opacity-0 ring-1 ring-inset ring-accent/40 transition-opacity duration-500 group-hover/card:opacity-100"
         />
 
-        <div className="absolute top-3 left-3 flex items-center gap-1.5 rounded-full border border-silver-dim/15 bg-ink-950/70 px-2.5 py-1 backdrop-blur-md sm:top-4 sm:left-4">
-          <span className="relative flex h-1.5 w-1.5">
+        <div className="absolute top-2 left-2 flex items-center gap-1 rounded-full border border-silver-dim/15 bg-ink-950/70 px-1.5 py-0.5 backdrop-blur-md sm:top-3 sm:left-3 sm:gap-1.5 sm:px-2 sm:py-1 md:top-3.5 md:left-3.5 md:px-2.5">
+          <span className="relative flex h-1 w-1 sm:h-1.5 sm:w-1.5">
             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent opacity-75" />
-            <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-accent" />
+            <span className="relative inline-flex h-1 w-1 rounded-full bg-accent sm:h-1.5 sm:w-1.5" />
           </span>
-          <span className="text-[9px] font-medium tracking-[0.24em] text-silver uppercase">
+          <span className="text-[8px] font-medium tracking-[0.2em] text-silver uppercase sm:text-[9px] sm:tracking-[0.24em]">
             Reel
           </span>
         </div>
 
-        <div className="absolute right-3 bottom-3 left-3 flex items-end justify-between gap-3 sm:right-4 sm:bottom-4 sm:left-4">
-          <div className="flex min-w-0 flex-col gap-1">
-            <span className="text-[9px] tracking-[0.3em] text-silver-dim uppercase">
+        <div className="absolute right-2 bottom-2 left-2 flex items-end justify-between gap-2 sm:right-3 sm:bottom-3 sm:left-3 md:right-3.5 md:bottom-3.5 md:left-3.5">
+          <div className="flex min-w-0 flex-col gap-0.5 sm:gap-1">
+            <span className="hidden text-[8px] tracking-[0.26em] text-silver-dim uppercase sm:inline sm:text-[9px] sm:tracking-[0.3em]">
               @azam.magic
             </span>
-            <span className="truncate text-[11px] font-medium tracking-[0.14em] text-silver uppercase drop-shadow-[0_1px_6px_rgba(0,0,0,0.9)] sm:text-[12px]">
+            <span className="truncate text-[9px] font-medium tracking-[0.1em] text-silver uppercase drop-shadow-[0_1px_6px_rgba(0,0,0,0.9)] sm:text-[10px] sm:tracking-[0.14em] md:text-[11px] lg:text-[12px]">
               {reel.caption}
             </span>
           </div>
           <span
             aria-hidden
-            className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full border border-silver-dim/25 bg-ink-950/70 text-silver backdrop-blur-md transition-all duration-300 group-hover/card:border-silver-dim/60 group-hover/card:bg-ink-900/90 group-hover/card:translate-x-0.5 group-hover/card:-translate-y-0.5 sm:h-9 sm:w-9"
+            className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full border border-silver-dim/25 bg-ink-950/70 text-silver backdrop-blur-md transition-all duration-300 group-hover/card:border-silver-dim/60 group-hover/card:bg-ink-900/90 group-hover/card:translate-x-0.5 group-hover/card:-translate-y-0.5 sm:h-7 sm:w-7 md:h-8 md:w-8"
           >
             <svg
               viewBox="0 0 24 24"
@@ -177,7 +177,7 @@ function ReelCard({
               strokeWidth="1.6"
               strokeLinecap="round"
               strokeLinejoin="round"
-              className="h-3.5 w-3.5 sm:h-4 sm:w-4"
+              className="h-3 w-3 sm:h-3.5 sm:w-3.5 md:h-4 md:w-4"
             >
               <path d="M7 17L17 7" />
               <path d="M8 7h9v9" />
