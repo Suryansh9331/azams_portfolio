@@ -1,10 +1,10 @@
 import { useEffect, useRef } from "react";
-import { reels, type Reel } from "../data/reels";
+import { reelsRowOne, reelsRowTwo, type Reel } from "../data/reels";
 import { useInView } from "../hooks/useInView";
 
 export function Reels() {
   const { ref, inView } = useInView<HTMLDivElement>();
-  const reelsReverse = [...reels].reverse();
+  const hasRowTwo = reelsRowTwo.length > 0;
 
   return (
     <div
@@ -34,10 +34,10 @@ export function Reels() {
           className="reels-marquee-track flex w-max gap-3 sm:gap-4 md:gap-5 lg:gap-6"
           style={{ ["--marquee-duration" as string]: "70s" }}
         >
-          {reels.map((reel, i) => (
+          {reelsRowOne.map((reel, i) => (
             <ReelCard key={`a-${reel.id}-${i}`} reel={reel} />
           ))}
-          {reels.map((reel, i) => (
+          {reelsRowOne.map((reel, i) => (
             <ReelCard key={`b-${reel.id}-${i}`} reel={reel} aria-hidden />
           ))}
         </div>
@@ -53,30 +53,32 @@ export function Reels() {
         />
       </div>
 
-      {/* Row 2 — scrolls left → right (cards enter from left, dissolve into right gap) */}
-      <div className="reels-marquee reels-marquee--reverse reels-row-2 group relative mt-3 w-full overflow-hidden sm:mt-4 md:mt-5 lg:mt-6">
-        <div
-          className="reels-marquee-track flex w-max gap-3 sm:gap-4 md:gap-5 lg:gap-6"
-          style={{ ["--marquee-duration" as string]: "82s" }}
-        >
-          {reelsReverse.map((reel, i) => (
-            <ReelCard key={`c-${reel.id}-${i}`} reel={reel} />
-          ))}
-          {reelsReverse.map((reel, i) => (
-            <ReelCard key={`d-${reel.id}-${i}`} reel={reel} aria-hidden />
-          ))}
-        </div>
+      {/* Row 2 — scrolls left → right. Only renders when reelsRowTwo has items. */}
+      {hasRowTwo && (
+        <div className="reels-marquee reels-marquee--reverse reels-row-2 group relative mt-3 w-full overflow-hidden sm:mt-4 md:mt-5 lg:mt-6">
+          <div
+            className="reels-marquee-track flex w-max gap-3 sm:gap-4 md:gap-5 lg:gap-6"
+            style={{ ["--marquee-duration" as string]: "82s" }}
+          >
+            {reelsRowTwo.map((reel, i) => (
+              <ReelCard key={`c-${reel.id}-${i}`} reel={reel} />
+            ))}
+            {reelsRowTwo.map((reel, i) => (
+              <ReelCard key={`d-${reel.id}-${i}`} reel={reel} aria-hidden />
+            ))}
+          </div>
 
-        <div
-          className="pointer-events-none absolute inset-y-0 right-0 z-10"
-          aria-hidden
-          style={{
-            width: "var(--section-left-gap, 1.25rem)",
-            backgroundImage:
-              "linear-gradient(to left, rgba(5,7,12,1) 0%, rgba(5,7,12,1) 55%, rgba(5,7,12,0) 100%)",
-          }}
-        />
-      </div>
+          <div
+            className="pointer-events-none absolute inset-y-0 right-0 z-10"
+            aria-hidden
+            style={{
+              width: "var(--section-left-gap, 1.25rem)",
+              backgroundImage:
+                "linear-gradient(to left, rgba(5,7,12,1) 0%, rgba(5,7,12,1) 55%, rgba(5,7,12,0) 100%)",
+            }}
+          />
+        </div>
+      )}
 
       <div className="pointer-events-none absolute right-5 bottom-5 flex flex-col items-end gap-1 text-[10px] tracking-[0.3em] text-muted uppercase sm:right-8 md:right-12 md:bottom-8 lg:right-16 lg:bottom-10">
         <span className="font-display text-sm tracking-[0.4em] text-silver-dim">
