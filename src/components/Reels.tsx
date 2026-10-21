@@ -4,7 +4,6 @@ import { useInView } from "../hooks/useInView";
 
 export function Reels() {
   const { ref, inView } = useInView<HTMLDivElement>();
-  const marqueeItems = [...reels, ...reels];
 
   return (
     <div
@@ -28,19 +27,41 @@ export function Reels() {
         </p>
       </div>
 
-      <div className="reels-marquee reels-fade-mask group relative w-full overflow-hidden">
+      <div className="reels-marquee group relative w-full overflow-hidden">
         <div
           className="reels-marquee-track flex w-max gap-4 sm:gap-5 md:gap-6"
           style={{ ["--marquee-duration" as string]: "70s" }}
         >
-          {marqueeItems.map((reel, i) => (
+          <div
+            className="reels-spacer flex-shrink-0"
+            style={{ width: "var(--section-left-gap, 1.25rem)" }}
+            aria-hidden
+          />
+          {reels.map((reel, i) => (
+            <ReelCard key={`a-${reel.id}-${i}`} reel={reel} />
+          ))}
+          <div
+            className="reels-spacer flex-shrink-0"
+            style={{ width: "var(--section-left-gap, 1.25rem)" }}
+            aria-hidden
+          />
+          {reels.map((reel, i) => (
             <ReelCard
-              key={`${reel.id}-${i}`}
+              key={`b-${reel.id}-${i}`}
               reel={reel}
-              aria-hidden={i >= reels.length}
+              aria-hidden={true}
             />
           ))}
         </div>
+
+        <div
+          className="pointer-events-none absolute inset-y-0 right-0 z-10 w-16 sm:w-24 md:w-32 lg:w-40"
+          aria-hidden
+          style={{
+            backgroundImage:
+              "linear-gradient(to left, rgba(5,7,12,1) 0%, rgba(5,7,12,0.7) 45%, rgba(5,7,12,0) 100%)",
+          }}
+        />
       </div>
 
       <div className="pointer-events-none absolute right-5 bottom-5 flex flex-col items-end gap-1 text-[10px] tracking-[0.3em] text-muted uppercase sm:right-8 md:right-12 md:bottom-8 lg:right-16 lg:bottom-10">

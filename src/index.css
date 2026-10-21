@@ -23,17 +23,32 @@
 html {
   scroll-behavior: smooth;
   --about-image-bleed: 0px;
+  --section-left-gap: 1.25rem;
+}
+
+@media (min-width: 640px) {
+  html {
+    --section-left-gap: 1.5rem;
+  }
+}
+
+@media (min-width: 768px) {
+  html {
+    --section-left-gap: 2rem;
+  }
 }
 
 @media (min-width: 1024px) {
   html {
     --about-image-bleed: calc(-1 * max(2.5rem, (100vw - 1680px) / 2 + 2.5rem));
+    --section-left-gap: max(2.5rem, calc((100vw - 1680px) / 2 + 2.5rem));
   }
 }
 
 @media (min-width: 1280px) {
   html {
     --about-image-bleed: calc(-1 * max(3.5rem, (100vw - 1680px) / 2 + 3.5rem));
+    --section-left-gap: max(3.5rem, calc((100vw - 1680px) / 2 + 3.5rem));
   }
 }
 
