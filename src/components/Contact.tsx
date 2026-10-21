@@ -43,7 +43,7 @@ export function Contact() {
               Contact
             </span>
           </h2>
-          <p className="contact-sub mt-6 text-[10px] tracking-[0.3em] text-silver-dim uppercase sm:mt-8 sm:text-[11px]">
+          <p className="contact-sub mt-6 text-[11px] tracking-[0.3em] text-silver-dim uppercase sm:mt-8 sm:text-[12px] md:text-[13px]">
             For availability, brand activations and stage programming
           </p>
         </div>
@@ -106,7 +106,7 @@ export function Contact() {
                     <SnapchatIcon />
                   </SocialLink>
                 </div>
-                <span className="text-[11px] tracking-[0.28em] text-silver uppercase">
+                <span className="text-[12px] tracking-[0.28em] text-silver uppercase sm:text-[13px] md:text-sm">
                   Azam.Magic
                 </span>
               </div>
@@ -125,7 +125,7 @@ export function Contact() {
 function ContactCol({ title, children }: { title: string; children: ReactNode }) {
   return (
     <div className="contact-col flex flex-col gap-3">
-      <span className="text-[11px] tracking-[0.28em] text-muted uppercase">
+      <span className="text-[12px] tracking-[0.28em] text-muted uppercase sm:text-[13px] md:text-sm">
         {title}
       </span>
       <div className="text-sm md:text-[15px]">{children}</div>

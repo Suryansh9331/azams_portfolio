@@ -58,7 +58,7 @@ export function Process() {
                   } as React.CSSProperties
                 }
               >
-                <span className="process-num block text-[11px] tracking-[0.3em] text-muted">
+                <span className="process-num block text-[12px] tracking-[0.3em] text-muted sm:text-[13px]">
                   {s.n}
                 </span>
 

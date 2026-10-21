@@ -38,7 +38,7 @@ export function Hero() {
 
       <div className="relative z-10 flex min-h-svh w-full max-w-[1680px] flex-col px-4 sm:px-5 md:px-6 lg:px-8 xl:px-10">
         <div className="flex items-center justify-center pt-6 sm:pt-8 md:pt-10">
-          <div className="flex items-center gap-2 text-center text-[9px] tracking-[0.22em] text-silver-dim uppercase sm:gap-4 sm:text-[10px] sm:tracking-[0.3em] md:text-xs md:tracking-[0.4em] md:whitespace-nowrap">
+          <div className="flex items-center gap-2 text-center text-[10px] tracking-[0.22em] text-silver-dim uppercase sm:gap-4 sm:text-[11px] sm:tracking-[0.3em] md:text-[13px] md:tracking-[0.4em] md:whitespace-nowrap">
             <span className="hero-rail-left hidden h-px w-8 bg-silver-dim/40 sm:block md:w-10" />
             <span className="hero-tagline">
               Illusionist · Mentalist · Live Experience Creator
@@ -53,7 +53,7 @@ export function Hero() {
           </h1>
         </div>
 
-        <div className="flex items-end justify-between pb-5 text-[9px] tracking-[0.25em] text-silver-dim/80 uppercase md:pb-8 md:text-[10px] md:tracking-[0.3em]">
+        <div className="flex items-end justify-between pb-5 text-[10px] tracking-[0.25em] text-silver-dim/80 uppercase md:pb-8 md:text-[11px] md:tracking-[0.3em] lg:text-[12px]">
           <span className="hero-foot-left">Worldwide Magician</span>
           <span className="hero-foot-right hidden sm:inline">
             Live Experience Creator

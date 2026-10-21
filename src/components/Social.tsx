@@ -41,7 +41,7 @@ export function Social() {
                         className="h-5 w-5 text-silver sm:h-[22px] sm:w-[22px]"
                       />
                     </span>
-                    <span className="text-[11px] font-medium tracking-[0.18em] text-silver-dim uppercase sm:text-xs">
+                    <span className="text-[12px] font-medium tracking-[0.18em] text-silver-dim uppercase sm:text-[13px] md:text-sm">
                       {s.platform}
                     </span>
                   </div>
@@ -53,7 +53,7 @@ export function Social() {
                   <span className="social-number font-numeric text-4xl leading-none font-medium text-silver sm:text-5xl lg:text-6xl">
                     {s.followers}
                   </span>
-                  <span className="social-sublabel text-[10px] tracking-[0.22em] text-muted uppercase">
+                  <span className="social-sublabel text-[11px] tracking-[0.22em] text-muted uppercase sm:text-[12px] md:text-[13px]">
                     Followers
                   </span>
                 </div>
@@ -63,7 +63,7 @@ export function Social() {
 
           <div className="mt-16 grid grid-cols-1 gap-12 lg:mt-20 lg:grid-cols-[1fr_1.3fr_1.5fr] lg:gap-12">
             <div>
-              <p className="social-engagement-label mb-5 text-[11px] tracking-[0.22em] text-muted uppercase">
+              <p className="social-engagement-label mb-5 text-[12px] tracking-[0.22em] text-muted uppercase sm:text-[13px] md:text-sm">
                 Engagement Rate
               </p>
               <div className="flex items-end gap-2">
@@ -77,7 +77,7 @@ export function Social() {
             </div>
 
             <div>
-              <p className="social-group-label mb-6 text-[11px] tracking-[0.22em] text-muted uppercase">
+              <p className="social-group-label mb-6 text-[12px] tracking-[0.22em] text-muted uppercase sm:text-[13px] md:text-sm">
                 Age Groups
               </p>
               <div className="flex flex-col gap-4 sm:gap-5">
@@ -90,7 +90,7 @@ export function Social() {
             </div>
 
             <div className="social-countries-panel rounded-sm bg-[rgba(14,19,36,0.5)] p-5 sm:p-6 md:p-8">
-              <p className="social-group-label mb-6 text-[11px] tracking-[0.22em] text-muted uppercase">
+              <p className="social-group-label mb-6 text-[12px] tracking-[0.22em] text-muted uppercase sm:text-[13px] md:text-sm">
                 Top Countries
               </p>
               <div className="flex flex-col gap-3 sm:gap-4">

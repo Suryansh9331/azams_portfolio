@@ -100,7 +100,7 @@ function ProofItem({
         ) : null}
       </div>
       <div className="proof-underline h-px w-full max-w-[220px] bg-silver/30" />
-      <span className="proof-stat-label text-[11px] tracking-[0.24em] text-muted uppercase">
+      <span className="proof-stat-label text-[12px] tracking-[0.24em] text-muted uppercase sm:text-[13px] md:text-sm">
         {item.label}
       </span>
     </div>

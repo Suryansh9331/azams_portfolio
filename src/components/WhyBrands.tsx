@@ -36,7 +36,7 @@ export function WhyBrands() {
                     style={{ animationDelay: `${cardDelay + 0.28}s` }}
                   >
                     <span
-                      className="why-number text-[11px] tracking-[0.3em] text-muted"
+                      className="why-number text-[12px] tracking-[0.3em] text-muted sm:text-[13px]"
                       style={{ animationDelay: `${cardDelay + 0.38}s` }}
                     >
                       {item.n}
@@ -67,13 +67,13 @@ export function WhyBrands() {
             <div className="mt-10 flex flex-col items-start gap-8 sm:flex-row sm:items-center sm:gap-10 lg:gap-14">
               <div className="flex items-baseline gap-4 sm:gap-5">
                 <span
-                  className="why-stat-value font-display text-4xl leading-none font-normal text-silver sm:text-5xl lg:text-6xl"
+                  className="why-stat-value font-numeric text-4xl leading-none font-normal text-silver sm:text-5xl lg:text-6xl"
                   style={{ animationDelay: "1.5s" }}
                 >
                   7M+
                 </span>
                 <span
-                  className="why-stat-label text-[11px] tracking-[0.22em] text-muted uppercase"
+                  className="why-stat-label text-[12px] tracking-[0.22em] text-muted uppercase sm:text-[13px] md:text-sm"
                   style={{ animationDelay: "1.85s" }}
                 >
                   Social Media Followers
@@ -85,13 +85,13 @@ export function WhyBrands() {
               />
               <div className="flex items-baseline gap-4 sm:gap-5">
                 <span
-                  className="why-stat-value font-display text-4xl leading-none font-normal text-silver sm:text-5xl lg:text-6xl"
+                  className="why-stat-value font-numeric text-4xl leading-none font-normal text-silver sm:text-5xl lg:text-6xl"
                   style={{ animationDelay: "1.68s" }}
                 >
                   UAE
                 </span>
                 <span
-                  className="why-stat-label text-[11px] tracking-[0.22em] text-muted uppercase"
+                  className="why-stat-label text-[12px] tracking-[0.22em] text-muted uppercase sm:text-[13px] md:text-sm"
                   style={{ animationDelay: "2.03s" }}
                 >
                   Golden Visa Holder

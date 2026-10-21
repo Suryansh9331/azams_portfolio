@@ -16,7 +16,7 @@ export function BarMeter({ label, value, labelWidth = "md" }: Props) {
     <div
       className={`grid items-center gap-4 sm:gap-5 md:gap-6 ${widthMap[labelWidth]}`}
     >
-      <span className="text-[11px] tracking-[0.1em] whitespace-nowrap text-silver-dim uppercase sm:text-xs md:text-sm">
+      <span className="text-[12px] tracking-[0.1em] whitespace-nowrap text-silver-dim uppercase sm:text-[13px] md:text-[15px]">
         {label}
       </span>
       <div className="relative h-[3px] w-full overflow-hidden rounded-full bg-line-soft">
