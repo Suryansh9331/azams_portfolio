@@ -192,44 +192,44 @@ section[id] {
 
 .hero-overlay {
   opacity: 0;
-  animation: hero-overlay-fade 1.6s ease-out 1.4s forwards;
+  animation: hero-overlay-fade 1.12s ease-out 0.98s forwards;
   will-change: opacity;
 }
 
 .hero-tagline {
-  animation: hero-wipe-right 1.6s cubic-bezier(0.76, 0, 0.24, 1) 1.6s both;
+  animation: hero-wipe-right 1.12s cubic-bezier(0.76, 0, 0.24, 1) 1.12s both;
   will-change: clip-path, opacity;
 }
 
 .hero-rail-left {
   transform-origin: right center;
-  animation: hero-rail-draw 1.3s cubic-bezier(0.76, 0, 0.24, 1) 1.9s both;
+  animation: hero-rail-draw 0.91s cubic-bezier(0.76, 0, 0.24, 1) 1.33s both;
   will-change: transform, opacity;
 }
 
 .hero-rail-right {
   transform-origin: left center;
-  animation: hero-rail-draw 1.3s cubic-bezier(0.76, 0, 0.24, 1) 1.9s both;
+  animation: hero-rail-draw 0.91s cubic-bezier(0.76, 0, 0.24, 1) 1.33s both;
   will-change: transform, opacity;
 }
 
 .hero-headline {
   position: relative;
   display: inline-block;
-  animation: hero-focus-pull 2.4s cubic-bezier(0.6, 0.04, 0.3, 1) 2.1s both;
+  animation: hero-focus-pull 1.68s cubic-bezier(0.6, 0.04, 0.3, 1) 1.47s both;
   transform-origin: center center;
   will-change: opacity, filter, transform, letter-spacing;
 }
 
 .hero-foot-left {
   opacity: 0;
-  animation: hero-rise-soft 1.1s cubic-bezier(0.22, 1, 0.36, 1) 3s forwards;
+  animation: hero-rise-soft 0.77s cubic-bezier(0.22, 1, 0.36, 1) 2.1s forwards;
   will-change: opacity, transform;
 }
 
 .hero-foot-right {
   opacity: 0;
-  animation: hero-rise-soft 1.1s cubic-bezier(0.22, 1, 0.36, 1) 3.15s forwards;
+  animation: hero-rise-soft 0.77s cubic-bezier(0.22, 1, 0.36, 1) 2.2s forwards;
   will-change: opacity, transform;
 }
 
@@ -375,73 +375,73 @@ section[id] {
 }
 
 .about-reveal.in-view .about-label {
-  animation: about-fade-up 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.2s both;
+  animation: about-fade-up 0.63s cubic-bezier(0.22, 1, 0.36, 1) 0.14s both;
 }
 
 .about-reveal.in-view .about-rail {
-  animation: about-rail-draw 0.9s cubic-bezier(0.76, 0, 0.24, 1) 0.4s both;
+  animation: about-rail-draw 0.63s cubic-bezier(0.76, 0, 0.24, 1) 0.28s both;
 }
 
 /* Headline words — staggered via :nth-child */
 .about-reveal.in-view .about-word {
-  animation: about-word-rise 1.2s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: about-word-rise 0.84s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 .about-reveal.in-view .about-word:nth-child(1) {
-  animation-delay: 0.55s;
+  animation-delay: 0.385s;
 }
 .about-reveal.in-view .about-word:nth-child(2) {
-  animation-delay: 0.65s;
+  animation-delay: 0.455s;
 }
 .about-reveal.in-view .about-word:nth-child(3) {
-  animation-delay: 0.75s;
+  animation-delay: 0.525s;
 }
 .about-reveal.in-view .about-word:nth-child(4) {
-  animation-delay: 0.85s;
+  animation-delay: 0.595s;
 }
 .about-reveal.in-view .about-word:nth-child(5) {
-  animation-delay: 0.95s;
+  animation-delay: 0.665s;
 }
 .about-reveal.in-view .about-word:nth-child(6) {
-  animation-delay: 1.1s;
+  animation-delay: 0.77s;
 }
 .about-reveal.in-view .about-word:nth-child(7) {
-  animation-delay: 1.2s;
+  animation-delay: 0.84s;
 }
 .about-reveal.in-view .about-word:nth-child(8) {
-  animation-delay: 1.3s;
+  animation-delay: 0.91s;
 }
 
 /* Body paragraphs — stagger */
 .about-reveal.in-view .about-body > *:nth-child(1) {
-  animation: about-fade-up 1.1s cubic-bezier(0.22, 1, 0.36, 1) 1.4s both;
+  animation: about-fade-up 0.77s cubic-bezier(0.22, 1, 0.36, 1) 0.98s both;
 }
 .about-reveal.in-view .about-body > *:nth-child(2) {
-  animation: about-fade-up 1.1s cubic-bezier(0.22, 1, 0.36, 1) 1.55s both;
+  animation: about-fade-up 0.77s cubic-bezier(0.22, 1, 0.36, 1) 1.08s both;
 }
 
 .about-reveal.in-view .about-divider {
-  animation: about-divider-draw 1s cubic-bezier(0.76, 0, 0.24, 1) 1.7s both;
+  animation: about-divider-draw 0.7s cubic-bezier(0.76, 0, 0.24, 1) 1.19s both;
 }
 
 .about-reveal.in-view .about-quote {
-  animation: about-fade-up 1.1s cubic-bezier(0.22, 1, 0.36, 1) 1.9s both;
+  animation: about-fade-up 0.77s cubic-bezier(0.22, 1, 0.36, 1) 1.33s both;
 }
 
 /* Stats — stagger */
 .about-reveal.in-view .about-stat {
-  animation: about-stat-rise 1.2s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: about-stat-rise 0.84s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 .about-reveal.in-view .about-stat:nth-child(1) {
-  animation-delay: 2.1s;
+  animation-delay: 1.47s;
 }
 .about-reveal.in-view .about-stat:nth-child(2) {
-  animation-delay: 2.22s;
+  animation-delay: 1.55s;
 }
 .about-reveal.in-view .about-stat:nth-child(3) {
-  animation-delay: 2.34s;
+  animation-delay: 1.64s;
 }
 .about-reveal.in-view .about-stat:nth-child(4) {
-  animation-delay: 2.46s;
+  animation-delay: 1.72s;
 }
 
 /* === Proof (section 3) — DEPTH + COUNTER choreography === */
@@ -589,73 +589,73 @@ section[id] {
 
 /* Backdrop & setup */
 .proof-reveal.in-view .proof-backdrop {
-  animation: proof-backdrop-pull 2.2s cubic-bezier(0.76, 0, 0.24, 1) 0.1s both;
+  animation: proof-backdrop-pull 1.54s cubic-bezier(0.76, 0, 0.24, 1) 0.07s both;
   will-change: transform, opacity, filter;
 }
 .proof-reveal.in-view .proof-section-label {
-  animation: proof-fade-up 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.35s both;
+  animation: proof-fade-up 0.63s cubic-bezier(0.22, 1, 0.36, 1) 0.245s both;
 }
 .proof-reveal.in-view .proof-rail {
-  animation: proof-rail-draw 0.9s cubic-bezier(0.76, 0, 0.24, 1) 0.55s both;
+  animation: proof-rail-draw 0.63s cubic-bezier(0.76, 0, 0.24, 1) 0.385s both;
 }
 
 /* Each stat item flies in from depth with stagger */
 .proof-reveal.in-view .proof-item:nth-child(1) {
-  animation: proof-depth-in 1.5s cubic-bezier(0.22, 1, 0.36, 1) 0.75s both;
+  animation: proof-depth-in 1.05s cubic-bezier(0.22, 1, 0.36, 1) 0.525s both;
 }
 .proof-reveal.in-view .proof-item:nth-child(2) {
-  animation: proof-depth-in 1.5s cubic-bezier(0.22, 1, 0.36, 1) 0.95s both;
+  animation: proof-depth-in 1.05s cubic-bezier(0.22, 1, 0.36, 1) 0.665s both;
 }
 .proof-reveal.in-view .proof-item:nth-child(3) {
-  animation: proof-depth-in 1.5s cubic-bezier(0.22, 1, 0.36, 1) 1.15s both;
+  animation: proof-depth-in 1.05s cubic-bezier(0.22, 1, 0.36, 1) 0.805s both;
 }
 
 /* Glow pulses right as counter settles */
 .proof-reveal.in-view .proof-item:nth-child(1) .proof-value {
-  animation: proof-glow-pulse 1.6s cubic-bezier(0.5, 0, 0.5, 1) 1.9s both;
+  animation: proof-glow-pulse 1.12s cubic-bezier(0.5, 0, 0.5, 1) 1.33s both;
 }
 .proof-reveal.in-view .proof-item:nth-child(2) .proof-value {
-  animation: proof-glow-pulse 1.6s cubic-bezier(0.5, 0, 0.5, 1) 2.1s both;
+  animation: proof-glow-pulse 1.12s cubic-bezier(0.5, 0, 0.5, 1) 1.47s both;
 }
 .proof-reveal.in-view .proof-item:nth-child(3) .proof-value {
-  animation: proof-glow-pulse 1.6s cubic-bezier(0.5, 0, 0.5, 1) 2.3s both;
+  animation: proof-glow-pulse 1.12s cubic-bezier(0.5, 0, 0.5, 1) 1.61s both;
 }
 
 /* Tails fade in slightly after their item lands */
 .proof-reveal.in-view .proof-item:nth-child(1) .proof-tail {
-  animation: proof-fade-up 0.9s cubic-bezier(0.22, 1, 0.36, 1) 1.5s both;
+  animation: proof-fade-up 0.63s cubic-bezier(0.22, 1, 0.36, 1) 1.05s both;
 }
 .proof-reveal.in-view .proof-item:nth-child(2) .proof-tail {
-  animation: proof-fade-up 0.9s cubic-bezier(0.22, 1, 0.36, 1) 1.7s both;
+  animation: proof-fade-up 0.63s cubic-bezier(0.22, 1, 0.36, 1) 1.19s both;
 }
 .proof-reveal.in-view .proof-item:nth-child(3) .proof-tail {
-  animation: proof-fade-up 0.9s cubic-bezier(0.22, 1, 0.36, 1) 1.9s both;
+  animation: proof-fade-up 0.63s cubic-bezier(0.22, 1, 0.36, 1) 1.33s both;
 }
 
 /* Thin underline draws beneath each stat after counter completes */
 .proof-reveal.in-view .proof-item:nth-child(1) .proof-underline {
-  animation: proof-underline-draw 1.2s cubic-bezier(0.76, 0, 0.24, 1) 2.5s both;
+  animation: proof-underline-draw 0.84s cubic-bezier(0.76, 0, 0.24, 1) 1.75s both;
 }
 .proof-reveal.in-view .proof-item:nth-child(2) .proof-underline {
-  animation: proof-underline-draw 1.2s cubic-bezier(0.76, 0, 0.24, 1) 2.7s both;
+  animation: proof-underline-draw 0.84s cubic-bezier(0.76, 0, 0.24, 1) 1.89s both;
 }
 .proof-reveal.in-view .proof-item:nth-child(3) .proof-underline {
-  animation: proof-underline-draw 1.2s cubic-bezier(0.76, 0, 0.24, 1) 2.9s both;
+  animation: proof-underline-draw 0.84s cubic-bezier(0.76, 0, 0.24, 1) 2.03s both;
 }
 
 /* Labels slide in horizontally with letter-spacing collapse */
 .proof-reveal.in-view .proof-item:nth-child(1) .proof-stat-label {
-  animation: proof-label-slide 1.1s cubic-bezier(0.22, 1, 0.36, 1) 2.8s both;
+  animation: proof-label-slide 0.77s cubic-bezier(0.22, 1, 0.36, 1) 1.96s both;
 }
 .proof-reveal.in-view .proof-item:nth-child(2) .proof-stat-label {
-  animation: proof-label-slide 1.1s cubic-bezier(0.22, 1, 0.36, 1) 3s both;
+  animation: proof-label-slide 0.77s cubic-bezier(0.22, 1, 0.36, 1) 2.1s both;
 }
 .proof-reveal.in-view .proof-item:nth-child(3) .proof-stat-label {
-  animation: proof-label-slide 1.1s cubic-bezier(0.22, 1, 0.36, 1) 3.2s both;
+  animation: proof-label-slide 0.77s cubic-bezier(0.22, 1, 0.36, 1) 2.24s both;
 }
 
 .proof-reveal.in-view .proof-description {
-  animation: proof-fade-up 1.2s cubic-bezier(0.22, 1, 0.36, 1) 3.4s both;
+  animation: proof-fade-up 0.84s cubic-bezier(0.22, 1, 0.36, 1) 2.38s both;
 }
 
 /* === Social (section 4) — SPOTLIGHT SWEEP choreography === */
@@ -866,194 +866,194 @@ section[id] {
 
 /* === Trigger cascade on in-view === */
 .social-reveal.in-view .social-section-label {
-  animation: social-fade-up 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.1s both;
+  animation: social-fade-up 0.63s cubic-bezier(0.22, 1, 0.36, 1) 0.07s both;
 }
 .social-reveal.in-view .social-rail {
-  animation: social-rail-draw 0.9s cubic-bezier(0.76, 0, 0.24, 1) 0.3s both;
+  animation: social-rail-draw 0.63s cubic-bezier(0.76, 0, 0.24, 1) 0.21s both;
 }
 
 /* Spotlight sweeps across the row */
 .social-reveal.in-view .social-spotlight {
-  animation: social-spotlight-sweep 2.2s cubic-bezier(0.65, 0, 0.35, 1) 0.5s both;
+  animation: social-spotlight-sweep 1.54s cubic-bezier(0.65, 0, 0.35, 1) 0.35s both;
   will-change: transform, opacity;
 }
 
 /* Cards flash as the spotlight passes */
 .social-reveal.in-view .social-card {
-  animation: social-card-flash 1.1s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: social-card-flash 0.77s cubic-bezier(0.22, 1, 0.36, 1) both;
   will-change: transform, opacity, filter;
 }
 .social-reveal.in-view .social-card:nth-child(2) {
-  animation-delay: 0.6s;
+  animation-delay: 0.42s;
 }
 .social-reveal.in-view .social-card:nth-child(3) {
-  animation-delay: 0.9s;
+  animation-delay: 0.63s;
 }
 .social-reveal.in-view .social-card:nth-child(4) {
-  animation-delay: 1.2s;
+  animation-delay: 0.84s;
 }
 .social-reveal.in-view .social-card:nth-child(5) {
-  animation-delay: 1.5s;
+  animation-delay: 1.05s;
 }
 .social-reveal.in-view .social-card:nth-child(6) {
-  animation-delay: 1.8s;
+  animation-delay: 1.26s;
 }
 
 /* Icons pop in after their card flashes */
 .social-reveal.in-view .social-card .social-icon {
-  animation: social-icon-pop 0.65s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  animation: social-icon-pop 0.455s cubic-bezier(0.34, 1.56, 0.64, 1) both;
 }
 .social-reveal.in-view .social-card:nth-child(2) .social-icon {
-  animation-delay: 0.85s;
+  animation-delay: 0.595s;
 }
 .social-reveal.in-view .social-card:nth-child(3) .social-icon {
-  animation-delay: 1.15s;
+  animation-delay: 0.805s;
 }
 .social-reveal.in-view .social-card:nth-child(4) .social-icon {
-  animation-delay: 1.45s;
+  animation-delay: 1.01s;
 }
 .social-reveal.in-view .social-card:nth-child(5) .social-icon {
-  animation-delay: 1.75s;
+  animation-delay: 1.22s;
 }
 .social-reveal.in-view .social-card:nth-child(6) .social-icon {
-  animation-delay: 2.05s;
+  animation-delay: 1.43s;
 }
 
 /* Numbers wipe left-to-right after their card settles */
 .social-reveal.in-view .social-card .social-number {
-  animation: social-number-wipe 0.95s cubic-bezier(0.76, 0, 0.24, 1) both;
+  animation: social-number-wipe 0.665s cubic-bezier(0.76, 0, 0.24, 1) both;
 }
 .social-reveal.in-view .social-card:nth-child(2) .social-number {
-  animation-delay: 1s;
+  animation-delay: 0.7s;
 }
 .social-reveal.in-view .social-card:nth-child(3) .social-number {
-  animation-delay: 1.3s;
+  animation-delay: 0.91s;
 }
 .social-reveal.in-view .social-card:nth-child(4) .social-number {
-  animation-delay: 1.6s;
+  animation-delay: 1.12s;
 }
 .social-reveal.in-view .social-card:nth-child(5) .social-number {
-  animation-delay: 1.9s;
+  animation-delay: 1.33s;
 }
 .social-reveal.in-view .social-card:nth-child(6) .social-number {
-  animation-delay: 2.2s;
+  animation-delay: 1.54s;
 }
 
 /* Sublabels fade up last on each card */
 .social-reveal.in-view .social-card .social-sublabel {
-  animation: social-fade-up 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: social-fade-up 0.56s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 .social-reveal.in-view .social-card:nth-child(2) .social-sublabel {
-  animation-delay: 1.2s;
+  animation-delay: 0.84s;
 }
 .social-reveal.in-view .social-card:nth-child(3) .social-sublabel {
-  animation-delay: 1.5s;
+  animation-delay: 1.05s;
 }
 .social-reveal.in-view .social-card:nth-child(4) .social-sublabel {
-  animation-delay: 1.8s;
+  animation-delay: 1.26s;
 }
 .social-reveal.in-view .social-card:nth-child(5) .social-sublabel {
-  animation-delay: 2.1s;
+  animation-delay: 1.47s;
 }
 .social-reveal.in-view .social-card:nth-child(6) .social-sublabel {
-  animation-delay: 2.4s;
+  animation-delay: 1.68s;
 }
 
 /* Stats row — labels fade up together */
 .social-reveal.in-view .social-engagement-label,
 .social-reveal.in-view .social-group-label {
-  animation: social-fade-up 0.9s cubic-bezier(0.22, 1, 0.36, 1) 2.8s both;
+  animation: social-fade-up 0.63s cubic-bezier(0.22, 1, 0.36, 1) 1.96s both;
 }
 
 /* 92 — iris-close + glow burst */
 .social-reveal.in-view .social-engagement-value {
-  animation: social-engagement-reveal 1.6s cubic-bezier(0.22, 1, 0.36, 1) 3s both;
+  animation: social-engagement-reveal 1.12s cubic-bezier(0.22, 1, 0.36, 1) 2.1s both;
   display: inline-block;
   will-change: transform, opacity, filter, text-shadow, letter-spacing;
 }
 
 .social-reveal.in-view .social-engagement-percent {
-  animation: social-fade-up 0.9s cubic-bezier(0.22, 1, 0.36, 1) 3.65s both;
+  animation: social-fade-up 0.63s cubic-bezier(0.22, 1, 0.36, 1) 2.55s both;
 }
 
 .social-reveal.in-view .social-countries-panel {
-  animation: social-fade-up 1s cubic-bezier(0.22, 1, 0.36, 1) 2.95s both;
+  animation: social-fade-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) 2.06s both;
 }
 
 /* Age Group bars — 4 rows, stagger via nth-child */
 .social-reveal.in-view .social-ag-bar {
-  animation: social-bar-track 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: social-bar-track 0.49s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 .social-reveal.in-view .social-ag-bar:nth-child(1) {
-  animation-delay: 3.15s;
+  animation-delay: 2.2s;
 }
 .social-reveal.in-view .social-ag-bar:nth-child(2) {
-  animation-delay: 3.25s;
+  animation-delay: 2.27s;
 }
 .social-reveal.in-view .social-ag-bar:nth-child(3) {
-  animation-delay: 3.35s;
+  animation-delay: 2.34s;
 }
 .social-reveal.in-view .social-ag-bar:nth-child(4) {
-  animation-delay: 3.45s;
+  animation-delay: 2.42s;
 }
 .social-reveal.in-view .social-ag-bar .relative > div {
-  animation: social-bar-fill 1.3s cubic-bezier(0.65, 0, 0.35, 1) both;
+  animation: social-bar-fill 0.91s cubic-bezier(0.65, 0, 0.35, 1) both;
 }
 .social-reveal.in-view .social-ag-bar:nth-child(1) .relative > div {
-  animation-delay: 3.3s;
+  animation-delay: 2.31s;
 }
 .social-reveal.in-view .social-ag-bar:nth-child(2) .relative > div {
-  animation-delay: 3.4s;
+  animation-delay: 2.38s;
 }
 .social-reveal.in-view .social-ag-bar:nth-child(3) .relative > div {
-  animation-delay: 3.5s;
+  animation-delay: 2.45s;
 }
 .social-reveal.in-view .social-ag-bar:nth-child(4) .relative > div {
-  animation-delay: 3.6s;
+  animation-delay: 2.52s;
 }
 
 /* Country bars — 6 rows */
 .social-reveal.in-view .social-cn-bar {
-  animation: social-bar-track 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: social-bar-track 0.49s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 .social-reveal.in-view .social-cn-bar:nth-child(1) {
-  animation-delay: 3.25s;
+  animation-delay: 2.27s;
 }
 .social-reveal.in-view .social-cn-bar:nth-child(2) {
-  animation-delay: 3.35s;
+  animation-delay: 2.34s;
 }
 .social-reveal.in-view .social-cn-bar:nth-child(3) {
-  animation-delay: 3.45s;
+  animation-delay: 2.42s;
 }
 .social-reveal.in-view .social-cn-bar:nth-child(4) {
-  animation-delay: 3.55s;
+  animation-delay: 2.48s;
 }
 .social-reveal.in-view .social-cn-bar:nth-child(5) {
-  animation-delay: 3.65s;
+  animation-delay: 2.55s;
 }
 .social-reveal.in-view .social-cn-bar:nth-child(6) {
-  animation-delay: 3.75s;
+  animation-delay: 2.62s;
 }
 .social-reveal.in-view .social-cn-bar .relative > div {
-  animation: social-bar-fill 1.3s cubic-bezier(0.65, 0, 0.35, 1) both;
+  animation: social-bar-fill 0.91s cubic-bezier(0.65, 0, 0.35, 1) both;
 }
 .social-reveal.in-view .social-cn-bar:nth-child(1) .relative > div {
-  animation-delay: 3.4s;
+  animation-delay: 2.38s;
 }
 .social-reveal.in-view .social-cn-bar:nth-child(2) .relative > div {
-  animation-delay: 3.5s;
+  animation-delay: 2.45s;
 }
 .social-reveal.in-view .social-cn-bar:nth-child(3) .relative > div {
-  animation-delay: 3.6s;
+  animation-delay: 2.52s;
 }
 .social-reveal.in-view .social-cn-bar:nth-child(4) .relative > div {
-  animation-delay: 3.7s;
+  animation-delay: 2.59s;
 }
 .social-reveal.in-view .social-cn-bar:nth-child(5) .relative > div {
-  animation-delay: 3.8s;
+  animation-delay: 2.66s;
 }
 .social-reveal.in-view .social-cn-bar:nth-child(6) .relative > div {
-  animation-delay: 3.9s;
+  animation-delay: 2.73s;
 }
 
 /* === Why Brands (section 10) — CURTAIN DROP + 3D SPIN choreography === */
@@ -1262,43 +1262,43 @@ section[id] {
 
 /* === Triggers === */
 .why-reveal.in-view .why-section-label {
-  animation: why-fade-up 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.1s both;
+  animation: why-fade-up 0.63s cubic-bezier(0.22, 1, 0.36, 1) 0.07s both;
 }
 .why-reveal.in-view .why-rail {
-  animation: why-rail-draw 0.9s cubic-bezier(0.76, 0, 0.24, 1) 0.3s both;
+  animation: why-rail-draw 0.63s cubic-bezier(0.76, 0, 0.24, 1) 0.21s both;
 }
 
 .why-reveal.in-view .why-top-line {
   animation-name: why-top-line-draw;
-  animation-duration: 0.9s;
+  animation-duration: 0.63s;
   animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
   animation-fill-mode: both;
 }
 .why-reveal.in-view .why-content {
   animation-name: why-curtain-drop;
-  animation-duration: 1.2s;
+  animation-duration: 0.84s;
   animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1);
   animation-fill-mode: both;
 }
 .why-reveal.in-view .why-card::after {
-  animation: why-shine-sweep 1.2s cubic-bezier(0.76, 0, 0.24, 1) both;
+  animation: why-shine-sweep 0.84s cubic-bezier(0.76, 0, 0.24, 1) both;
 }
 .why-reveal.in-view .why-number {
   animation-name: why-number-glow;
-  animation-duration: 1.4s;
+  animation-duration: 0.98s;
   animation-timing-function: cubic-bezier(0.5, 0, 0.5, 1);
   animation-fill-mode: both;
   will-change: text-shadow;
 }
 .why-reveal.in-view .why-bottom-divider {
   animation-name: why-divider-expand;
-  animation-duration: 1.1s;
+  animation-duration: 0.77s;
   animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
   animation-fill-mode: both;
 }
 .why-reveal.in-view .why-stat-value {
   animation-name: why-stat-spin;
-  animation-duration: 1.5s;
+  animation-duration: 1.05s;
   animation-timing-function: cubic-bezier(0.34, 1.3, 0.64, 1);
   animation-fill-mode: both;
   will-change: transform, opacity, filter, text-shadow;
@@ -1307,13 +1307,13 @@ section[id] {
 }
 .why-reveal.in-view .why-stat-label {
   animation-name: why-fade-up;
-  animation-duration: 0.9s;
+  animation-duration: 0.63s;
   animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
   animation-fill-mode: both;
 }
 .why-reveal.in-view .why-vertical-divider {
   animation-name: why-vertical-draw;
-  animation-duration: 0.8s;
+  animation-duration: 0.56s;
   animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
   animation-fill-mode: both;
 }
@@ -1341,11 +1341,11 @@ section[id] {
 }
 
 .scroll-top-btn {
-  animation: scroll-top-in 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: scroll-top-in 0.315s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .scroll-top-btn:hover .scroll-top-arrow {
-  animation: scroll-arrow-nudge 1.1s ease-in-out infinite;
+  animation: scroll-arrow-nudge 0.77s ease-in-out infinite;
 }
 
 /* === Process section — "collaboration" timeline reveal === */
@@ -1490,49 +1490,49 @@ section[id] {
 /* In-view sequence */
 /* 1. Headline words rise, staggered — ~0.2s each */
 .process-reveal.in-view .process-word {
-  animation: process-word-mask-rise 1s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: process-word-mask-rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
-.process-reveal.in-view .process-word-mask:nth-child(1) .process-word { animation-delay: 0.15s; }
-.process-reveal.in-view .process-word-mask:nth-child(2) .process-word { animation-delay: 0.3s; }
-.process-reveal.in-view .process-word-mask:nth-child(3) .process-word { animation-delay: 0.45s; }
-.process-reveal.in-view .process-word-mask:nth-child(4) .process-word { animation-delay: 0.6s; }
+.process-reveal.in-view .process-word-mask:nth-child(1) .process-word { animation-delay: 0.105s; }
+.process-reveal.in-view .process-word-mask:nth-child(2) .process-word { animation-delay: 0.21s; }
+.process-reveal.in-view .process-word-mask:nth-child(3) .process-word { animation-delay: 0.315s; }
+.process-reveal.in-view .process-word-mask:nth-child(4) .process-word { animation-delay: 0.42s; }
 
 /* 2. The rail draws (vertical on mobile 0.9s–2.1s, horizontal on md+ same window) */
 .process-reveal.in-view .process-rail {
-  animation: process-rail-draw-vertical 1.4s cubic-bezier(0.76, 0, 0.24, 1) 0.9s forwards;
+  animation: process-rail-draw-vertical 0.98s cubic-bezier(0.76, 0, 0.24, 1) 0.63s forwards;
 }
 @media (min-width: 768px) {
   .process-reveal.in-view .process-rail {
-    animation: process-rail-draw-horizontal 1.6s cubic-bezier(0.76, 0, 0.24, 1) 0.9s forwards;
+    animation: process-rail-draw-horizontal 1.12s cubic-bezier(0.76, 0, 0.24, 1) 0.63s forwards;
   }
 }
 
 /* 3. Dots pop one by one, synced to the rail reaching each position. */
 /*    Each step has --step-delay (dot) and --step-text-delay (number/title/body). */
 .process-reveal.in-view .process-dot {
-  animation: process-dot-pop 0.75s cubic-bezier(0.34, 1.56, 0.64, 1) both;
-  animation-delay: var(--step-delay, 0.9s);
+  animation: process-dot-pop 0.525s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  animation-delay: var(--step-delay, 0.63s);
 }
 
 .process-reveal.in-view .process-dot-ring {
-  animation: process-dot-ring-pulse 1.1s cubic-bezier(0.22, 1, 0.36, 1) both;
-  animation-delay: var(--step-delay, 0.9s);
+  animation: process-dot-ring-pulse 0.77s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: var(--step-delay, 0.63s);
 }
 
 /* 4. Number, title, body cascade after each dot activates */
 .process-reveal.in-view .process-num {
-  animation: process-num-reveal 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
-  animation-delay: var(--step-text-delay, 1.1s);
+  animation: process-num-reveal 0.49s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: var(--step-text-delay, 0.77s);
 }
 
 .process-reveal.in-view .process-title {
-  animation: process-text-rise 0.85s cubic-bezier(0.22, 1, 0.36, 1) both;
-  animation-delay: calc(var(--step-text-delay, 1.1s) + 0.08s);
+  animation: process-text-rise 0.595s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(var(--step-text-delay, 0.77s) + 0.056s);
 }
 
 .process-reveal.in-view .process-body {
-  animation: process-text-rise 0.85s cubic-bezier(0.22, 1, 0.36, 1) both;
-  animation-delay: calc(var(--step-text-delay, 1.1s) + 0.18s);
+  animation: process-text-rise 0.595s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(var(--step-text-delay, 0.77s) + 0.126s);
 }
 
 /* === Formats section — "editorial reel" reveal === */
@@ -1670,30 +1670,30 @@ section[id] {
 
 /* In-view sequence — rails draw first, then row content assembles */
 .format-reveal.in-view .format-rail {
-  animation: format-rail-draw 0.9s cubic-bezier(0.76, 0, 0.24, 1) both;
-  animation-delay: var(--rail-delay, 0.15s);
+  animation: format-rail-draw 0.63s cubic-bezier(0.76, 0, 0.24, 1) both;
+  animation-delay: var(--rail-delay, 0.105s);
   transform-origin: left center;
 }
 
 .format-reveal.in-view .format-rail::after {
-  animation: format-rail-shimmer 0.9s cubic-bezier(0.4, 0.2, 0.2, 1) both;
-  animation-delay: var(--rail-delay, 0.15s);
+  animation: format-rail-shimmer 0.63s cubic-bezier(0.4, 0.2, 0.2, 1) both;
+  animation-delay: var(--rail-delay, 0.105s);
 }
 
 /* Row-level staggers driven by --row-delay */
 .format-reveal.in-view .format-row .format-num {
-  animation: format-num-slide 0.85s cubic-bezier(0.22, 1, 0.36, 1) both;
-  animation-delay: var(--row-delay, 0.35s);
+  animation: format-num-slide 0.595s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: var(--row-delay, 0.245s);
 }
 
 .format-reveal.in-view .format-row .format-title {
-  animation: format-title-rise 1s cubic-bezier(0.22, 1, 0.36, 1) both;
-  animation-delay: calc(var(--row-delay, 0.35s) + 0.08s);
+  animation: format-title-rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(var(--row-delay, 0.245s) + 0.056s);
 }
 
 .format-reveal.in-view .format-row .format-body {
-  animation: format-body-drift 1s cubic-bezier(0.22, 1, 0.36, 1) both;
-  animation-delay: calc(var(--row-delay, 0.35s) + 0.18s);
+  animation: format-body-drift 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(var(--row-delay, 0.245s) + 0.126s);
 }
 
 /* Hover on a row briefly accents the number */
@@ -1705,8 +1705,8 @@ section[id] {
 /* Footnote fades in after the last row has settled */
 .format-reveal.in-view ~ .format-footnote,
 .format-reveal.in-view .format-footnote {
-  animation: format-footnote-fade 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
-  animation-delay: 2.2s;
+  animation: format-footnote-fade 0.63s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: 1.54s;
 }
 
 /* === Contact section reveal — cinematic iris/aperture open === */
@@ -1814,42 +1814,42 @@ section[id] {
 }
 
 .contact-reveal.in-view .contact-wash {
-  animation: contact-wash-in 1.4s ease-out 0.5s forwards;
+  animation: contact-wash-in 0.98s ease-out 0.35s forwards;
 }
 
 .contact-reveal.in-view .contact-head > *:nth-child(1) {
-  animation: contact-rise 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.6s forwards;
+  animation: contact-rise 0.63s cubic-bezier(0.22, 1, 0.36, 1) 0.42s forwards;
 }
 
 .contact-reveal.in-view .contact-head-rail {
   opacity: 1;
-  animation: contact-rail-draw 0.9s cubic-bezier(0.76, 0, 0.24, 1) 0.8s forwards;
+  animation: contact-rail-draw 0.63s cubic-bezier(0.76, 0, 0.24, 1) 0.56s forwards;
 }
 
 .contact-reveal.in-view .contact-title-line:nth-of-type(1) {
-  animation: contact-title-in 1.4s cubic-bezier(0.22, 0.61, 0.36, 1) 0.9s forwards;
+  animation: contact-title-in 0.98s cubic-bezier(0.22, 0.61, 0.36, 1) 0.63s forwards;
 }
 
 .contact-reveal.in-view .contact-title-line:nth-of-type(2) {
-  animation: contact-title-in 1.4s cubic-bezier(0.22, 0.61, 0.36, 1) 1.15s forwards;
+  animation: contact-title-in 0.98s cubic-bezier(0.22, 0.61, 0.36, 1) 0.805s forwards;
 }
 
 .contact-reveal.in-view .contact-sub {
-  animation: contact-rise 0.9s cubic-bezier(0.22, 1, 0.36, 1) 1.5s forwards;
+  animation: contact-rise 0.63s cubic-bezier(0.22, 1, 0.36, 1) 1.05s forwards;
 }
 
 .contact-reveal.in-view .contact-divider {
   opacity: 1;
-  animation: contact-rail-draw 1.1s cubic-bezier(0.76, 0, 0.24, 1) 1.7s forwards;
+  animation: contact-rail-draw 0.77s cubic-bezier(0.76, 0, 0.24, 1) 1.19s forwards;
 }
 
 .contact-reveal.in-view .contact-col {
-  animation: contact-rise 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: contact-rise 0.63s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
-.contact-reveal.in-view .contact-col:nth-child(1) { animation-delay: 1.85s; }
-.contact-reveal.in-view .contact-col:nth-child(2) { animation-delay: 1.98s; }
-.contact-reveal.in-view .contact-col:nth-child(3) { animation-delay: 2.11s; }
-.contact-reveal.in-view .contact-col:nth-child(4) { animation-delay: 2.24s; }
+.contact-reveal.in-view .contact-col:nth-child(1) { animation-delay: 1.29s; }
+.contact-reveal.in-view .contact-col:nth-child(2) { animation-delay: 1.39s; }
+.contact-reveal.in-view .contact-col:nth-child(3) { animation-delay: 1.48s; }
+.contact-reveal.in-view .contact-col:nth-child(4) { animation-delay: 1.57s; }
 
 /* === Brand logo grid — magician card deal === */
 /* Tiles drop from above with slight rotation (as if dealt onto a table), */
@@ -1923,12 +1923,12 @@ section[id] {
 }
 
 .brand-reveal.in-view .brand-cell:nth-child(odd) {
-  animation: brand-card-deal-left 1s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: brand-card-deal-left 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
   animation-delay: var(--brand-delay, 0ms);
 }
 
 .brand-reveal.in-view .brand-cell:nth-child(even) {
-  animation: brand-card-deal-right 1s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: brand-card-deal-right 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
   animation-delay: var(--brand-delay, 0ms);
 }
 
@@ -1959,8 +1959,8 @@ section[id] {
 
 /* One-off sheen sweep after the tile lands */
 .brand-reveal.in-view .brand-cell > div::after {
-  animation: brand-sheen 1.3s cubic-bezier(0.4, 0.2, 0.2, 1) both;
-  animation-delay: calc(var(--brand-delay, 0ms) + 0.9s);
+  animation: brand-sheen 0.91s cubic-bezier(0.4, 0.2, 0.2, 1) both;
+  animation-delay: calc(var(--brand-delay, 0ms) + 0.63s);
 }
 
 .brand-reveal .brand-cell:hover > div {

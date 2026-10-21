@@ -1,0 +1,1983 @@
+@import url("https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,500..900;1,6..96,500..900&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Inter:wght@300;400;500;600&display=swap");
+@import "tailwindcss";
+
+@theme {
+  --font-display: "Playfair Display", ui-serif, Georgia, serif;
+  --font-contact: "Bodoni Moda", "Playfair Display", ui-serif, Georgia, serif;
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+
+  --color-ink-950: #05070c;
+  --color-ink-900: #0a0e1a;
+  --color-ink-800: #0e1324;
+  --color-ink-700: #141a2e;
+  --color-ink-600: #1a2140;
+  --color-line: #2a2e3a;
+  --color-line-soft: #1c2030;
+  --color-silver: #e8e8ec;
+  --color-silver-dim: #b8bac4;
+  --color-muted: #8b8e99;
+  --color-accent: #8aa0ff;
+}
+
+html {
+  scroll-behavior: smooth;
+  --about-image-bleed: 0px;
+}
+
+@media (min-width: 1024px) {
+  html {
+    --about-image-bleed: calc(-1 * max(2.5rem, (100vw - 1680px) / 2 + 2.5rem));
+  }
+}
+
+@media (min-width: 1280px) {
+  html {
+    --about-image-bleed: calc(-1 * max(3.5rem, (100vw - 1680px) / 2 + 3.5rem));
+  }
+}
+
+html,
+body {
+  background-color: var(--color-ink-950);
+  color: var(--color-silver);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  background-image:
+    radial-gradient(ellipse at top, rgba(40, 60, 120, 0.14), transparent 55%),
+    radial-gradient(ellipse at bottom, rgba(20, 30, 70, 0.18), transparent 60%);
+  background-attachment: fixed;
+  overflow-x: hidden;
+}
+
+section[id] {
+  scroll-margin-top: 24px;
+}
+
+.glow-radial {
+  background-image: radial-gradient(
+    ellipse at center,
+    rgba(60, 80, 160, 0.22) 0%,
+    rgba(20, 30, 70, 0.08) 45%,
+    transparent 70%
+  );
+}
+
+.hero-glow {
+  background-image: radial-gradient(
+    ellipse at center,
+    rgba(80, 100, 180, 0.28) 0%,
+    rgba(30, 40, 90, 0.1) 40%,
+    transparent 70%
+  );
+}
+
+::selection {
+  background: rgba(138, 160, 255, 0.3);
+  color: #fff;
+}
+
+/* === Hero landing animations === */
+/* Cinematic iris reveal — the stage curtain opens from the center outward */
+@keyframes hero-iris {
+  0% {
+    clip-path: inset(50% 50% 50% 50%);
+    transform: scale(1.25);
+    filter: brightness(0.3) blur(12px);
+  }
+  60% {
+    filter: brightness(0.9) blur(0);
+  }
+  100% {
+    clip-path: inset(0% 0% 0% 0%);
+    transform: scale(1);
+    filter: brightness(1) blur(0);
+  }
+}
+
+/* Continuous slow drift — subtle ken burns life after reveal */
+@keyframes hero-drift {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.045);
+  }
+}
+
+@keyframes hero-overlay-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Horizontal mask wipe — characters appear as a soft reveal from behind */
+@keyframes hero-wipe-right {
+  0% {
+    clip-path: inset(0 100% 0 0);
+    opacity: 0;
+  }
+  40% {
+    opacity: 1;
+  }
+  100% {
+    clip-path: inset(0 0 0 0);
+    opacity: 1;
+  }
+}
+
+/* Rail draws outward from its inner edge, then settles */
+@keyframes hero-rail-draw {
+  0% {
+    transform: scaleX(0);
+    opacity: 0;
+  }
+  70% {
+    opacity: 0.6;
+  }
+  100% {
+    transform: scaleX(1);
+    opacity: 0.4;
+  }
+}
+
+/* Cinematic focus pull — text resolves from heavy blur into sharp focus */
+@keyframes hero-focus-pull {
+  0% {
+    opacity: 0;
+    filter: blur(28px);
+    transform: scale(1.12);
+    letter-spacing: 0.08em;
+  }
+  40% {
+    opacity: 0.65;
+  }
+  70% {
+    opacity: 1;
+    filter: blur(4px);
+    letter-spacing: 0.02em;
+  }
+  100% {
+    opacity: 1;
+    filter: blur(0);
+    transform: scale(1);
+    letter-spacing: 0;
+  }
+}
+
+@keyframes hero-rise-soft {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hero-image {
+  animation:
+    hero-iris 2.6s cubic-bezier(0.76, 0, 0.24, 1) 0.15s both,
+    hero-drift 24s ease-out 2.8s forwards;
+  transform-origin: center center;
+  will-change: transform, clip-path, filter;
+}
+
+.hero-overlay {
+  opacity: 0;
+  animation: hero-overlay-fade 1.6s ease-out 1.4s forwards;
+  will-change: opacity;
+}
+
+.hero-tagline {
+  animation: hero-wipe-right 1.6s cubic-bezier(0.76, 0, 0.24, 1) 1.6s both;
+  will-change: clip-path, opacity;
+}
+
+.hero-rail-left {
+  transform-origin: right center;
+  animation: hero-rail-draw 1.3s cubic-bezier(0.76, 0, 0.24, 1) 1.9s both;
+  will-change: transform, opacity;
+}
+
+.hero-rail-right {
+  transform-origin: left center;
+  animation: hero-rail-draw 1.3s cubic-bezier(0.76, 0, 0.24, 1) 1.9s both;
+  will-change: transform, opacity;
+}
+
+.hero-headline {
+  position: relative;
+  display: inline-block;
+  animation: hero-focus-pull 2.4s cubic-bezier(0.6, 0.04, 0.3, 1) 2.1s both;
+  transform-origin: center center;
+  will-change: opacity, filter, transform, letter-spacing;
+}
+
+.hero-foot-left {
+  opacity: 0;
+  animation: hero-rise-soft 1.1s cubic-bezier(0.22, 1, 0.36, 1) 3s forwards;
+  will-change: opacity, transform;
+}
+
+.hero-foot-right {
+  opacity: 0;
+  animation: hero-rise-soft 1.1s cubic-bezier(0.22, 1, 0.36, 1) 3.15s forwards;
+  will-change: opacity, transform;
+}
+
+/* === About (section 2) scroll-triggered reveal === */
+@keyframes about-image-curtain {
+  0% {
+    opacity: 0;
+    transform: scale(1.14);
+    filter: blur(18px) brightness(0.55);
+  }
+  55% {
+    opacity: 1;
+    filter: blur(4px) brightness(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+    filter: blur(0) brightness(1);
+  }
+}
+
+@keyframes about-image-drift {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.05);
+  }
+}
+
+@keyframes about-word-rise {
+  0% {
+    opacity: 0;
+    transform: translateY(110%) skewY(4deg);
+  }
+  60% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) skewY(0);
+  }
+}
+
+@keyframes about-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+    filter: blur(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+@keyframes about-rail-draw {
+  from {
+    transform: scaleX(0);
+    opacity: 0;
+  }
+  to {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+}
+
+@keyframes about-divider-draw {
+  from {
+    transform: scaleX(0);
+    opacity: 0;
+  }
+  to {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+}
+
+@keyframes about-stat-rise {
+  0% {
+    opacity: 0;
+    transform: translateY(40px) scale(0.86);
+    filter: blur(8px);
+  }
+  60% {
+    opacity: 1;
+    filter: blur(0);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+@keyframes about-glow-pulse {
+  0%,
+  100% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* Initial hidden state for all animated elements */
+.about-reveal .about-img,
+.about-reveal .about-label,
+.about-reveal .about-rail,
+.about-reveal .about-word,
+.about-reveal .about-body > *,
+.about-reveal .about-divider,
+.about-reveal .about-quote,
+.about-reveal .about-stat {
+  opacity: 0;
+}
+
+
+.about-reveal .about-word-mask {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+  line-height: 1.05;
+}
+
+.about-reveal .about-word {
+  display: inline-block;
+  will-change: transform, opacity;
+}
+
+.about-reveal .about-divider,
+.about-reveal .about-rail {
+  transform-origin: left center;
+}
+
+/* On enter: cascade everything */
+.about-reveal.in-view .about-img {
+  animation:
+    about-image-curtain 2.1s cubic-bezier(0.76, 0, 0.24, 1) 0.05s both,
+    about-image-drift 22s ease-out 2.3s forwards;
+  will-change: transform, clip-path, filter;
+}
+
+.about-reveal.in-view .about-label {
+  animation: about-fade-up 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.2s both;
+}
+
+.about-reveal.in-view .about-rail {
+  animation: about-rail-draw 0.9s cubic-bezier(0.76, 0, 0.24, 1) 0.4s both;
+}
+
+/* Headline words — staggered via :nth-child */
+.about-reveal.in-view .about-word {
+  animation: about-word-rise 1.2s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.about-reveal.in-view .about-word:nth-child(1) {
+  animation-delay: 0.55s;
+}
+.about-reveal.in-view .about-word:nth-child(2) {
+  animation-delay: 0.65s;
+}
+.about-reveal.in-view .about-word:nth-child(3) {
+  animation-delay: 0.75s;
+}
+.about-reveal.in-view .about-word:nth-child(4) {
+  animation-delay: 0.85s;
+}
+.about-reveal.in-view .about-word:nth-child(5) {
+  animation-delay: 0.95s;
+}
+.about-reveal.in-view .about-word:nth-child(6) {
+  animation-delay: 1.1s;
+}
+.about-reveal.in-view .about-word:nth-child(7) {
+  animation-delay: 1.2s;
+}
+.about-reveal.in-view .about-word:nth-child(8) {
+  animation-delay: 1.3s;
+}
+
+/* Body paragraphs — stagger */
+.about-reveal.in-view .about-body > *:nth-child(1) {
+  animation: about-fade-up 1.1s cubic-bezier(0.22, 1, 0.36, 1) 1.4s both;
+}
+.about-reveal.in-view .about-body > *:nth-child(2) {
+  animation: about-fade-up 1.1s cubic-bezier(0.22, 1, 0.36, 1) 1.55s both;
+}
+
+.about-reveal.in-view .about-divider {
+  animation: about-divider-draw 1s cubic-bezier(0.76, 0, 0.24, 1) 1.7s both;
+}
+
+.about-reveal.in-view .about-quote {
+  animation: about-fade-up 1.1s cubic-bezier(0.22, 1, 0.36, 1) 1.9s both;
+}
+
+/* Stats — stagger */
+.about-reveal.in-view .about-stat {
+  animation: about-stat-rise 1.2s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.about-reveal.in-view .about-stat:nth-child(1) {
+  animation-delay: 2.1s;
+}
+.about-reveal.in-view .about-stat:nth-child(2) {
+  animation-delay: 2.22s;
+}
+.about-reveal.in-view .about-stat:nth-child(3) {
+  animation-delay: 2.34s;
+}
+.about-reveal.in-view .about-stat:nth-child(4) {
+  animation-delay: 2.46s;
+}
+
+/* === Proof (section 3) — DEPTH + COUNTER choreography === */
+@keyframes proof-backdrop-pull {
+  0% {
+    opacity: 0;
+    transform: scale(1.18);
+    filter: blur(20px) brightness(0.3) saturate(0.7);
+  }
+  55% {
+    opacity: 0.8;
+    filter: blur(3px) brightness(0.95) saturate(1);
+  }
+  100% {
+    opacity: 0.8;
+    transform: scale(1);
+    filter: blur(0) brightness(1) saturate(1);
+  }
+}
+
+/* Depth-in: item flies toward camera from far away */
+@keyframes proof-depth-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.72) translateY(22px);
+    filter: blur(16px);
+  }
+  55% {
+    opacity: 1;
+    filter: blur(2px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+    filter: blur(0);
+  }
+}
+
+/* Glow pulse — fires once as the counter settles */
+@keyframes proof-glow-pulse {
+  0% {
+    text-shadow: 0 0 0 rgba(138, 160, 255, 0);
+  }
+  40% {
+    text-shadow:
+      0 0 32px rgba(138, 160, 255, 0.55),
+      0 0 72px rgba(138, 160, 255, 0.28);
+  }
+  100% {
+    text-shadow: 0 0 0 rgba(138, 160, 255, 0);
+  }
+}
+
+/* Letter stagger for text-only values like "UAE" */
+@keyframes proof-char-in {
+  0% {
+    opacity: 0;
+    transform: translateY(40%) scale(0.9);
+    filter: blur(8px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+/* Underline draws under each item after it lands */
+@keyframes proof-underline-draw {
+  from {
+    transform: scaleX(0);
+    opacity: 0;
+  }
+  to {
+    transform: scaleX(1);
+    opacity: 0.45;
+  }
+}
+
+/* Label slides in horizontally with soft fade */
+@keyframes proof-label-slide {
+  from {
+    opacity: 0;
+    transform: translateX(-14px);
+    letter-spacing: 0.4em;
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+    letter-spacing: 0.24em;
+  }
+}
+
+/* Rail/section-label still use these minimal patterns */
+@keyframes proof-rail-draw {
+  from {
+    transform: scaleX(0);
+    opacity: 0;
+  }
+  to {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+}
+
+@keyframes proof-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+    filter: blur(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+/* Initial hidden state */
+.proof-reveal .proof-backdrop,
+.proof-reveal .proof-section-label,
+.proof-reveal .proof-rail,
+.proof-reveal .proof-item,
+.proof-reveal .proof-tail,
+.proof-reveal .proof-stat-label,
+.proof-reveal .proof-description,
+.proof-reveal .proof-char {
+  opacity: 0;
+}
+
+.proof-reveal .proof-underline {
+  opacity: 0;
+  transform-origin: left center;
+  transform: scaleX(0);
+}
+
+.proof-reveal .proof-rail {
+  transform-origin: left center;
+}
+
+.proof-reveal .proof-char {
+  display: inline-block;
+  will-change: transform, opacity, filter;
+}
+
+/* Backdrop & setup */
+.proof-reveal.in-view .proof-backdrop {
+  animation: proof-backdrop-pull 2.2s cubic-bezier(0.76, 0, 0.24, 1) 0.1s both;
+  will-change: transform, opacity, filter;
+}
+.proof-reveal.in-view .proof-section-label {
+  animation: proof-fade-up 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.35s both;
+}
+.proof-reveal.in-view .proof-rail {
+  animation: proof-rail-draw 0.9s cubic-bezier(0.76, 0, 0.24, 1) 0.55s both;
+}
+
+/* Each stat item flies in from depth with stagger */
+.proof-reveal.in-view .proof-item:nth-child(1) {
+  animation: proof-depth-in 1.5s cubic-bezier(0.22, 1, 0.36, 1) 0.75s both;
+}
+.proof-reveal.in-view .proof-item:nth-child(2) {
+  animation: proof-depth-in 1.5s cubic-bezier(0.22, 1, 0.36, 1) 0.95s both;
+}
+.proof-reveal.in-view .proof-item:nth-child(3) {
+  animation: proof-depth-in 1.5s cubic-bezier(0.22, 1, 0.36, 1) 1.15s both;
+}
+
+/* Glow pulses right as counter settles */
+.proof-reveal.in-view .proof-item:nth-child(1) .proof-value {
+  animation: proof-glow-pulse 1.6s cubic-bezier(0.5, 0, 0.5, 1) 1.9s both;
+}
+.proof-reveal.in-view .proof-item:nth-child(2) .proof-value {
+  animation: proof-glow-pulse 1.6s cubic-bezier(0.5, 0, 0.5, 1) 2.1s both;
+}
+.proof-reveal.in-view .proof-item:nth-child(3) .proof-value {
+  animation: proof-glow-pulse 1.6s cubic-bezier(0.5, 0, 0.5, 1) 2.3s both;
+}
+
+/* Tails fade in slightly after their item lands */
+.proof-reveal.in-view .proof-item:nth-child(1) .proof-tail {
+  animation: proof-fade-up 0.9s cubic-bezier(0.22, 1, 0.36, 1) 1.5s both;
+}
+.proof-reveal.in-view .proof-item:nth-child(2) .proof-tail {
+  animation: proof-fade-up 0.9s cubic-bezier(0.22, 1, 0.36, 1) 1.7s both;
+}
+.proof-reveal.in-view .proof-item:nth-child(3) .proof-tail {
+  animation: proof-fade-up 0.9s cubic-bezier(0.22, 1, 0.36, 1) 1.9s both;
+}
+
+/* Thin underline draws beneath each stat after counter completes */
+.proof-reveal.in-view .proof-item:nth-child(1) .proof-underline {
+  animation: proof-underline-draw 1.2s cubic-bezier(0.76, 0, 0.24, 1) 2.5s both;
+}
+.proof-reveal.in-view .proof-item:nth-child(2) .proof-underline {
+  animation: proof-underline-draw 1.2s cubic-bezier(0.76, 0, 0.24, 1) 2.7s both;
+}
+.proof-reveal.in-view .proof-item:nth-child(3) .proof-underline {
+  animation: proof-underline-draw 1.2s cubic-bezier(0.76, 0, 0.24, 1) 2.9s both;
+}
+
+/* Labels slide in horizontally with letter-spacing collapse */
+.proof-reveal.in-view .proof-item:nth-child(1) .proof-stat-label {
+  animation: proof-label-slide 1.1s cubic-bezier(0.22, 1, 0.36, 1) 2.8s both;
+}
+.proof-reveal.in-view .proof-item:nth-child(2) .proof-stat-label {
+  animation: proof-label-slide 1.1s cubic-bezier(0.22, 1, 0.36, 1) 3s both;
+}
+.proof-reveal.in-view .proof-item:nth-child(3) .proof-stat-label {
+  animation: proof-label-slide 1.1s cubic-bezier(0.22, 1, 0.36, 1) 3.2s both;
+}
+
+.proof-reveal.in-view .proof-description {
+  animation: proof-fade-up 1.2s cubic-bezier(0.22, 1, 0.36, 1) 3.4s both;
+}
+
+/* === Social (section 4) — SPOTLIGHT SWEEP choreography === */
+@keyframes social-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+    filter: blur(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+@keyframes social-rail-draw {
+  from {
+    transform: scaleX(0);
+    opacity: 0;
+  }
+  to {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+}
+
+/* Signature move — a vertical beam of light sweeps L→R across the card row */
+@keyframes social-spotlight-sweep {
+  0% {
+    opacity: 0;
+    transform: translateX(-60%);
+  }
+  12% {
+    opacity: 1;
+  }
+  88% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(calc(100vw - 180px + 60%));
+  }
+}
+
+/* As the spotlight hits each card, it flashes brightly then settles */
+@keyframes social-card-flash {
+  0% {
+    opacity: 0;
+    transform: translateY(14px) scale(0.95);
+    filter: brightness(0.35);
+  }
+  40% {
+    opacity: 1;
+    filter: brightness(1.6);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: brightness(1);
+  }
+}
+
+/* Icon springs with a scale + rotation */
+@keyframes social-icon-pop {
+  0% {
+    opacity: 0;
+    transform: scale(0) rotate(-25deg);
+  }
+  70% {
+    opacity: 1;
+    transform: scale(1.15) rotate(0);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(0);
+  }
+}
+
+/* Number horizontal clip-reveal — left to right wipe */
+@keyframes social-number-wipe {
+  0% {
+    opacity: 0;
+    clip-path: inset(0 100% 0 0);
+    filter: blur(6px);
+  }
+  40% {
+    opacity: 1;
+    filter: blur(0);
+  }
+  100% {
+    opacity: 1;
+    clip-path: inset(0 0 0 0);
+    filter: blur(0);
+  }
+}
+
+/* 92 — iris-close + glow burst */
+@keyframes social-engagement-reveal {
+  0% {
+    opacity: 0;
+    transform: scale(1.35);
+    filter: blur(22px);
+    text-shadow: 0 0 0 rgba(138, 160, 255, 0);
+    letter-spacing: 0.12em;
+  }
+  55% {
+    opacity: 1;
+    filter: blur(0);
+    letter-spacing: 0.02em;
+  }
+  70% {
+    text-shadow:
+      0 0 44px rgba(138, 160, 255, 0.7),
+      0 0 90px rgba(138, 160, 255, 0.32);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+    text-shadow: 0 0 0 rgba(138, 160, 255, 0);
+    letter-spacing: 0;
+  }
+}
+
+/* Bar wrapper fades up */
+@keyframes social-bar-track {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Bar fill — scaleX sweep with a leading-edge glow pulse */
+@keyframes social-bar-fill {
+  0% {
+    transform: scaleX(0);
+    filter: drop-shadow(0 0 0 rgba(138, 160, 255, 0));
+  }
+  70% {
+    filter: drop-shadow(0 0 12px rgba(138, 160, 255, 0.6));
+  }
+  100% {
+    transform: scaleX(1);
+    filter: drop-shadow(0 0 0 rgba(138, 160, 255, 0));
+  }
+}
+
+/* === Initial hidden state === */
+.social-reveal .social-section-label,
+.social-reveal .social-rail,
+.social-reveal .social-card,
+.social-reveal .social-icon,
+.social-reveal .social-number,
+.social-reveal .social-sublabel,
+.social-reveal .social-engagement-label,
+.social-reveal .social-engagement-value,
+.social-reveal .social-engagement-percent,
+.social-reveal .social-group-label,
+.social-reveal .social-ag-bar,
+.social-reveal .social-cn-bar,
+.social-reveal .social-countries-panel {
+  opacity: 0;
+}
+
+.social-reveal .social-rail {
+  transform-origin: left center;
+}
+
+.social-reveal .social-cards-grid {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Spotlight bar — vertical gradient beam, 180px wide */
+.social-reveal .social-spotlight {
+  position: absolute;
+  top: -25%;
+  bottom: -25%;
+  left: 0;
+  width: 180px;
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0;
+  background-image: radial-gradient(
+    ellipse 50% 60% at center,
+    rgba(138, 160, 255, 0.45) 0%,
+    rgba(138, 160, 255, 0.18) 35%,
+    transparent 70%
+  );
+  mix-blend-mode: screen;
+  filter: blur(4px);
+}
+
+.social-reveal .social-number {
+  display: inline-block;
+}
+
+/* Bar fill — target the inner moving div inside each BarMeter */
+.social-reveal .social-ag-bar .relative > div,
+.social-reveal .social-cn-bar .relative > div {
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+
+/* === Trigger cascade on in-view === */
+.social-reveal.in-view .social-section-label {
+  animation: social-fade-up 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.1s both;
+}
+.social-reveal.in-view .social-rail {
+  animation: social-rail-draw 0.9s cubic-bezier(0.76, 0, 0.24, 1) 0.3s both;
+}
+
+/* Spotlight sweeps across the row */
+.social-reveal.in-view .social-spotlight {
+  animation: social-spotlight-sweep 2.2s cubic-bezier(0.65, 0, 0.35, 1) 0.5s both;
+  will-change: transform, opacity;
+}
+
+/* Cards flash as the spotlight passes */
+.social-reveal.in-view .social-card {
+  animation: social-card-flash 1.1s cubic-bezier(0.22, 1, 0.36, 1) both;
+  will-change: transform, opacity, filter;
+}
+.social-reveal.in-view .social-card:nth-child(2) {
+  animation-delay: 0.6s;
+}
+.social-reveal.in-view .social-card:nth-child(3) {
+  animation-delay: 0.9s;
+}
+.social-reveal.in-view .social-card:nth-child(4) {
+  animation-delay: 1.2s;
+}
+.social-reveal.in-view .social-card:nth-child(5) {
+  animation-delay: 1.5s;
+}
+.social-reveal.in-view .social-card:nth-child(6) {
+  animation-delay: 1.8s;
+}
+
+/* Icons pop in after their card flashes */
+.social-reveal.in-view .social-card .social-icon {
+  animation: social-icon-pop 0.65s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+.social-reveal.in-view .social-card:nth-child(2) .social-icon {
+  animation-delay: 0.85s;
+}
+.social-reveal.in-view .social-card:nth-child(3) .social-icon {
+  animation-delay: 1.15s;
+}
+.social-reveal.in-view .social-card:nth-child(4) .social-icon {
+  animation-delay: 1.45s;
+}
+.social-reveal.in-view .social-card:nth-child(5) .social-icon {
+  animation-delay: 1.75s;
+}
+.social-reveal.in-view .social-card:nth-child(6) .social-icon {
+  animation-delay: 2.05s;
+}
+
+/* Numbers wipe left-to-right after their card settles */
+.social-reveal.in-view .social-card .social-number {
+  animation: social-number-wipe 0.95s cubic-bezier(0.76, 0, 0.24, 1) both;
+}
+.social-reveal.in-view .social-card:nth-child(2) .social-number {
+  animation-delay: 1s;
+}
+.social-reveal.in-view .social-card:nth-child(3) .social-number {
+  animation-delay: 1.3s;
+}
+.social-reveal.in-view .social-card:nth-child(4) .social-number {
+  animation-delay: 1.6s;
+}
+.social-reveal.in-view .social-card:nth-child(5) .social-number {
+  animation-delay: 1.9s;
+}
+.social-reveal.in-view .social-card:nth-child(6) .social-number {
+  animation-delay: 2.2s;
+}
+
+/* Sublabels fade up last on each card */
+.social-reveal.in-view .social-card .social-sublabel {
+  animation: social-fade-up 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.social-reveal.in-view .social-card:nth-child(2) .social-sublabel {
+  animation-delay: 1.2s;
+}
+.social-reveal.in-view .social-card:nth-child(3) .social-sublabel {
+  animation-delay: 1.5s;
+}
+.social-reveal.in-view .social-card:nth-child(4) .social-sublabel {
+  animation-delay: 1.8s;
+}
+.social-reveal.in-view .social-card:nth-child(5) .social-sublabel {
+  animation-delay: 2.1s;
+}
+.social-reveal.in-view .social-card:nth-child(6) .social-sublabel {
+  animation-delay: 2.4s;
+}
+
+/* Stats row — labels fade up together */
+.social-reveal.in-view .social-engagement-label,
+.social-reveal.in-view .social-group-label {
+  animation: social-fade-up 0.9s cubic-bezier(0.22, 1, 0.36, 1) 2.8s both;
+}
+
+/* 92 — iris-close + glow burst */
+.social-reveal.in-view .social-engagement-value {
+  animation: social-engagement-reveal 1.6s cubic-bezier(0.22, 1, 0.36, 1) 3s both;
+  display: inline-block;
+  will-change: transform, opacity, filter, text-shadow, letter-spacing;
+}
+
+.social-reveal.in-view .social-engagement-percent {
+  animation: social-fade-up 0.9s cubic-bezier(0.22, 1, 0.36, 1) 3.65s both;
+}
+
+.social-reveal.in-view .social-countries-panel {
+  animation: social-fade-up 1s cubic-bezier(0.22, 1, 0.36, 1) 2.95s both;
+}
+
+/* Age Group bars — 4 rows, stagger via nth-child */
+.social-reveal.in-view .social-ag-bar {
+  animation: social-bar-track 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.social-reveal.in-view .social-ag-bar:nth-child(1) {
+  animation-delay: 3.15s;
+}
+.social-reveal.in-view .social-ag-bar:nth-child(2) {
+  animation-delay: 3.25s;
+}
+.social-reveal.in-view .social-ag-bar:nth-child(3) {
+  animation-delay: 3.35s;
+}
+.social-reveal.in-view .social-ag-bar:nth-child(4) {
+  animation-delay: 3.45s;
+}
+.social-reveal.in-view .social-ag-bar .relative > div {
+  animation: social-bar-fill 1.3s cubic-bezier(0.65, 0, 0.35, 1) both;
+}
+.social-reveal.in-view .social-ag-bar:nth-child(1) .relative > div {
+  animation-delay: 3.3s;
+}
+.social-reveal.in-view .social-ag-bar:nth-child(2) .relative > div {
+  animation-delay: 3.4s;
+}
+.social-reveal.in-view .social-ag-bar:nth-child(3) .relative > div {
+  animation-delay: 3.5s;
+}
+.social-reveal.in-view .social-ag-bar:nth-child(4) .relative > div {
+  animation-delay: 3.6s;
+}
+
+/* Country bars — 6 rows */
+.social-reveal.in-view .social-cn-bar {
+  animation: social-bar-track 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.social-reveal.in-view .social-cn-bar:nth-child(1) {
+  animation-delay: 3.25s;
+}
+.social-reveal.in-view .social-cn-bar:nth-child(2) {
+  animation-delay: 3.35s;
+}
+.social-reveal.in-view .social-cn-bar:nth-child(3) {
+  animation-delay: 3.45s;
+}
+.social-reveal.in-view .social-cn-bar:nth-child(4) {
+  animation-delay: 3.55s;
+}
+.social-reveal.in-view .social-cn-bar:nth-child(5) {
+  animation-delay: 3.65s;
+}
+.social-reveal.in-view .social-cn-bar:nth-child(6) {
+  animation-delay: 3.75s;
+}
+.social-reveal.in-view .social-cn-bar .relative > div {
+  animation: social-bar-fill 1.3s cubic-bezier(0.65, 0, 0.35, 1) both;
+}
+.social-reveal.in-view .social-cn-bar:nth-child(1) .relative > div {
+  animation-delay: 3.4s;
+}
+.social-reveal.in-view .social-cn-bar:nth-child(2) .relative > div {
+  animation-delay: 3.5s;
+}
+.social-reveal.in-view .social-cn-bar:nth-child(3) .relative > div {
+  animation-delay: 3.6s;
+}
+.social-reveal.in-view .social-cn-bar:nth-child(4) .relative > div {
+  animation-delay: 3.7s;
+}
+.social-reveal.in-view .social-cn-bar:nth-child(5) .relative > div {
+  animation-delay: 3.8s;
+}
+.social-reveal.in-view .social-cn-bar:nth-child(6) .relative > div {
+  animation-delay: 3.9s;
+}
+
+/* === Why Brands (section 10) — CURTAIN DROP + 3D SPIN choreography === */
+@keyframes why-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+    filter: blur(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+@keyframes why-rail-draw {
+  from {
+    transform: scaleX(0);
+    opacity: 0;
+  }
+  to {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+}
+
+/* Top horizontal line of each card draws L→R to "frame" the card */
+@keyframes why-top-line-draw {
+  0% {
+    transform: scaleX(0);
+    opacity: 0;
+  }
+  70% {
+    opacity: 1;
+  }
+  100% {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+}
+
+/* SIGNATURE: curtain drop — card content unveils top→bottom via clip-path */
+@keyframes why-curtain-drop {
+  0% {
+    opacity: 0;
+    clip-path: inset(0 0 100% 0);
+    transform: translateY(-6px);
+    filter: blur(6px);
+  }
+  40% {
+    opacity: 1;
+    filter: blur(0);
+  }
+  100% {
+    opacity: 1;
+    clip-path: inset(0 0 0 0);
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+/* Glow pulse on the number as the curtain reveals it */
+@keyframes why-number-glow {
+  0% {
+    text-shadow: 0 0 0 rgba(138, 160, 255, 0);
+  }
+  45% {
+    text-shadow:
+      0 0 20px rgba(138, 160, 255, 0.9),
+      0 0 42px rgba(138, 160, 255, 0.42);
+  }
+  100% {
+    text-shadow: 0 0 0 rgba(138, 160, 255, 0);
+  }
+}
+
+/* Light bar sweeps horizontally across the card for a split-second */
+@keyframes why-shine-sweep {
+  0% {
+    opacity: 0;
+    transform: translateX(-120%) skewX(-18deg);
+  }
+  25% {
+    opacity: 1;
+  }
+  75% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(220%) skewX(-18deg);
+  }
+}
+
+/* Divider expands horizontally from center outward */
+@keyframes why-divider-expand {
+  0% {
+    transform: scaleX(0);
+    opacity: 0;
+  }
+  100% {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+}
+
+/* UNIQUE: stats spin into view with 3D rotateY like a coin flip */
+@keyframes why-stat-spin {
+  0% {
+    opacity: 0;
+    transform: perspective(900px) rotateY(85deg) scale(0.9);
+    filter: brightness(0.3) blur(4px);
+    text-shadow: 0 0 0 rgba(138, 160, 255, 0);
+  }
+  55% {
+    opacity: 1;
+    filter: brightness(1.35) blur(0);
+    text-shadow:
+      0 0 24px rgba(138, 160, 255, 0.6),
+      0 0 48px rgba(138, 160, 255, 0.25);
+  }
+  85% {
+    transform: perspective(900px) rotateY(-8deg) scale(1.02);
+  }
+  100% {
+    opacity: 1;
+    transform: perspective(900px) rotateY(0) scale(1);
+    filter: brightness(1);
+    text-shadow: 0 0 0 rgba(138, 160, 255, 0);
+  }
+}
+
+@keyframes why-vertical-draw {
+  from {
+    transform: scaleY(0);
+    opacity: 0;
+  }
+  to {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+}
+
+/* === Initial hidden state === */
+.why-reveal .why-section-label,
+.why-reveal .why-rail,
+.why-reveal .why-top-line,
+.why-reveal .why-content,
+.why-reveal .why-bottom-divider,
+.why-reveal .why-stat-value,
+.why-reveal .why-stat-label,
+.why-reveal .why-vertical-divider {
+  opacity: 0;
+}
+
+.why-reveal .why-rail,
+.why-reveal .why-top-line,
+.why-reveal .why-bottom-divider {
+  transform-origin: left center;
+  transform: scaleX(0);
+}
+
+.why-reveal .why-bottom-divider {
+  transform-origin: center;
+}
+
+.why-reveal .why-vertical-divider {
+  transform-origin: top center;
+  transform: scaleY(0);
+}
+
+.why-reveal .why-content {
+  clip-path: inset(0 0 100% 0);
+  will-change: clip-path, opacity, transform, filter;
+}
+
+/* Shine sweep inside each card (uses pseudo overlay) */
+.why-reveal .why-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.why-reveal .why-card::after {
+  content: "";
+  position: absolute;
+  top: -10%;
+  bottom: -10%;
+  left: 0;
+  width: 60px;
+  pointer-events: none;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(138, 160, 255, 0.22) 45%,
+    rgba(255, 255, 255, 0.18) 50%,
+    rgba(138, 160, 255, 0.22) 55%,
+    transparent 100%
+  );
+  mix-blend-mode: screen;
+  filter: blur(6px);
+  opacity: 0;
+  transform: translateX(-120%);
+  will-change: transform, opacity;
+}
+
+/* === Triggers === */
+.why-reveal.in-view .why-section-label {
+  animation: why-fade-up 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.1s both;
+}
+.why-reveal.in-view .why-rail {
+  animation: why-rail-draw 0.9s cubic-bezier(0.76, 0, 0.24, 1) 0.3s both;
+}
+
+.why-reveal.in-view .why-top-line {
+  animation-name: why-top-line-draw;
+  animation-duration: 0.9s;
+  animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+  animation-fill-mode: both;
+}
+.why-reveal.in-view .why-content {
+  animation-name: why-curtain-drop;
+  animation-duration: 1.2s;
+  animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1);
+  animation-fill-mode: both;
+}
+.why-reveal.in-view .why-card::after {
+  animation: why-shine-sweep 1.2s cubic-bezier(0.76, 0, 0.24, 1) both;
+}
+.why-reveal.in-view .why-number {
+  animation-name: why-number-glow;
+  animation-duration: 1.4s;
+  animation-timing-function: cubic-bezier(0.5, 0, 0.5, 1);
+  animation-fill-mode: both;
+  will-change: text-shadow;
+}
+.why-reveal.in-view .why-bottom-divider {
+  animation-name: why-divider-expand;
+  animation-duration: 1.1s;
+  animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+  animation-fill-mode: both;
+}
+.why-reveal.in-view .why-stat-value {
+  animation-name: why-stat-spin;
+  animation-duration: 1.5s;
+  animation-timing-function: cubic-bezier(0.34, 1.3, 0.64, 1);
+  animation-fill-mode: both;
+  will-change: transform, opacity, filter, text-shadow;
+  display: inline-block;
+  transform-style: preserve-3d;
+}
+.why-reveal.in-view .why-stat-label {
+  animation-name: why-fade-up;
+  animation-duration: 0.9s;
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  animation-fill-mode: both;
+}
+.why-reveal.in-view .why-vertical-divider {
+  animation-name: why-vertical-draw;
+  animation-duration: 0.8s;
+  animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+  animation-fill-mode: both;
+}
+
+/* === Scroll-to-top button === */
+@keyframes scroll-top-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes scroll-arrow-nudge {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+.scroll-top-btn {
+  animation: scroll-top-in 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.scroll-top-btn:hover .scroll-top-arrow {
+  animation: scroll-arrow-nudge 1.1s ease-in-out infinite;
+}
+
+/* === Process section — "collaboration" timeline reveal === */
+/* The line draws progressively; each dot pulses in as the line reaches it; */
+/* number, title and body cascade from each activated dot. */
+
+@keyframes process-word-mask-rise {
+  0% {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes process-rail-draw-vertical {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+
+@keyframes process-rail-draw-horizontal {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes process-dot-pop {
+  0% {
+    opacity: 0;
+    transform: scale(0);
+    box-shadow: 0 0 0 rgba(220, 225, 240, 0);
+  }
+  55% {
+    opacity: 1;
+    transform: scale(1.6);
+    box-shadow:
+      0 0 24px rgba(138, 160, 255, 0.9),
+      0 0 48px rgba(138, 160, 255, 0.35);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+    box-shadow:
+      0 0 12px rgba(220, 225, 240, 0.5),
+      0 0 0 rgba(138, 160, 255, 0);
+  }
+}
+
+@keyframes process-dot-ring-pulse {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.4);
+    border: 1px solid rgba(138, 160, 255, 0.9);
+  }
+  60% {
+    opacity: 0.6;
+    border: 1px solid rgba(138, 160, 255, 0.5);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(4.5);
+    border: 1px solid rgba(138, 160, 255, 0);
+  }
+}
+
+@keyframes process-num-reveal {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px);
+    letter-spacing: 0.5em;
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+    letter-spacing: 0.3em;
+  }
+}
+
+@keyframes process-text-rise {
+  0% {
+    opacity: 0;
+    transform: translateY(18px);
+    filter: blur(5px);
+  }
+  60% {
+    filter: blur(0);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+/* Initial hidden state */
+.process-reveal .process-word-mask {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+}
+
+.process-reveal .process-word {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(100%);
+  will-change: transform, opacity;
+}
+
+.process-reveal .process-rail {
+  transform: scaleY(0);
+  will-change: transform;
+}
+
+@media (min-width: 768px) {
+  .process-reveal .process-rail {
+    transform: scaleX(0);
+  }
+}
+
+.process-reveal .process-dot,
+.process-reveal .process-num,
+.process-reveal .process-title,
+.process-reveal .process-body {
+  opacity: 0;
+  will-change: opacity, transform, filter;
+}
+
+.process-reveal .process-dot-ring {
+  opacity: 0;
+  border: 1px solid rgba(138, 160, 255, 0);
+}
+
+/* In-view sequence */
+/* 1. Headline words rise, staggered — ~0.2s each */
+.process-reveal.in-view .process-word {
+  animation: process-word-mask-rise 1s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.process-reveal.in-view .process-word-mask:nth-child(1) .process-word { animation-delay: 0.15s; }
+.process-reveal.in-view .process-word-mask:nth-child(2) .process-word { animation-delay: 0.3s; }
+.process-reveal.in-view .process-word-mask:nth-child(3) .process-word { animation-delay: 0.45s; }
+.process-reveal.in-view .process-word-mask:nth-child(4) .process-word { animation-delay: 0.6s; }
+
+/* 2. The rail draws (vertical on mobile 0.9s–2.1s, horizontal on md+ same window) */
+.process-reveal.in-view .process-rail {
+  animation: process-rail-draw-vertical 1.4s cubic-bezier(0.76, 0, 0.24, 1) 0.9s forwards;
+}
+@media (min-width: 768px) {
+  .process-reveal.in-view .process-rail {
+    animation: process-rail-draw-horizontal 1.6s cubic-bezier(0.76, 0, 0.24, 1) 0.9s forwards;
+  }
+}
+
+/* 3. Dots pop one by one, synced to the rail reaching each position. */
+/*    Each step has --step-delay (dot) and --step-text-delay (number/title/body). */
+.process-reveal.in-view .process-dot {
+  animation: process-dot-pop 0.75s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  animation-delay: var(--step-delay, 0.9s);
+}
+
+.process-reveal.in-view .process-dot-ring {
+  animation: process-dot-ring-pulse 1.1s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: var(--step-delay, 0.9s);
+}
+
+/* 4. Number, title, body cascade after each dot activates */
+.process-reveal.in-view .process-num {
+  animation: process-num-reveal 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: var(--step-text-delay, 1.1s);
+}
+
+.process-reveal.in-view .process-title {
+  animation: process-text-rise 0.85s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(var(--step-text-delay, 1.1s) + 0.08s);
+}
+
+.process-reveal.in-view .process-body {
+  animation: process-text-rise 0.85s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(var(--step-text-delay, 1.1s) + 0.18s);
+}
+
+/* === Formats section — "editorial reel" reveal === */
+/* Each row is assembled from both directions: dividers draw left-to-right  */
+/* like a scanner; the number slides in from the left with wide tracking    */
+/* collapsing; the title mask-rises from below; the body description drifts */
+/* in from the right with a blur-shed. The dividers get a brief bright      */
+/* highlight that races along as they draw — subtle but luxurious.          */
+
+@keyframes format-rail-draw {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes format-rail-shimmer {
+  0% {
+    opacity: 0;
+    transform: translateX(-30%);
+  }
+  40% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(130%);
+  }
+}
+
+@keyframes format-num-slide {
+  0% {
+    opacity: 0;
+    transform: translateX(-24px);
+    letter-spacing: 0.8em;
+    filter: blur(6px);
+  }
+  60% {
+    opacity: 1;
+    filter: blur(0);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+    letter-spacing: 0.3em;
+    filter: blur(0);
+  }
+}
+
+@keyframes format-title-rise {
+  0% {
+    opacity: 0;
+    transform: translateY(110%) skewY(2deg);
+  }
+  60% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) skewY(0);
+  }
+}
+
+@keyframes format-body-drift {
+  0% {
+    opacity: 0;
+    transform: translateX(32px);
+    filter: blur(5px);
+  }
+  55% {
+    opacity: 1;
+    filter: blur(0);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+    filter: blur(0);
+  }
+}
+
+@keyframes format-footnote-fade {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Initial hidden state */
+.format-reveal .format-rail {
+  position: relative;
+  transform: scaleX(0);
+  overflow: visible;
+  will-change: transform;
+}
+
+.format-reveal .format-rail::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(138, 160, 255, 0.9) 50%,
+    transparent 100%
+  );
+  opacity: 0;
+  pointer-events: none;
+  width: 40%;
+  transform: translateX(-30%);
+  will-change: transform, opacity;
+}
+
+.format-reveal .format-num,
+.format-reveal .format-body {
+  opacity: 0;
+  will-change: opacity, transform, filter;
+}
+
+.format-reveal .format-title {
+  opacity: 0;
+  transform: translateY(110%);
+  will-change: opacity, transform;
+}
+
+.format-reveal .format-footnote {
+  opacity: 0;
+  will-change: opacity, transform;
+}
+
+/* In-view sequence — rails draw first, then row content assembles */
+.format-reveal.in-view .format-rail {
+  animation: format-rail-draw 0.9s cubic-bezier(0.76, 0, 0.24, 1) both;
+  animation-delay: var(--rail-delay, 0.15s);
+  transform-origin: left center;
+}
+
+.format-reveal.in-view .format-rail::after {
+  animation: format-rail-shimmer 0.9s cubic-bezier(0.4, 0.2, 0.2, 1) both;
+  animation-delay: var(--rail-delay, 0.15s);
+}
+
+/* Row-level staggers driven by --row-delay */
+.format-reveal.in-view .format-row .format-num {
+  animation: format-num-slide 0.85s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: var(--row-delay, 0.35s);
+}
+
+.format-reveal.in-view .format-row .format-title {
+  animation: format-title-rise 1s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(var(--row-delay, 0.35s) + 0.08s);
+}
+
+.format-reveal.in-view .format-row .format-body {
+  animation: format-body-drift 1s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(var(--row-delay, 0.35s) + 0.18s);
+}
+
+/* Hover on a row briefly accents the number */
+.format-reveal .format-row:hover .format-num {
+  color: var(--color-silver);
+  transition: color 0.3s ease-out;
+}
+
+/* Footnote fades in after the last row has settled */
+.format-reveal.in-view ~ .format-footnote,
+.format-reveal.in-view .format-footnote {
+  animation: format-footnote-fade 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: 2.2s;
+}
+
+/* === Contact section reveal — cinematic iris/aperture open === */
+@keyframes contact-aperture-open {
+  0% {
+    opacity: 0;
+    clip-path: inset(50% 50% 50% 50%);
+    transform: scale(1.14);
+    filter: brightness(0.4) saturate(0.5) blur(6px);
+  }
+  25% {
+    opacity: 1;
+  }
+  40% {
+    opacity: 1;
+    filter: brightness(0.7) saturate(0.75) blur(2px);
+  }
+  100% {
+    opacity: 1;
+    clip-path: inset(0% 0% 0% 0%);
+    transform: scale(1);
+    filter: brightness(1) saturate(1) blur(0);
+  }
+}
+
+@keyframes contact-bg-drift {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.05);
+  }
+}
+
+@keyframes contact-wash-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes contact-title-in {
+  0% {
+    opacity: 0;
+    transform: translateY(32px);
+    filter: blur(14px);
+    letter-spacing: 0.1em;
+  }
+  60% {
+    filter: blur(0);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+    letter-spacing: -0.015em;
+  }
+}
+
+@keyframes contact-rise {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes contact-rail-draw {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+.contact-reveal .contact-bg,
+.contact-reveal .contact-wash,
+.contact-reveal .contact-head > *,
+.contact-reveal .contact-head-rail,
+.contact-reveal .contact-title-line,
+.contact-reveal .contact-sub,
+.contact-reveal .contact-divider,
+.contact-reveal .contact-col {
+  opacity: 0;
+  will-change: opacity, transform, filter;
+}
+
+.contact-reveal .contact-divider,
+.contact-reveal .contact-head-rail {
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+
+.contact-reveal.in-view .contact-bg {
+  animation:
+    contact-aperture-open 2.4s cubic-bezier(0.76, 0, 0.24, 1) 0.1s forwards,
+    contact-bg-drift 24s ease-out 2.6s forwards;
+  transform-origin: center center;
+}
+
+.contact-reveal.in-view .contact-wash {
+  animation: contact-wash-in 1.4s ease-out 0.5s forwards;
+}
+
+.contact-reveal.in-view .contact-head > *:nth-child(1) {
+  animation: contact-rise 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.6s forwards;
+}
+
+.contact-reveal.in-view .contact-head-rail {
+  opacity: 1;
+  animation: contact-rail-draw 0.9s cubic-bezier(0.76, 0, 0.24, 1) 0.8s forwards;
+}
+
+.contact-reveal.in-view .contact-title-line:nth-of-type(1) {
+  animation: contact-title-in 1.4s cubic-bezier(0.22, 0.61, 0.36, 1) 0.9s forwards;
+}
+
+.contact-reveal.in-view .contact-title-line:nth-of-type(2) {
+  animation: contact-title-in 1.4s cubic-bezier(0.22, 0.61, 0.36, 1) 1.15s forwards;
+}
+
+.contact-reveal.in-view .contact-sub {
+  animation: contact-rise 0.9s cubic-bezier(0.22, 1, 0.36, 1) 1.5s forwards;
+}
+
+.contact-reveal.in-view .contact-divider {
+  opacity: 1;
+  animation: contact-rail-draw 1.1s cubic-bezier(0.76, 0, 0.24, 1) 1.7s forwards;
+}
+
+.contact-reveal.in-view .contact-col {
+  animation: contact-rise 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.contact-reveal.in-view .contact-col:nth-child(1) { animation-delay: 1.85s; }
+.contact-reveal.in-view .contact-col:nth-child(2) { animation-delay: 1.98s; }
+.contact-reveal.in-view .contact-col:nth-child(3) { animation-delay: 2.11s; }
+.contact-reveal.in-view .contact-col:nth-child(4) { animation-delay: 2.24s; }
+
+/* === Brand logo grid — magician card deal === */
+/* Tiles drop from above with slight rotation (as if dealt onto a table), */
+/* then settle with a soft overshoot. Odd/even tiles rotate opposite ways. */
+.brand-reveal {
+  perspective: 1400px;
+}
+
+@keyframes brand-card-deal-left {
+  0% {
+    opacity: 0;
+    transform: translateY(-60px) translateX(-14px) rotate(-10deg) rotateX(28deg)
+      scale(0.9);
+    filter: blur(4px) brightness(0.6);
+  }
+  55% {
+    opacity: 1;
+    filter: blur(0) brightness(1);
+  }
+  78% {
+    transform: translateY(4px) translateX(0) rotate(1.2deg) rotateX(-2deg)
+      scale(1.015);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) translateX(0) rotate(0) rotateX(0) scale(1);
+    filter: blur(0) brightness(1);
+  }
+}
+
+@keyframes brand-card-deal-right {
+  0% {
+    opacity: 0;
+    transform: translateY(-60px) translateX(14px) rotate(10deg) rotateX(28deg)
+      scale(0.9);
+    filter: blur(4px) brightness(0.6);
+  }
+  55% {
+    opacity: 1;
+    filter: blur(0) brightness(1);
+  }
+  78% {
+    transform: translateY(4px) translateX(0) rotate(-1.2deg) rotateX(-2deg)
+      scale(1.015);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) translateX(0) rotate(0) rotateX(0) scale(1);
+    filter: blur(0) brightness(1);
+  }
+}
+
+@keyframes brand-sheen {
+  0% {
+    transform: translateX(-120%) skewX(-20deg);
+    opacity: 0;
+  }
+  40% {
+    opacity: 0.9;
+  }
+  100% {
+    transform: translateX(220%) skewX(-20deg);
+    opacity: 0;
+  }
+}
+
+.brand-reveal .brand-cell {
+  opacity: 0;
+  transform-origin: center top;
+  will-change: opacity, transform, filter;
+}
+
+.brand-reveal.in-view .brand-cell:nth-child(odd) {
+  animation: brand-card-deal-left 1s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: var(--brand-delay, 0ms);
+}
+
+.brand-reveal.in-view .brand-cell:nth-child(even) {
+  animation: brand-card-deal-right 1s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: var(--brand-delay, 0ms);
+}
+
+/* The white logo card itself — sheen sweep + hover lift */
+.brand-reveal .brand-cell > div {
+  position: relative;
+  overflow: hidden;
+  transition:
+    transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.45s ease-out;
+}
+
+.brand-reveal .brand-cell > div::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    110deg,
+    transparent 20%,
+    rgba(255, 255, 255, 0.55) 50%,
+    transparent 80%
+  );
+  mix-blend-mode: screen;
+  transform: translateX(-120%) skewX(-20deg);
+  opacity: 0;
+}
+
+/* One-off sheen sweep after the tile lands */
+.brand-reveal.in-view .brand-cell > div::after {
+  animation: brand-sheen 1.3s cubic-bezier(0.4, 0.2, 0.2, 1) both;
+  animation-delay: calc(var(--brand-delay, 0ms) + 0.9s);
+}
+
+.brand-reveal .brand-cell:hover > div {
+  transform: translateY(-4px) scale(1.035);
+  box-shadow:
+    0 12px 32px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(255, 255, 255, 0.06);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
