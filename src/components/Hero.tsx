@@ -1,14 +1,18 @@
 import heroBanner from "../assets/hero-banner.png";
+import heroBannerMobile from "../assets/hero-banner-mobile.png";
 
 export function Hero() {
   return (
-    <section className="relative flex min-h-[100svh] w-full items-center justify-center overflow-hidden bg-ink-950">
-      <img
-        src={heroBanner}
-        alt="Azam on stage"
-        className="absolute inset-0 h-full w-full object-cover object-center"
-        fetchPriority="high"
-      />
+    <section className="relative flex min-h-[78svh] sm:min-h-svh w-full items-center justify-center overflow-hidden bg-ink-950">
+      <picture className="absolute inset-0 h-full w-full">
+        <source media="(min-width: 1024px)" srcSet={heroBanner} />
+        <img
+          src={heroBannerMobile}
+          alt="Azam on stage"
+          className="absolute inset-0 h-full w-full object-cover object-center"
+          fetchPriority="high"
+        />
+      </picture>
 
       <div
         className="absolute inset-0"
@@ -32,7 +36,7 @@ export function Hero() {
         }}
       />
 
-      <div className="relative z-10 flex min-h-[100svh] w-full max-w-[1680px] flex-col px-4 sm:px-5 md:px-6 lg:px-8 xl:px-10">
+      <div className="relative z-10 flex min-h-[78svh] sm:min-h-svh w-full max-w-[1680px] flex-col px-4 sm:px-5 md:px-6 lg:px-8 xl:px-10">
         <div className="flex items-center justify-center pt-6 sm:pt-8 md:pt-10">
           <div className="flex items-center gap-2 text-center text-[9px] tracking-[0.22em] text-silver-dim uppercase sm:gap-4 sm:text-[10px] sm:tracking-[0.3em] md:text-xs md:tracking-[0.4em] md:whitespace-nowrap">
             <span className="hidden h-px w-8 bg-silver-dim/40 sm:block md:w-10" />
