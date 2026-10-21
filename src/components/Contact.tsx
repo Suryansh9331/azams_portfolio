@@ -37,9 +37,16 @@ export function Contact() {
         </div>
 
         <div className="flex flex-1 flex-col justify-center py-12 md:py-16">
-          <h2 className="font-contact text-4xl leading-[1.02] font-bold tracking-[-0.015em] text-silver uppercase sm:text-5xl md:text-6xl lg:text-[80px] xl:text-[104px]">
+          <h2
+            className="font-numeric text-[42px] leading-[0.95] font-black text-silver uppercase sm:text-[56px] md:text-7xl lg:text-[88px] xl:text-[112px]"
+            style={{
+              letterSpacing: "0.01em",
+              wordSpacing: "0.14em",
+              fontVariationSettings: '"opsz" 144',
+            }}
+          >
             <span className="contact-title-line block">Azam Says</span>
-            <span className="contact-title-line block bg-linear-to-b from-silver via-silver/90 to-silver/25 bg-clip-text text-transparent">
+            <span className="contact-title-line block bg-linear-to-b from-silver via-silver/90 to-silver/25 bg-clip-text italic text-transparent">
               Contact
             </span>
           </h2>
