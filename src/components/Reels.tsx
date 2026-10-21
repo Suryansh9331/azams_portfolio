@@ -4,6 +4,7 @@ import { useInView } from "../hooks/useInView";
 
 export function Reels() {
   const { ref, inView } = useInView<HTMLDivElement>();
+  const reelsReverse = [...reels].reverse();
 
   return (
     <div
@@ -27,7 +28,8 @@ export function Reels() {
         </p>
       </div>
 
-      <div className="reels-marquee group relative w-full overflow-hidden">
+      {/* Row 1 — scrolls right → left (cards enter from right, dissolve into left gap) */}
+      <div className="reels-marquee reels-row-1 group relative w-full overflow-hidden">
         <div
           className="reels-marquee-track flex w-max gap-4 sm:gap-5 md:gap-6"
           style={{ ["--marquee-duration" as string]: "70s" }}
@@ -36,11 +38,7 @@ export function Reels() {
             <ReelCard key={`a-${reel.id}-${i}`} reel={reel} />
           ))}
           {reels.map((reel, i) => (
-            <ReelCard
-              key={`b-${reel.id}-${i}`}
-              reel={reel}
-              aria-hidden={true}
-            />
+            <ReelCard key={`b-${reel.id}-${i}`} reel={reel} aria-hidden />
           ))}
         </div>
 
@@ -51,6 +49,31 @@ export function Reels() {
             width: "var(--section-left-gap, 1.25rem)",
             backgroundImage:
               "linear-gradient(to right, rgba(5,7,12,1) 0%, rgba(5,7,12,1) 55%, rgba(5,7,12,0) 100%)",
+          }}
+        />
+      </div>
+
+      {/* Row 2 — scrolls left → right (cards enter from left, dissolve into right gap) */}
+      <div className="reels-marquee reels-marquee--reverse reels-row-2 group relative mt-4 w-full overflow-hidden sm:mt-5 md:mt-6">
+        <div
+          className="reels-marquee-track flex w-max gap-4 sm:gap-5 md:gap-6"
+          style={{ ["--marquee-duration" as string]: "82s" }}
+        >
+          {reelsReverse.map((reel, i) => (
+            <ReelCard key={`c-${reel.id}-${i}`} reel={reel} />
+          ))}
+          {reelsReverse.map((reel, i) => (
+            <ReelCard key={`d-${reel.id}-${i}`} reel={reel} aria-hidden />
+          ))}
+        </div>
+
+        <div
+          className="pointer-events-none absolute inset-y-0 right-0 z-10"
+          aria-hidden
+          style={{
+            width: "var(--section-left-gap, 1.25rem)",
+            backgroundImage:
+              "linear-gradient(to left, rgba(5,7,12,1) 0%, rgba(5,7,12,1) 55%, rgba(5,7,12,0) 100%)",
           }}
         />
       </div>
