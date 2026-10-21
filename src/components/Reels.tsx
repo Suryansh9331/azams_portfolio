@@ -67,7 +67,7 @@ export function Reels() {
           <span className="font-display text-sm tracking-[0.4em] text-silver-dim">
             AZAM
           </span>
-          <span>R</span>
+          <span>05</span>
         </div>
       </section>
     </div>

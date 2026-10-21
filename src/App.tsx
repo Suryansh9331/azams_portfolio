@@ -19,12 +19,12 @@ function App() {
       <About />
       <Proof />
       <Social />
+      <Reels />
       {brandGroups.map((group) => (
         <BrandGrid key={group.id} group={group} />
       ))}
       <WhyBrands />
       <Creates />
-      <Reels />
       <Formats />
       <Process />
       <Contact />
