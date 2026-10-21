@@ -3,126 +3,64 @@ import { reels, type Reel } from "../data/reels";
 import { useInView } from "../hooks/useInView";
 
 export function Reels() {
-  const { ref: sectionRef, inView } = useInView<HTMLDivElement>();
-  const scrollerRef = useRef<HTMLDivElement>(null);
-
-  const scroll = (dir: "left" | "right") => {
-    const el = scrollerRef.current;
-    if (!el) return;
-    const amount = el.clientWidth * 0.75;
-    el.scrollBy({
-      left: dir === "left" ? -amount : amount,
-      behavior: "smooth",
-    });
-  };
+  const { ref, inView } = useInView<HTMLDivElement>();
+  const marqueeItems = [...reels, ...reels];
 
   return (
     <div
-      ref={sectionRef}
-      className={`reels-reveal relative ${inView ? "in-view" : ""}`}
+      ref={ref}
+      className={`reels-reveal relative overflow-hidden bg-ink-950 py-20 sm:py-24 md:py-28 lg:py-32 ${
+        inView ? "in-view" : ""
+      }`}
     >
-      <section
-        id="reels"
-        className="relative mx-auto w-full max-w-[1680px] px-5 py-20 sm:px-6 md:px-8 md:py-24 lg:px-10 lg:py-32 xl:px-14"
-      >
-        <div className="mb-10 flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between md:mb-14 lg:mb-16">
-          <div>
-            <p className="reels-label text-[13px] font-medium tracking-[0.24em] text-muted uppercase sm:text-[14px] md:text-[15px] lg:text-[16px]">
-              Reels
-            </p>
-            <div className="reels-rail mt-3 h-px w-24 bg-line sm:w-32" />
-            <h3 className="reels-headline mt-6 font-display text-3xl leading-[1.1] font-normal text-silver sm:text-4xl md:text-5xl lg:text-6xl">
-              Moments <span className="italic text-silver-dim">worth filming.</span>
-            </h3>
-          </div>
+      <div className="mx-auto mb-12 w-full max-w-[1680px] px-5 sm:px-6 md:mb-16 md:px-8 lg:mb-20 lg:px-10 xl:px-14">
+        <p className="reels-label text-[13px] font-medium tracking-[0.24em] text-muted uppercase sm:text-[14px] md:text-[15px] lg:text-[16px]">
+          Reels
+        </p>
+        <div className="reels-rail mt-3 h-px w-24 bg-line sm:w-32" />
+        <h3 className="reels-headline mt-6 font-display text-3xl leading-[1.1] font-normal text-silver sm:text-4xl md:text-5xl lg:text-6xl">
+          Moments{" "}
+          <span className="italic text-silver-dim">worth filming.</span>
+        </h3>
+        <p className="reels-sub mt-5 max-w-xl text-[13px] leading-relaxed text-silver-dim sm:text-sm">
+          A rolling look at Azam's latest brand activations and stage moments —
+          hover to pause, tap any clip to watch the full reel on Instagram.
+        </p>
+      </div>
 
-          <div className="reels-controls hidden items-center gap-3 md:flex">
-            <ScrollButton direction="left" onClick={() => scroll("left")} />
-            <ScrollButton direction="right" onClick={() => scroll("right")} />
-          </div>
+      <div className="reels-marquee reels-fade-mask group relative w-full overflow-hidden">
+        <div
+          className="reels-marquee-track flex w-max gap-4 sm:gap-5 md:gap-6"
+          style={{ ["--marquee-duration" as string]: "70s" }}
+        >
+          {marqueeItems.map((reel, i) => (
+            <ReelCard
+              key={`${reel.id}-${i}`}
+              reel={reel}
+              aria-hidden={i >= reels.length}
+            />
+          ))}
         </div>
+      </div>
 
-        <div className="relative">
-          <div
-            ref={scrollerRef}
-            className="reels-scroller flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth pb-4 sm:gap-5 md:gap-6"
-          >
-            {reels.map((reel, i) => (
-              <ReelCard key={reel.id} reel={reel} index={i} />
-            ))}
-            <div className="shrink-0 pr-2 sm:pr-4" aria-hidden />
-          </div>
-
-          <div
-            className="pointer-events-none absolute inset-y-0 left-0 w-10 bg-gradient-to-r from-ink-950 to-transparent sm:w-16"
-            aria-hidden
-          />
-          <div
-            className="pointer-events-none absolute inset-y-0 right-0 w-10 bg-gradient-to-l from-ink-950 to-transparent sm:w-16"
-            aria-hidden
-          />
-        </div>
-
-        <div className="pointer-events-none absolute right-5 bottom-5 flex flex-col items-end gap-1 text-[10px] tracking-[0.3em] text-muted uppercase sm:right-8 md:right-12 md:bottom-8 lg:right-16 lg:bottom-10">
-          <span className="font-display text-sm tracking-[0.4em] text-silver-dim">
-            AZAM
-          </span>
-          <span>05</span>
-        </div>
-      </section>
+      <div className="pointer-events-none absolute right-5 bottom-5 flex flex-col items-end gap-1 text-[10px] tracking-[0.3em] text-muted uppercase sm:right-8 md:right-12 md:bottom-8 lg:right-16 lg:bottom-10">
+        <span className="font-display text-sm tracking-[0.4em] text-silver-dim">
+          AZAM
+        </span>
+        <span>05</span>
+      </div>
     </div>
   );
 }
 
-function ScrollButton({
-  direction,
-  onClick,
+function ReelCard({
+  reel,
+  "aria-hidden": ariaHidden,
 }: {
-  direction: "left" | "right";
-  onClick: () => void;
+  reel: Reel;
+  "aria-hidden"?: boolean;
 }) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      aria-label={direction === "left" ? "Previous reels" : "Next reels"}
-      className="group relative flex h-11 w-11 items-center justify-center rounded-full border border-line text-silver transition-all duration-300 hover:border-silver-dim hover:bg-line-soft lg:h-12 lg:w-12"
-    >
-      <span
-        aria-hidden
-        className="pointer-events-none absolute inset-0 rounded-full opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-        style={{
-          background:
-            "radial-gradient(ellipse at center, rgba(138,160,255,0.18) 0%, transparent 70%)",
-        }}
-      />
-      <svg
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        className="relative h-4 w-4 lg:h-[18px] lg:w-[18px]"
-      >
-        {direction === "left" ? (
-          <>
-            <path d="M19 12H5" />
-            <path d="M12 19l-7-7 7-7" />
-          </>
-        ) : (
-          <>
-            <path d="M5 12h14" />
-            <path d="M12 5l7 7-7 7" />
-          </>
-        )}
-      </svg>
-    </button>
-  );
-}
-
-function ReelCard({ reel, index }: { reel: Reel; index: number }) {
-  const { ref, inView } = useInView<HTMLAnchorElement>({ threshold: 0.4 });
+  const { ref, inView } = useInView<HTMLAnchorElement>({ threshold: 0.3 });
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
@@ -130,7 +68,7 @@ function ReelCard({ reel, index }: { reel: Reel; index: number }) {
     if (!video) return;
     if (inView) {
       video.play().catch(() => {
-        /* autoplay rejected — ignore */
+        /* autoplay rejected */
       });
     } else {
       video.pause();
@@ -143,11 +81,12 @@ function ReelCard({ reel, index }: { reel: Reel; index: number }) {
       href={reel.instagramUrl}
       target="_blank"
       rel="noopener noreferrer"
-      aria-label={`View ${reel.caption} on Instagram`}
-      className="reel-card group relative block flex-shrink-0 snap-start overflow-hidden rounded-md border border-line bg-ink-900 shadow-[0_14px_38px_rgba(0,0,0,0.55)] transition-transform duration-500 ease-out hover:scale-[1.02]"
-      style={{ ["--i" as string]: String(index) }}
+      aria-label={ariaHidden ? undefined : `View ${reel.caption} on Instagram`}
+      aria-hidden={ariaHidden}
+      tabIndex={ariaHidden ? -1 : undefined}
+      className="reel-card group/card relative block flex-shrink-0 overflow-hidden rounded-lg border border-line/70 bg-ink-900 shadow-[0_18px_42px_rgba(0,0,0,0.6)] ring-1 ring-silver-dim/0 transition-all duration-500 ease-out hover:scale-[1.015] hover:ring-silver-dim/40"
     >
-      <div className="relative aspect-[9/16] w-[220px] sm:w-[240px] md:w-[260px] lg:w-[280px] xl:w-[300px]">
+      <div className="relative aspect-[9/16] w-[220px] sm:w-[240px] md:w-[270px] lg:w-[290px] xl:w-[310px]">
         <video
           ref={videoRef}
           src={reel.video}
@@ -164,32 +103,37 @@ function ReelCard({ reel, index }: { reel: Reel; index: number }) {
           className="pointer-events-none absolute inset-0"
           style={{
             backgroundImage:
-              "linear-gradient(180deg, rgba(5,7,12,0.35) 0%, rgba(5,7,12,0) 25%, rgba(5,7,12,0) 55%, rgba(5,7,12,0.85) 100%)",
+              "linear-gradient(180deg, rgba(5,7,12,0.4) 0%, rgba(5,7,12,0) 22%, rgba(5,7,12,0) 55%, rgba(5,7,12,0.9) 100%)",
           }}
         />
 
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-0 opacity-0 ring-1 ring-silver-dim/30 transition-opacity duration-300 group-hover:opacity-100"
+          className="pointer-events-none absolute inset-0 opacity-0 ring-1 ring-inset ring-accent/40 transition-opacity duration-500 group-hover/card:opacity-100"
         />
 
-        <div className="absolute top-3 left-3 flex items-center gap-1.5 rounded-full bg-ink-950/70 px-2.5 py-1 backdrop-blur-md sm:top-4 sm:left-4">
+        <div className="absolute top-3 left-3 flex items-center gap-1.5 rounded-full border border-silver-dim/15 bg-ink-950/70 px-2.5 py-1 backdrop-blur-md sm:top-4 sm:left-4">
           <span className="relative flex h-1.5 w-1.5">
-            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent opacity-70" />
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent opacity-75" />
             <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-accent" />
           </span>
-          <span className="text-[9px] font-medium tracking-[0.22em] text-silver uppercase">
+          <span className="text-[9px] font-medium tracking-[0.24em] text-silver uppercase">
             Reel
           </span>
         </div>
 
-        <div className="absolute right-3 bottom-3 left-3 flex items-end justify-between gap-2 sm:right-4 sm:bottom-4 sm:left-4">
-          <span className="text-[10px] tracking-[0.18em] text-silver uppercase drop-shadow-[0_1px_6px_rgba(0,0,0,0.8)] sm:text-[11px]">
-            {reel.caption}
-          </span>
+        <div className="absolute right-3 bottom-3 left-3 flex items-end justify-between gap-3 sm:right-4 sm:bottom-4 sm:left-4">
+          <div className="flex min-w-0 flex-col gap-1">
+            <span className="text-[9px] tracking-[0.3em] text-silver-dim uppercase">
+              @azam.magic
+            </span>
+            <span className="truncate text-[11px] font-medium tracking-[0.14em] text-silver uppercase drop-shadow-[0_1px_6px_rgba(0,0,0,0.9)] sm:text-[12px]">
+              {reel.caption}
+            </span>
+          </div>
           <span
             aria-hidden
-            className="flex h-7 w-7 items-center justify-center rounded-full bg-ink-950/70 text-silver backdrop-blur-md transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 sm:h-8 sm:w-8"
+            className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full border border-silver-dim/25 bg-ink-950/70 text-silver backdrop-blur-md transition-all duration-300 group-hover/card:border-silver-dim/60 group-hover/card:bg-ink-900/90 group-hover/card:translate-x-0.5 group-hover/card:-translate-y-0.5 sm:h-9 sm:w-9"
           >
             <svg
               viewBox="0 0 24 24"

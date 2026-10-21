@@ -1329,6 +1329,84 @@ section[id] {
   animation-fill-mode: both;
 }
 
+/* === Reels showcase (section 05) — MARQUEE + REVEAL === */
+@keyframes reels-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+    filter: blur(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+@keyframes reels-rail-draw {
+  from {
+    transform: scaleX(0);
+    opacity: 0;
+  }
+  to {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+}
+
+@keyframes reels-marquee-scroll {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.reels-reveal .reels-label,
+.reels-reveal .reels-rail,
+.reels-reveal .reels-headline,
+.reels-reveal .reels-sub {
+  opacity: 0;
+}
+
+.reels-reveal .reels-rail {
+  transform-origin: left center;
+}
+
+.reels-reveal.in-view .reels-label {
+  animation: reels-fade-up 0.63s cubic-bezier(0.22, 1, 0.36, 1) 0.07s both;
+}
+.reels-reveal.in-view .reels-rail {
+  animation: reels-rail-draw 0.63s cubic-bezier(0.76, 0, 0.24, 1) 0.21s both;
+}
+.reels-reveal.in-view .reels-headline {
+  animation: reels-fade-up 0.84s cubic-bezier(0.22, 1, 0.36, 1) 0.28s both;
+}
+.reels-reveal.in-view .reels-sub {
+  animation: reels-fade-up 0.84s cubic-bezier(0.22, 1, 0.36, 1) 0.42s both;
+}
+
+.reels-marquee-track {
+  animation: reels-marquee-scroll var(--marquee-duration, 60s) linear infinite;
+  will-change: transform;
+}
+
+.reels-marquee:hover .reels-marquee-track {
+  animation-play-state: paused;
+}
+
+.reels-fade-mask {
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 6%, #000 94%, transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0, #000 6%, #000 94%, transparent 100%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reels-marquee-track {
+    animation: none;
+  }
+}
+
 /* === Scroll-to-top button === */
 @keyframes scroll-top-in {
   from {
