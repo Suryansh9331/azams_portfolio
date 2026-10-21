@@ -1407,18 +1407,22 @@ section[id] {
   will-change: transform;
 }
 
-.reels-marquee:hover .reels-marquee-track {
-  animation-play-state: paused;
+/* RAF-driven marquee scroller — hide scrollbar but keep native scroll */
+.reels-scroller {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  scroll-behavior: auto;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-x;
+  cursor: grab;
 }
-
-/* When any reel is unmuted, freeze BOTH marquee rows */
-.reels-reveal.marquee-paused .reels-marquee-track {
-  animation-play-state: paused;
+.reels-scroller::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
 }
-
-/* Row 2 — reverse direction (cards slide left → right) */
-.reels-marquee--reverse .reels-marquee-track {
-  animation-direction: reverse;
+.reels-scroller:active {
+  cursor: grabbing;
 }
 
 .reels-fade-mask {

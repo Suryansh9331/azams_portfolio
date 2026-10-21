@@ -1,4 +1,10 @@
-import { useEffect, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import { reelsRowOne, reelsRowTwo, type Reel } from "../data/reels";
 import { useInView } from "../hooks/useInView";
 
@@ -6,7 +12,7 @@ export function Reels() {
   const { ref, inView } = useInView<HTMLDivElement>();
   const [unmutedKey, setUnmutedKey] = useState<string | null>(null);
   const hasRowTwo = reelsRowTwo.length > 0;
-  const isMarqueePaused = unmutedKey !== null;
+  const isLocked = unmutedKey !== null;
 
   const handleToggleMute = (key: string) => {
     setUnmutedKey((prev) => (prev === key ? null : key));
@@ -17,7 +23,7 @@ export function Reels() {
       ref={ref}
       className={`reels-reveal relative overflow-hidden bg-ink-950 py-20 sm:py-24 md:py-28 lg:py-32 ${
         inView ? "in-view" : ""
-      } ${isMarqueePaused ? "marquee-paused" : ""}`}
+      }`}
     >
       <div className="mx-auto mb-12 w-full max-w-[1680px] px-5 sm:px-6 md:mb-16 md:px-8 lg:mb-20 lg:px-10 xl:px-14">
         <p className="reels-label text-[13px] font-medium tracking-[0.24em] text-muted uppercase sm:text-[14px] md:text-[15px] lg:text-[16px]">
@@ -30,96 +36,34 @@ export function Reels() {
         </h3>
         <p className="reels-sub mt-5 max-w-xl text-[13px] leading-relaxed text-silver-dim sm:text-sm">
           A rolling look at Azam's latest brand activations and stage moments —
-          tap any reel to unmute, tap the arrow to open it on Instagram.
+          drag or swipe to scroll, tap any reel to unmute, tap the arrow to open
+          it on Instagram.
         </p>
       </div>
 
-      {/* Row 1 — scrolls right → left */}
-      <div className="reels-marquee reels-row-1 group relative w-full overflow-hidden">
-        <div
-          className="reels-marquee-track flex w-max gap-3 sm:gap-4 md:gap-5 lg:gap-6"
-          style={{ ["--marquee-duration" as string]: "70s" }}
-        >
-          {reelsRowOne.map((reel, i) => {
-            const key = `a-${reel.id}-${i}`;
-            return (
-              <ReelCard
-                key={key}
-                cardKey={key}
-                reel={reel}
-                unmutedKey={unmutedKey}
-                onToggleMute={handleToggleMute}
-              />
-            );
-          })}
-          {reelsRowOne.map((reel, i) => {
-            const key = `b-${reel.id}-${i}`;
-            return (
-              <ReelCard
-                key={key}
-                cardKey={key}
-                reel={reel}
-                unmutedKey={unmutedKey}
-                onToggleMute={handleToggleMute}
-                aria-hidden
-              />
-            );
-          })}
-        </div>
+      {/* Row 1 — auto-scrolls right → left, user can drag/scroll freely */}
+      <MarqueeRow
+        reels={reelsRowOne}
+        reverse={false}
+        pxPerSecond={38}
+        fadeSide="left"
+        isLocked={isLocked}
+        unmutedKey={unmutedKey}
+        onToggleMute={handleToggleMute}
+        keyPrefix="r1"
+      />
 
-        <div
-          className="pointer-events-none absolute inset-y-0 left-0 z-10"
-          aria-hidden
-          style={{
-            width: "var(--section-left-gap, 1.25rem)",
-            backgroundImage:
-              "linear-gradient(to right, rgba(5,7,12,1) 0%, rgba(5,7,12,1) 55%, rgba(5,7,12,0) 100%)",
-          }}
-        />
-      </div>
-
-      {/* Row 2 — scrolls left → right. Only renders when reelsRowTwo has items. */}
       {hasRowTwo && (
-        <div className="reels-marquee reels-marquee--reverse reels-row-2 group relative mt-3 w-full overflow-hidden sm:mt-4 md:mt-5 lg:mt-6">
-          <div
-            className="reels-marquee-track flex w-max gap-3 sm:gap-4 md:gap-5 lg:gap-6"
-            style={{ ["--marquee-duration" as string]: "82s" }}
-          >
-            {reelsRowTwo.map((reel, i) => {
-              const key = `c-${reel.id}-${i}`;
-              return (
-                <ReelCard
-                  key={key}
-                  cardKey={key}
-                  reel={reel}
-                  unmutedKey={unmutedKey}
-                  onToggleMute={handleToggleMute}
-                />
-              );
-            })}
-            {reelsRowTwo.map((reel, i) => {
-              const key = `d-${reel.id}-${i}`;
-              return (
-                <ReelCard
-                  key={key}
-                  cardKey={key}
-                  reel={reel}
-                  unmutedKey={unmutedKey}
-                  onToggleMute={handleToggleMute}
-                  aria-hidden
-                />
-              );
-            })}
-          </div>
-
-          <div
-            className="pointer-events-none absolute inset-y-0 right-0 z-10"
-            aria-hidden
-            style={{
-              width: "var(--section-left-gap, 1.25rem)",
-              backgroundImage:
-                "linear-gradient(to left, rgba(5,7,12,1) 0%, rgba(5,7,12,1) 55%, rgba(5,7,12,0) 100%)",
-            }}
+        <div className="mt-3 sm:mt-4 md:mt-5 lg:mt-6">
+          <MarqueeRow
+            reels={reelsRowTwo}
+            reverse
+            pxPerSecond={32}
+            fadeSide="right"
+            isLocked={isLocked}
+            unmutedKey={unmutedKey}
+            onToggleMute={handleToggleMute}
+            keyPrefix="r2"
           />
         </div>
       )}
@@ -130,6 +74,163 @@ export function Reels() {
         </span>
         <span>05</span>
       </div>
+    </div>
+  );
+}
+
+function MarqueeRow({
+  reels,
+  reverse,
+  pxPerSecond,
+  fadeSide,
+  isLocked,
+  unmutedKey,
+  onToggleMute,
+  keyPrefix,
+}: {
+  reels: Reel[];
+  reverse: boolean;
+  pxPerSecond: number;
+  fadeSide: "left" | "right";
+  isLocked: boolean;
+  unmutedKey: string | null;
+  onToggleMute: (key: string) => void;
+  keyPrefix: string;
+}) {
+  const scrollerRef = useRef<HTMLDivElement>(null);
+  const [isUserActive, setIsUserActive] = useState(false);
+  const resumeTimerRef = useRef<number | null>(null);
+  const lastTimeRef = useRef<number | null>(null);
+  const initializedRef = useRef(false);
+
+  const isPaused = isLocked || isUserActive;
+
+  const bumpActivity = useCallback((idleMs = 1800) => {
+    setIsUserActive(true);
+    if (resumeTimerRef.current !== null) {
+      window.clearTimeout(resumeTimerRef.current);
+    }
+    resumeTimerRef.current = window.setTimeout(() => {
+      setIsUserActive(false);
+      resumeTimerRef.current = null;
+    }, idleMs);
+  }, []);
+
+  // Set initial scroll to the midpoint so manual scroll has room in both directions.
+  useLayoutEffect(() => {
+    const el = scrollerRef.current;
+    if (!el || initializedRef.current) return;
+    const setInitial = () => {
+      if (el.scrollWidth > el.clientWidth) {
+        el.scrollLeft = el.scrollWidth / 4;
+        initializedRef.current = true;
+      } else {
+        requestAnimationFrame(setInitial);
+      }
+    };
+    requestAnimationFrame(setInitial);
+  }, []);
+
+  // RAF loop advancing scrollLeft; pause when paused.
+  useEffect(() => {
+    const el = scrollerRef.current;
+    if (!el) return;
+
+    let rafId = 0;
+    lastTimeRef.current = null;
+
+    const tick = (now: number) => {
+      if (lastTimeRef.current === null) lastTimeRef.current = now;
+      const dt = now - lastTimeRef.current;
+      lastTimeRef.current = now;
+
+      if (!isPaused && el.scrollWidth > el.clientWidth) {
+        const halfWidth = el.scrollWidth / 2;
+        const delta = (pxPerSecond / 1000) * dt * (reverse ? -1 : 1);
+        let newLeft = el.scrollLeft + delta;
+
+        if (newLeft >= halfWidth) newLeft -= halfWidth;
+        if (newLeft < 0) newLeft += halfWidth;
+
+        el.scrollLeft = newLeft;
+      }
+
+      rafId = requestAnimationFrame(tick);
+    };
+
+    rafId = requestAnimationFrame(tick);
+    return () => {
+      cancelAnimationFrame(rafId);
+    };
+  }, [isPaused, pxPerSecond, reverse]);
+
+  // Keep user-scrolled position within the loopable range so it doesn't hit a wall.
+  const normalizeScroll = useCallback(() => {
+    const el = scrollerRef.current;
+    if (!el) return;
+    const halfWidth = el.scrollWidth / 2;
+    if (halfWidth <= 0) return;
+    if (el.scrollLeft >= halfWidth) {
+      el.scrollLeft -= halfWidth;
+    } else if (el.scrollLeft < 0) {
+      el.scrollLeft += halfWidth;
+    }
+  }, []);
+
+  return (
+    <div className="reels-row relative w-full">
+      <div
+        ref={scrollerRef}
+        className="reels-scroller flex w-full gap-3 overflow-x-auto overscroll-x-contain sm:gap-4 md:gap-5 lg:gap-6"
+        onMouseEnter={() => setIsUserActive(true)}
+        onMouseLeave={() => bumpActivity(400)}
+        onTouchStart={() => bumpActivity(2500)}
+        onTouchMove={() => bumpActivity(2500)}
+        onTouchEnd={() => bumpActivity(2500)}
+        onWheel={() => bumpActivity(1200)}
+        onPointerDown={() => bumpActivity(2500)}
+        onScrollCapture={normalizeScroll}
+      >
+        {reels.map((reel, i) => {
+          const cardKey = `${keyPrefix}-a-${reel.id}-${i}`;
+          return (
+            <ReelCard
+              key={cardKey}
+              cardKey={cardKey}
+              reel={reel}
+              unmutedKey={unmutedKey}
+              onToggleMute={onToggleMute}
+            />
+          );
+        })}
+        {reels.map((reel, i) => {
+          const cardKey = `${keyPrefix}-b-${reel.id}-${i}`;
+          return (
+            <ReelCard
+              key={cardKey}
+              cardKey={cardKey}
+              reel={reel}
+              unmutedKey={unmutedKey}
+              onToggleMute={onToggleMute}
+              aria-hidden
+            />
+          );
+        })}
+      </div>
+
+      <div
+        className={`pointer-events-none absolute inset-y-0 z-10 ${
+          fadeSide === "left" ? "left-0" : "right-0"
+        }`}
+        aria-hidden
+        style={{
+          width: "var(--section-left-gap, 1.25rem)",
+          backgroundImage:
+            fadeSide === "left"
+              ? "linear-gradient(to right, rgba(5,7,12,1) 0%, rgba(5,7,12,1) 55%, rgba(5,7,12,0) 100%)"
+              : "linear-gradient(to left, rgba(5,7,12,1) 0%, rgba(5,7,12,1) 55%, rgba(5,7,12,0) 100%)",
+        }}
+      />
     </div>
   );
 }
@@ -195,7 +296,7 @@ function ReelCard({
           handleCardClick();
         }
       }}
-      className={`reel-card group/card relative block flex-shrink-0 cursor-pointer overflow-hidden rounded-lg border bg-ink-900 shadow-[0_18px_42px_rgba(0,0,0,0.6)] transition-all duration-500 ease-out hover:scale-[1.015] ${
+      className={`reel-card group/card relative block flex-shrink-0 cursor-pointer snap-start overflow-hidden rounded-lg border bg-ink-900 shadow-[0_18px_42px_rgba(0,0,0,0.6)] transition-all duration-500 ease-out hover:scale-[1.015] ${
         isUnmuted
           ? "border-accent/70 ring-2 ring-accent/40 shadow-[0_18px_52px_rgba(138,160,255,0.3)]"
           : "border-line/70 ring-1 ring-silver-dim/0 hover:ring-silver-dim/40"
@@ -222,7 +323,6 @@ function ReelCard({
           }}
         />
 
-        {/* Live REEL badge */}
         <div className="absolute top-2 left-2 flex items-center gap-1 rounded-full border border-silver-dim/15 bg-ink-950/70 px-1.5 py-0.5 backdrop-blur-md sm:top-3 sm:left-3 sm:gap-1.5 sm:px-2 sm:py-1 md:top-3.5 md:left-3.5 md:px-2.5">
           <span className="relative flex h-1 w-1 sm:h-1.5 sm:w-1.5">
             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent opacity-75" />
@@ -233,7 +333,6 @@ function ReelCard({
           </span>
         </div>
 
-        {/* Speaker / mute indicator - top right */}
         <div
           className={`pointer-events-none absolute top-2 right-2 flex h-6 w-6 items-center justify-center rounded-full border backdrop-blur-md transition-all duration-300 sm:top-3 sm:right-3 sm:h-7 sm:w-7 md:top-3.5 md:right-3.5 md:h-8 md:w-8 ${
             isUnmuted
@@ -244,7 +343,6 @@ function ReelCard({
           {isUnmuted ? <SpeakerOnIcon /> : <SpeakerOffIcon />}
         </div>
 
-        {/* Caption + Instagram link */}
         <div className="absolute right-2 bottom-2 left-2 flex items-end justify-between gap-2 sm:right-3 sm:bottom-3 sm:left-3 md:right-3.5 md:bottom-3.5 md:left-3.5">
           <div className="flex min-w-0 flex-col gap-0.5 sm:gap-1">
             <span className="hidden text-[8px] tracking-[0.26em] text-silver-dim uppercase sm:inline sm:text-[9px] sm:tracking-[0.3em]">
