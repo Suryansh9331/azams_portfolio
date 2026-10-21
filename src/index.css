@@ -688,6 +688,180 @@ section[id] {
   animation: scroll-arrow-nudge 1.1s ease-in-out infinite;
 }
 
+/* === Contact section reveal — cinematic iris/aperture open === */
+@keyframes contact-aperture-open {
+  0% {
+    clip-path: inset(50% 50% 50% 50%);
+    transform: scale(1.14);
+    filter: brightness(0.4) saturate(0.5) blur(6px);
+  }
+  40% {
+    filter: brightness(0.7) saturate(0.75) blur(2px);
+  }
+  100% {
+    clip-path: inset(0% 0% 0% 0%);
+    transform: scale(1);
+    filter: brightness(1) saturate(1) blur(0);
+  }
+}
+
+@keyframes contact-bg-drift {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.05);
+  }
+}
+
+@keyframes contact-wash-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes contact-title-in {
+  0% {
+    opacity: 0;
+    transform: translateY(32px);
+    filter: blur(14px);
+    letter-spacing: 0.1em;
+  }
+  60% {
+    filter: blur(0);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+    letter-spacing: -0.015em;
+  }
+}
+
+@keyframes contact-rise {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes contact-rail-draw {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+.contact-reveal .contact-bg,
+.contact-reveal .contact-wash,
+.contact-reveal .contact-head > *,
+.contact-reveal .contact-head-rail,
+.contact-reveal .contact-title-line,
+.contact-reveal .contact-sub,
+.contact-reveal .contact-divider,
+.contact-reveal .contact-col {
+  opacity: 0;
+  will-change: opacity, transform, filter;
+}
+
+.contact-reveal .contact-divider,
+.contact-reveal .contact-head-rail {
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+
+.contact-reveal.in-view .contact-bg {
+  animation:
+    contact-bg-in 2s cubic-bezier(0.22, 0.61, 0.36, 1) 0.1s forwards,
+    contact-bg-drift 22s ease-out 2.1s forwards;
+  transform-origin: center center;
+}
+
+.contact-reveal.in-view .contact-wash {
+  animation: contact-wash-in 1.4s ease-out 0.5s forwards;
+}
+
+.contact-reveal.in-view .contact-head > *:nth-child(1) {
+  animation: contact-rise 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.6s forwards;
+}
+
+.contact-reveal.in-view .contact-head-rail {
+  opacity: 1;
+  animation: contact-rail-draw 0.9s cubic-bezier(0.76, 0, 0.24, 1) 0.8s forwards;
+}
+
+.contact-reveal.in-view .contact-title-line:nth-of-type(1) {
+  animation: contact-title-in 1.4s cubic-bezier(0.22, 0.61, 0.36, 1) 0.9s forwards;
+}
+
+.contact-reveal.in-view .contact-title-line:nth-of-type(2) {
+  animation: contact-title-in 1.4s cubic-bezier(0.22, 0.61, 0.36, 1) 1.15s forwards;
+}
+
+.contact-reveal.in-view .contact-sub {
+  animation: contact-rise 0.9s cubic-bezier(0.22, 1, 0.36, 1) 1.5s forwards;
+}
+
+.contact-reveal.in-view .contact-divider {
+  opacity: 1;
+  animation: contact-rail-draw 1.1s cubic-bezier(0.76, 0, 0.24, 1) 1.7s forwards;
+}
+
+.contact-reveal.in-view .contact-col {
+  animation: contact-rise 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.contact-reveal.in-view .contact-col:nth-child(1) { animation-delay: 1.85s; }
+.contact-reveal.in-view .contact-col:nth-child(2) { animation-delay: 1.98s; }
+.contact-reveal.in-view .contact-col:nth-child(3) { animation-delay: 2.11s; }
+.contact-reveal.in-view .contact-col:nth-child(4) { animation-delay: 2.24s; }
+
+/* === Brand logo grid reveal === */
+@keyframes brand-cell-in {
+  0% {
+    opacity: 0;
+    transform: translateY(16px) scale(0.94);
+    filter: blur(6px);
+  }
+  60% {
+    filter: blur(0);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+.brand-reveal .brand-cell {
+  opacity: 0;
+  will-change: opacity, transform, filter;
+}
+
+.brand-reveal.in-view .brand-cell {
+  animation: brand-cell-in 0.85s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: var(--brand-delay, 0ms);
+}
+
+.brand-reveal .brand-cell > div {
+  transition:
+    transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.4s ease-out;
+}
+
+.brand-reveal .brand-cell:hover > div {
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

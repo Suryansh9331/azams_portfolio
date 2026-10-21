@@ -1,49 +1,55 @@
 import type { ReactNode } from "react";
 import contactBg from "../assets/contact.png";
+import { useInView } from "../hooks/useInView";
 
 export function Contact() {
+  const { ref, inView } = useInView<HTMLElement>({ threshold: 0.15 });
+
   return (
     <section
+      ref={ref}
       id="contact"
-      className="relative min-h-screen w-full overflow-hidden bg-ink-950"
+      className={`contact-reveal relative min-h-screen w-full overflow-hidden bg-ink-950 ${
+        inView ? "in-view" : ""
+      }`}
     >
       <img
         src={contactBg}
         alt=""
         aria-hidden
-        className="pointer-events-none absolute inset-0 h-full w-full object-cover object-right"
+        className="contact-bg pointer-events-none absolute inset-0 h-full w-full object-cover object-right"
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 bg-linear-to-r from-ink-950 via-ink-950/85 to-transparent sm:via-ink-950/70 md:via-ink-950/55 lg:via-ink-950/40"
+        className="contact-wash pointer-events-none absolute inset-0 bg-linear-to-r from-ink-950 via-ink-950/85 to-transparent sm:via-ink-950/70 md:via-ink-950/55 lg:via-ink-950/40"
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-1/3 bg-linear-to-t from-ink-950 via-ink-950/60 to-transparent"
+        className="contact-wash pointer-events-none absolute inset-x-0 bottom-0 h-1/3 bg-linear-to-t from-ink-950 via-ink-950/60 to-transparent"
       />
 
       <div className="relative mx-auto flex min-h-screen w-full max-w-[1680px] flex-col px-4 py-14 sm:px-5 sm:py-16 md:px-6 md:py-20 lg:px-8 lg:py-24 xl:px-10">
-        <div>
+        <div className="contact-head">
           <p className="text-[10px] font-medium tracking-[0.24em] text-muted uppercase sm:text-[11px]">
             Book Azam
           </p>
-          <div className="mt-3 h-px w-24 bg-line sm:w-32" />
+          <div className="contact-head-rail mt-3 h-px w-24 bg-line sm:w-32" />
         </div>
 
         <div className="flex flex-1 flex-col justify-center py-12 md:py-16">
           <h2 className="font-contact text-4xl leading-[1.02] font-bold tracking-[-0.015em] text-silver uppercase sm:text-5xl md:text-6xl lg:text-[80px] xl:text-[104px]">
-            <span className="block">Azam Says</span>
-            <span className="block bg-linear-to-b from-silver via-silver/90 to-silver/25 bg-clip-text text-transparent">
+            <span className="contact-title-line block">Azam Says</span>
+            <span className="contact-title-line block bg-linear-to-b from-silver via-silver/90 to-silver/25 bg-clip-text text-transparent">
               Contact
             </span>
           </h2>
-          <p className="mt-6 text-[10px] tracking-[0.3em] text-silver-dim uppercase sm:mt-8 sm:text-[11px]">
+          <p className="contact-sub mt-6 text-[10px] tracking-[0.3em] text-silver-dim uppercase sm:mt-8 sm:text-[11px]">
             For availability, brand activations and stage programming
           </p>
         </div>
 
         <div className="mt-auto">
-          <div className="h-px w-full bg-line/80" />
+          <div className="contact-divider h-px w-full bg-line/80" />
 
           <div className="mt-8 grid grid-cols-1 gap-8 sm:grid-cols-2 md:mt-10 md:gap-10 lg:grid-cols-4">
             <ContactCol title="Email">
@@ -118,7 +124,7 @@ export function Contact() {
 
 function ContactCol({ title, children }: { title: string; children: ReactNode }) {
   return (
-    <div className="flex flex-col gap-3">
+    <div className="contact-col flex flex-col gap-3">
       <span className="text-[11px] tracking-[0.28em] text-muted uppercase">
         {title}
       </span>

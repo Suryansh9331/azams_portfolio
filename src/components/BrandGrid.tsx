@@ -2,10 +2,8 @@ import { SectionShell } from "./shared/SectionShell";
 import { LogoTile } from "./shared/LogoTile";
 import type { BrandGroup } from "../data/brands";
 import { getLogo } from "../data/logos";
+import { useInView } from "../hooks/useInView";
 
-// Flex-basis per breakpoint. The basis math assumes gap-4 (1rem) on the
-// container so a full row of N items fills exactly 100% width; a partial
-// trailing row occupies less and is centered by `justify-center`.
 const basisClassMap: Record<number, string> = {
   3: "basis-[calc((100%-1rem)/2)] sm:basis-[calc((100%-2rem)/3)]",
   4: "basis-[calc((100%-1rem)/2)] sm:basis-[calc((100%-2rem)/3)] md:basis-[calc((100%-3rem)/4)]",
@@ -15,11 +13,22 @@ const basisClassMap: Record<number, string> = {
 
 export function BrandGrid({ group }: { group: BrandGroup }) {
   const basis = basisClassMap[group.columns] ?? basisClassMap[5];
+  const { ref, inView } = useInView<HTMLDivElement>({ threshold: 0.1 });
+
   return (
     <SectionShell id={group.id} label={group.label} page={group.page}>
-      <div className="flex flex-wrap justify-center gap-4">
-        {group.items.map((item) => (
-          <div key={item.slug} className={`${basis} shrink-0 grow-0`}>
+      <div
+        ref={ref}
+        className={`brand-reveal flex flex-wrap justify-center gap-4 ${
+          inView ? "in-view" : ""
+        }`}
+      >
+        {group.items.map((item, i) => (
+          <div
+            key={item.slug}
+            className={`brand-cell ${basis} shrink-0 grow-0`}
+            style={{ "--brand-delay": `${i * 60}ms` } as React.CSSProperties}
+          >
             <LogoTile name={item.name} src={getLogo(group.folder, item.slug)} />
           </div>
         ))}
