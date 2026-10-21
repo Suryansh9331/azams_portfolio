@@ -24,7 +24,7 @@ export function Proof() {
         className="relative z-10 min-h-[88vh]"
       >
         <div className="flex min-h-[55vh] flex-col justify-center">
-          <div className="grid grid-cols-1 divide-y divide-line/60 sm:grid-cols-2 sm:divide-x sm:divide-y-0 lg:grid-cols-3">
+          <div className="grid grid-cols-1 divide-y divide-line/60 md:grid-cols-3 md:divide-x md:divide-y-0">
             {items.map((it, i) => (
               <ProofItem key={it.label} {...it} index={i} />
             ))}
@@ -48,16 +48,16 @@ function ProofItem({
 }: Item & { index: number }) {
   const pad =
     index === 0
-      ? "sm:pr-8 lg:pr-10"
-      : "py-10 sm:py-0 sm:px-8 lg:px-10";
+      ? "md:pr-8 lg:pr-10"
+      : "py-10 md:py-0 md:px-8 lg:px-10";
   return (
     <div className={`flex flex-col gap-5 ${pad}`}>
-      <div className="flex items-baseline gap-x-3 whitespace-nowrap">
-        <span className="font-display text-6xl leading-none font-medium text-silver sm:text-7xl lg:text-[88px]">
+      <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+        <span className="font-display text-5xl leading-none font-medium text-silver sm:text-6xl md:text-5xl lg:text-6xl xl:text-[88px]">
           {value}
         </span>
         {tail ? (
-          <span className="font-display text-2xl leading-none font-normal text-silver-dim sm:text-3xl lg:text-4xl">
+          <span className="font-display text-xl leading-none font-normal text-silver-dim sm:text-2xl md:text-xl lg:text-2xl xl:text-4xl">
             {tail}
           </span>
         ) : null}
