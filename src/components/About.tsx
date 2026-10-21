@@ -97,31 +97,31 @@ export function About() {
               className="about-img absolute inset-0 h-full w-full object-cover object-center"
             />
             <div
-              className="pointer-events-none absolute inset-y-0 left-0 w-[45%]"
+              className="pointer-events-none absolute inset-y-0 left-0 w-[55%]"
               style={{
                 backgroundImage:
-                  "linear-gradient(90deg, rgba(5,7,12,1) 0%, rgba(5,7,12,0.75) 25%, rgba(5,7,12,0.3) 65%, rgba(5,7,12,0) 100%)",
+                  "linear-gradient(90deg, rgba(5,7,12,1) 0%, rgba(5,7,12,0.95) 20%, rgba(5,7,12,0.6) 55%, rgba(5,7,12,0.15) 85%, rgba(5,7,12,0) 100%)",
               }}
             />
             <div
-              className="pointer-events-none absolute inset-y-0 right-0 w-[22%] md:w-[18%] lg:w-[14%]"
+              className="pointer-events-none absolute inset-y-0 right-0 w-[32%] md:w-[26%] lg:w-[22%]"
               style={{
                 backgroundImage:
-                  "linear-gradient(90deg, rgba(5,7,12,0) 0%, rgba(5,7,12,0.55) 55%, rgba(5,7,12,1) 100%)",
+                  "linear-gradient(90deg, rgba(5,7,12,0) 0%, rgba(5,7,12,0.4) 35%, rgba(5,7,12,0.85) 70%, rgba(5,7,12,1) 100%)",
               }}
             />
             <div
-              className="pointer-events-none absolute inset-x-0 top-0 h-[18%]"
+              className="pointer-events-none absolute inset-x-0 top-0 h-[32%]"
               style={{
                 backgroundImage:
-                  "linear-gradient(180deg, rgba(5,7,12,0.9) 0%, rgba(5,7,12,0) 100%)",
+                  "linear-gradient(180deg, rgba(5,7,12,1) 0%, rgba(5,7,12,0.85) 30%, rgba(5,7,12,0.35) 70%, rgba(5,7,12,0) 100%)",
               }}
             />
             <div
-              className="pointer-events-none absolute inset-x-0 bottom-0 h-[25%]"
+              className="pointer-events-none absolute inset-x-0 bottom-0 h-[38%]"
               style={{
                 backgroundImage:
-                  "linear-gradient(180deg, rgba(5,7,12,0) 0%, rgba(5,7,12,0.9) 100%)",
+                  "linear-gradient(180deg, rgba(5,7,12,0) 0%, rgba(5,7,12,0.35) 30%, rgba(5,7,12,0.85) 70%, rgba(5,7,12,1) 100%)",
               }}
             />
           </div>
