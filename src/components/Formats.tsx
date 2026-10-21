@@ -1,7 +1,11 @@
+import { Fragment } from "react";
 import { SectionShell } from "./shared/SectionShell";
 import { formats } from "../data/content";
+import { useInView } from "../hooks/useInView";
 
 export function Formats() {
+  const { ref, inView } = useInView<HTMLDivElement>({ threshold: 0.12 });
+
   return (
     <SectionShell id="formats" label="Experience Formats" page="12">
       <div
@@ -17,26 +21,49 @@ export function Formats() {
         />
       </div>
 
-      <div className="relative border-t border-line">
-        {formats.map((f) => (
-          <div
-            key={f.n}
-            className="group grid grid-cols-[auto_1fr] items-baseline gap-x-3 gap-y-3 border-b border-line py-6 transition-colors hover:bg-line-soft sm:gap-x-5 sm:py-8 md:grid-cols-[60px_1.4fr_2fr] md:gap-x-8 md:py-10 lg:grid-cols-[80px_1.2fr_2fr] lg:gap-x-10"
-          >
-            <span className="text-[11px] tracking-[0.3em] text-muted">
-              {f.n}
-            </span>
-            <h3 className="font-display text-xl font-medium text-silver sm:text-2xl md:text-3xl lg:text-4xl">
-              {f.title}
-            </h3>
-            <p className="col-span-2 text-sm leading-relaxed text-silver-dim md:col-span-1 md:text-base">
-              {f.body}
-            </p>
-          </div>
+      <div
+        ref={ref}
+        className={`format-reveal relative ${inView ? "in-view" : ""}`}
+      >
+        <div
+          className="format-rail h-px w-full origin-left bg-line"
+          style={{ "--rail-delay": "0.15s" } as React.CSSProperties}
+        />
+        {formats.map((f, i) => (
+          <Fragment key={f.n}>
+            <div
+              className="format-row group relative grid grid-cols-[auto_1fr] items-baseline gap-x-3 gap-y-3 py-6 transition-colors hover:bg-line-soft sm:gap-x-5 sm:py-8 md:grid-cols-[60px_1.4fr_2fr] md:gap-x-8 md:py-10 lg:grid-cols-[80px_1.2fr_2fr] lg:gap-x-10"
+              style={
+                {
+                  "--row-delay": `${0.35 + i * 0.22}s`,
+                } as React.CSSProperties
+              }
+            >
+              <span className="format-num text-[11px] tracking-[0.3em] text-muted">
+                {f.n}
+              </span>
+              <h3 className="format-title-mask overflow-hidden">
+                <span className="format-title block font-display text-xl font-medium text-silver sm:text-2xl md:text-3xl lg:text-4xl">
+                  {f.title}
+                </span>
+              </h3>
+              <p className="format-body col-span-2 text-sm leading-relaxed text-silver-dim md:col-span-1 md:text-base">
+                {f.body}
+              </p>
+            </div>
+            <div
+              className="format-rail h-px w-full origin-left bg-line"
+              style={
+                {
+                  "--rail-delay": `${0.55 + i * 0.22}s`,
+                } as React.CSSProperties
+              }
+            />
+          </Fragment>
         ))}
       </div>
 
-      <p className="mt-8 text-sm text-silver-dim sm:mt-10">
+      <p className="format-footnote mt-8 text-sm text-silver-dim sm:mt-10">
         Every format is scaled to the room, the audience and the brand
         objective.
       </p>
