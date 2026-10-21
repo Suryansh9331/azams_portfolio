@@ -16,7 +16,7 @@ export function Creates() {
         A brand does not book a magician.
       </p>
 
-      <h2 className="font-display text-3xl leading-[1.2] font-medium text-silver sm:text-4xl md:text-5xl lg:text-6xl xl:text-[80px] xl:leading-[1.1]">
+      <h2 className="font-display flex flex-wrap items-baseline gap-y-2 text-3xl leading-[1.15] font-medium text-silver sm:text-4xl md:text-5xl lg:text-6xl xl:text-[80px] xl:leading-[1.1]">
         {words.map((w, i) => (
           <span key={w} className="whitespace-nowrap">
             {i > 0 ? (
@@ -25,9 +25,11 @@ export function Creates() {
               </span>
             ) : null}
             {w}
+            {i === words.length - 1 ? (
+              <span className="text-accent">.</span>
+            ) : null}
           </span>
         ))}
-        <span className="text-accent">.</span>
       </h2>
 
       <p className="mt-10 max-w-xl text-sm leading-relaxed text-silver-dim sm:mt-14">
