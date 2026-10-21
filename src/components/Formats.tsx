@@ -9,10 +9,10 @@ export function Formats() {
         aria-hidden="true"
       >
         <div
-          className="absolute top-0 left-0 h-[55%] w-[55%]"
+          className="absolute top-0 left-0 h-[45%] w-[42%]"
           style={{
             backgroundImage:
-              "radial-gradient(ellipse 70% 80% at 25% 20%, rgba(60,90,180,0.22) 0%, rgba(30,50,120,0.12) 35%, rgba(10,16,34,0) 70%)",
+              "radial-gradient(ellipse 60% 70% at 22% 18%, rgba(45,70,140,0.11) 0%, rgba(25,40,95,0.05) 35%, rgba(10,16,34,0) 72%)",
           }}
         />
       </div>
