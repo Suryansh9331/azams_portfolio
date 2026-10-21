@@ -72,6 +72,13 @@ export function About() {
               }}
             />
             <div
+              className="pointer-events-none absolute inset-y-0 right-0 w-[22%] md:w-[18%] lg:w-[14%]"
+              style={{
+                backgroundImage:
+                  "linear-gradient(90deg, rgba(5,7,12,0) 0%, rgba(5,7,12,0.55) 55%, rgba(5,7,12,1) 100%)",
+              }}
+            />
+            <div
               className="pointer-events-none absolute inset-x-0 top-0 h-[18%]"
               style={{
                 backgroundImage:
