@@ -87,23 +87,23 @@ export function Contact() {
             <ContactCol title="Social Media">
               <div className="flex flex-col gap-3 text-silver">
                 <div className="flex flex-wrap items-center gap-x-4 gap-y-3">
-                  <SocialLink href="https://instagram.com/azam.magic" label="Instagram">
+                  <SocialLink href="https://www.instagram.com/azam.magic/" label="Instagram">
                     <InstagramIcon />
                   </SocialLink>
-                  <SocialLink href="https://facebook.com/Azaam.Magic" label="Facebook">
+                  <SocialLink href="https://www.facebook.com/Azam-107858473927856" label="Facebook (page)">
+                    <FacebookIcon />
+                  </SocialLink>
+                  <SocialLink href="https://www.facebook.com/profile.php?id=100004640555267" label="Facebook (profile)">
                     <FacebookIcon />
                   </SocialLink>
                   <SocialLink href="https://www.tiktok.com/@azam.magic10" label="TikTok">
                     <TikTokIcon />
                   </SocialLink>
-                  <SocialLink href="https://youtube.com/@azammagic" label="YouTube">
+                  <SocialLink href="https://www.youtube.com/@AzamMagic1" label="YouTube">
                     <YouTubeIcon />
                   </SocialLink>
                   <SocialLink href="https://t.snapchat.com/TCmCz4AB" label="Snapchat">
                     <SnapchatIcon />
-                  </SocialLink>
-                  <SocialLink href="https://x.com/azammagic" label="X">
-                    <XIcon />
                   </SocialLink>
                 </div>
                 <span className="text-[11px] tracking-[0.28em] text-silver uppercase">
@@ -204,10 +204,3 @@ function SnapchatIcon() {
   );
 }
 
-function XIcon() {
-  return (
-    <svg {...iconProps}>
-      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-    </svg>
-  );
-}

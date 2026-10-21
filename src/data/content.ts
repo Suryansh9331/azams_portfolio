@@ -1,10 +1,19 @@
 export const socials = [
-  { platform: "Facebook", followers: "5.5M", href: "https://facebook.com/Azaam.Magic" },
-  { platform: "Instagram", followers: "500K", href: "https://instagram.com/azam.magic" },
+  { platform: "Facebook", followers: "5.5M", href: "https://www.facebook.com/Azam-107858473927856" },
+  { platform: "Instagram", followers: "500K", href: "https://www.instagram.com/azam.magic/" },
   { platform: "TikTok", followers: "500K", href: "https://www.tiktok.com/@azam.magic10" },
-  { platform: "YouTube", followers: "300K", href: "https://youtube.com/@azammagic" },
+  { platform: "YouTube", followers: "300K", href: "https://www.youtube.com/@AzamMagic1" },
   { platform: "Snapchat", followers: "100K", href: "https://t.snapchat.com/TCmCz4AB" },
 ];
+
+export const socialLinks = {
+  facebookPage: "https://www.facebook.com/Azam-107858473927856",
+  facebookProfile: "https://www.facebook.com/profile.php?id=100004640555267",
+  instagram: "https://www.instagram.com/azam.magic/",
+  tiktok: "https://www.tiktok.com/@azam.magic10",
+  youtube: "https://www.youtube.com/@AzamMagic1",
+  snapchat: "https://t.snapchat.com/TCmCz4AB",
+} as const;
 
 export const ageGroups = [
   { label: "13–17", value: 35 },
