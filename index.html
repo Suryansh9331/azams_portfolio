@@ -7,9 +7,28 @@
     <meta name="color-scheme" content="dark" />
     <meta name="theme-color" content="#05070c" />
 
-    <!-- Google Fonts: open the TLS connection early so the font request isn't blocked -->
+    <!-- Early TLS handshake to Google Fonts hosts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <!-- Load fonts non-render-blocking: fetch via "print" (ignored for layout), swap to "all" once loaded -->
+    <link
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,500..900;1,6..96,500..900&family=Fraunces:ital,opsz,wght@0,9..144,500..900;1,9..144,500..900&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Inter:wght@300;400;500;600&display=swap"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,500..900;1,6..96,500..900&family=Fraunces:ital,opsz,wght@0,9..144,500..900;1,9..144,500..900&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Inter:wght@300;400;500;600&display=swap"
+      media="print"
+      onload="this.media='all'"
+    />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,500..900;1,6..96,500..900&family=Fraunces:ital,opsz,wght@0,9..144,500..900;1,9..144,500..900&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Inter:wght@300;400;500;600&display=swap"
+      />
+    </noscript>
 
     <title>AZAM — Open the Impossible | Illusionist · Mentalist · Live Experience Creator</title>
     <meta name="description" content="Azam is a Dubai-based illusionist and live experience creator. UAE Golden Visa holder, 7M+ followers, trusted by 130+ global brands." />
