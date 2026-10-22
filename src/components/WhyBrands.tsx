@@ -105,7 +105,7 @@ export function WhyBrands() {
           <span className="font-display text-sm tracking-[0.4em] text-silver-dim">
             AZAM
           </span>
-          <span>11</span>
+          <span>07</span>
         </div>
       </section>
     </div>

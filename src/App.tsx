@@ -2,7 +2,7 @@ import { Hero } from "./components/Hero";
 import { About } from "./components/About";
 import { Proof } from "./components/Proof";
 import { Social } from "./components/Social";
-import { BrandGrid } from "./components/BrandGrid";
+import { BrandMarquee } from "./components/BrandMarquee";
 import { WhyBrands } from "./components/WhyBrands";
 import { Creates } from "./components/Creates";
 import { Formats } from "./components/Formats";
@@ -10,7 +10,6 @@ import { Process } from "./components/Process";
 import { Contact } from "./components/Contact";
 import { Reels } from "./components/Reels";
 import { ScrollToTop } from "./components/ScrollToTop";
-import { brandGroups } from "./data/brands";
 
 function App() {
   return (
@@ -20,9 +19,7 @@ function App() {
       <Proof />
       <Social />
       <Reels />
-      {brandGroups.map((group) => (
-        <BrandGrid key={group.id} group={group} />
-      ))}
+      <BrandMarquee />
       <WhyBrands />
       <Creates />
       <Formats />

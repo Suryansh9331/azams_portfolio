@@ -13,7 +13,7 @@ export function Process() {
   const { ref, inView } = useInView<HTMLDivElement>({ threshold: 0.2 });
 
   return (
-    <SectionShell id="process" label="How a Collaboration Works" page="14">
+    <SectionShell id="process" label="How a Collaboration Works" page="10">
       <div
         className="pointer-events-none absolute inset-0 -z-0"
         aria-hidden="true"

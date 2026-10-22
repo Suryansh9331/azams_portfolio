@@ -11,7 +11,7 @@ const words = [
 
 export function Creates() {
   return (
-    <SectionShell id="creates" label="What Azam Creates" page="12">
+    <SectionShell id="creates" label="What Azam Creates" page="08">
       <p className="mb-6 text-[12px] tracking-[0.3em] text-silver-dim uppercase sm:text-[13px] md:text-sm sm:mb-8">
         A brand does not book a magician.
       </p>

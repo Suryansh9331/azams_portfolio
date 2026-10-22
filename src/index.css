@@ -96,6 +96,129 @@ section[id] {
   color: #fff;
 }
 
+/* === Brand marquee — two rows scrolling opposite ways === */
+@keyframes brand-scroll-left {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@keyframes brand-scroll-right {
+  from {
+    transform: translate3d(-50%, 0, 0);
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.brand-marquee-track {
+  will-change: transform;
+}
+
+/* Pause both rows while any card is being hovered — gives a graceful inspection moment */
+.brand-marquee-row:hover .brand-marquee-track {
+  animation-play-state: paused;
+}
+
+/* Reveal cascade for the header text */
+@keyframes brand-marquee-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+    filter: blur(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+@keyframes brand-marquee-rail-draw {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes brand-marquee-row-rise {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+    filter: blur(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+.brand-marquee-reveal .brand-marquee-label,
+.brand-marquee-reveal .brand-marquee-headline,
+.brand-marquee-reveal .brand-marquee-sub,
+.brand-marquee-reveal .brand-marquee-row {
+  opacity: 0;
+}
+
+.brand-marquee-reveal .brand-marquee-rail {
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+
+.brand-marquee-reveal.in-view .brand-marquee-label {
+  animation: brand-marquee-fade-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.1s forwards;
+}
+
+.brand-marquee-reveal.in-view .brand-marquee-rail {
+  animation: brand-marquee-rail-draw 0.8s cubic-bezier(0.76, 0, 0.24, 1) 0.28s forwards;
+}
+
+.brand-marquee-reveal.in-view .brand-marquee-headline {
+  animation: brand-marquee-fade-up 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.42s forwards;
+}
+
+.brand-marquee-reveal.in-view .brand-marquee-sub {
+  animation: brand-marquee-fade-up 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.58s forwards;
+}
+
+.brand-marquee-reveal.in-view .brand-marquee-row:nth-of-type(1) {
+  animation: brand-marquee-row-rise 1s cubic-bezier(0.22, 1, 0.36, 1) 0.8s forwards;
+}
+
+.brand-marquee-reveal.in-view .brand-marquee-row:nth-of-type(2) {
+  animation: brand-marquee-row-rise 1s cubic-bezier(0.22, 1, 0.36, 1) 0.95s forwards;
+}
+
+/* The reveal cascade targets opacity, but the row's inner track is already */
+/* animating transform. Keep them separate so the marquee never pauses.    */
+.brand-marquee-reveal .brand-marquee-row > .brand-marquee-track {
+  opacity: 1;
+}
+
+/* Honor reduced-motion: freeze the marquee and skip the reveal cascade */
+@media (prefers-reduced-motion: reduce) {
+  .brand-marquee-reveal .brand-marquee-track {
+    animation: none !important;
+    transform: translate3d(-10%, 0, 0);
+  }
+  .brand-marquee-reveal .brand-marquee-row,
+  .brand-marquee-reveal .brand-marquee-label,
+  .brand-marquee-reveal .brand-marquee-headline,
+  .brand-marquee-reveal .brand-marquee-sub {
+    opacity: 1;
+  }
+  .brand-marquee-reveal .brand-marquee-rail {
+    transform: scaleX(1);
+  }
+}
+
 /* All big stat numerals use Fraunces — modern revival serif with uniform
    lining figures, equal column widths, and a thicker "+" that stays legible
    at mobile sizes. Optical sizing lets the font self-adjust per text size. */
