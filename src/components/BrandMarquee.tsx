@@ -119,6 +119,7 @@ function LogoChip({ logo }: { logo: ResolvedLogo }) {
           src={logo.src}
           alt={logo.name}
           loading="lazy"
+          decoding="async"
           className="h-full w-full object-contain"
         />
       ) : (
