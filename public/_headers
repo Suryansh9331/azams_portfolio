@@ -1,0 +1,11 @@
+# Hashed Vite build assets (JS, CSS, WebP, images) are content-addressed,
+# so they never change for a given URL — cache them for a year.
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Public static files (reel videos, favicons) — long cache but revalidate daily
+/reels/*
+  Cache-Control: public, max-age=86400
+
+/*.svg
+  Cache-Control: public, max-age=86400
