@@ -206,6 +206,8 @@ function ProofBackdrop() {
       <img
         src={thirdSectionImg}
         alt=""
+        loading="lazy"
+        decoding="async"
         className="proof-backdrop absolute inset-0 h-full w-full object-cover object-center"
       />
 

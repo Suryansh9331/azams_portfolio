@@ -17,6 +17,8 @@ export function Contact() {
         src={contactBg}
         alt=""
         aria-hidden
+        loading="lazy"
+        decoding="async"
         className="contact-bg pointer-events-none absolute inset-0 h-full w-full object-cover object-right"
       />
       <div

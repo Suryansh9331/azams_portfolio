@@ -94,6 +94,8 @@ export function About() {
             <img
               src={secondSectionImg}
               alt="Azam holding an Ace of Spades"
+              loading="lazy"
+              decoding="async"
               className="about-img absolute inset-0 h-full w-full object-cover object-center"
               style={{
                 WebkitMaskImage:
