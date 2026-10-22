@@ -4,7 +4,6 @@ import { useInView } from "../hooks/useInView";
 
 type ResolvedLogo = BrandItem & { folder: BrandCategoryFolder; src?: string };
 
-// Flatten + resolve all logos across every category.
 const allLogos: ResolvedLogo[] = brandGroups.flatMap((group) =>
   group.items.map((item) => ({
     ...item,
@@ -13,10 +12,12 @@ const allLogos: ResolvedLogo[] = brandGroups.flatMap((group) =>
   })),
 );
 
-// Split roughly in half for two rows. Interleave categories so each row has a
-// mix of brands (Dior next to Dubai Police looks richer than Dior next to Pepsi).
-const rowOne = allLogos.filter((_, i) => i % 2 === 0);
-const rowTwo = allLogos.filter((_, i) => i % 2 === 1);
+// Split across 4 rows (interleaved) so each row shows a mix of categories.
+// Varying speeds/directions per row make the whole set feel alive, not mechanical.
+const row1 = allLogos.filter((_, i) => i % 4 === 0);
+const row2 = allLogos.filter((_, i) => i % 4 === 1);
+const row3 = allLogos.filter((_, i) => i % 4 === 2);
+const row4 = allLogos.filter((_, i) => i % 4 === 3);
 
 export function BrandMarquee() {
   const { ref, inView } = useInView<HTMLDivElement>({ threshold: 0.08 });
@@ -45,9 +46,11 @@ export function BrandMarquee() {
         </p>
       </div>
 
-      <MarqueeRow logos={rowOne} direction="left" speed={60} />
-      <div className="mt-3 sm:mt-4 md:mt-5">
-        <MarqueeRow logos={rowTwo} direction="right" speed={70} />
+      <div className="flex flex-col gap-2 sm:gap-3 md:gap-4">
+        <MarqueeRow logos={row1} direction="left" speed={55} />
+        <MarqueeRow logos={row2} direction="right" speed={65} />
+        <MarqueeRow logos={row3} direction="left" speed={60} />
+        <MarqueeRow logos={row4} direction="right" speed={70} />
       </div>
 
       <div className="pointer-events-none absolute right-4 bottom-5 flex flex-col items-end gap-1 text-[10px] tracking-[0.3em] text-muted uppercase sm:right-5 md:right-6 md:bottom-8 lg:right-8 lg:bottom-10">
@@ -67,15 +70,14 @@ function MarqueeRow({
 }: {
   logos: ResolvedLogo[];
   direction: "left" | "right";
-  speed: number; // seconds per full loop
+  speed: number;
 }) {
-  // Duplicate the list so the translate(-50%) loop is seamless.
   const sequence = [...logos, ...logos];
 
   return (
     <div className="brand-marquee-row group relative w-full">
       <div
-        className="brand-marquee-track flex w-max gap-2 sm:gap-3 md:gap-4"
+        className="brand-marquee-track flex w-max gap-2 sm:gap-2.5 md:gap-3 lg:gap-4"
         style={{
           animationName:
             direction === "left" ? "brand-scroll-left" : "brand-scroll-right",
@@ -89,21 +91,20 @@ function MarqueeRow({
         ))}
       </div>
 
-      {/* Left/right edge fades so logos appear and disappear softly, not with a hard clip */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-y-0 left-0 z-10 w-16 sm:w-24 md:w-32 lg:w-40"
+        className="pointer-events-none absolute inset-y-0 left-0 z-10 w-10 sm:w-16 md:w-24 lg:w-32"
         style={{
           backgroundImage:
-            "linear-gradient(to right, rgba(5,7,12,1) 0%, rgba(5,7,12,0.85) 50%, rgba(5,7,12,0) 100%)",
+            "linear-gradient(to right, rgba(5,7,12,1) 0%, rgba(5,7,12,0.85) 55%, rgba(5,7,12,0) 100%)",
         }}
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-y-0 right-0 z-10 w-16 sm:w-24 md:w-32 lg:w-40"
+        className="pointer-events-none absolute inset-y-0 right-0 z-10 w-10 sm:w-16 md:w-24 lg:w-32"
         style={{
           backgroundImage:
-            "linear-gradient(to left, rgba(5,7,12,1) 0%, rgba(5,7,12,0.85) 50%, rgba(5,7,12,0) 100%)",
+            "linear-gradient(to left, rgba(5,7,12,1) 0%, rgba(5,7,12,0.85) 55%, rgba(5,7,12,0) 100%)",
         }}
       />
     </div>
@@ -112,7 +113,7 @@ function MarqueeRow({
 
 function LogoChip({ logo }: { logo: ResolvedLogo }) {
   return (
-    <div className="brand-marquee-chip group/chip flex aspect-[16/10] w-[92px] shrink-0 items-center justify-center rounded-md bg-white px-2 py-1.5 shadow-[0_6px_18px_rgba(0,0,0,0.35)] transition-transform duration-300 hover:scale-[1.04] sm:w-[115px] sm:px-3 sm:py-2 md:w-[135px] md:rounded-lg lg:w-[160px] lg:px-4 lg:py-2.5 xl:w-[180px]">
+    <div className="brand-marquee-chip group/chip flex aspect-[16/10] w-18 shrink-0 items-center justify-center rounded-md bg-white px-1.5 py-1 shadow-[0_4px_14px_rgba(0,0,0,0.3)] transition-transform duration-300 hover:scale-[1.05] sm:w-22.5 sm:px-2 sm:py-1.5 md:w-27.5 md:px-2.5 md:py-2 lg:w-32.5 lg:px-3 xl:w-37.5">
       {logo.src ? (
         <img
           src={logo.src}
@@ -121,7 +122,7 @@ function LogoChip({ logo }: { logo: ResolvedLogo }) {
           className="h-full w-full object-contain"
         />
       ) : (
-        <span className="text-center text-[10px] leading-tight font-semibold tracking-wide text-neutral-800 sm:text-xs">
+        <span className="text-center text-[9px] leading-tight font-semibold tracking-wide text-neutral-800 sm:text-[10px]">
           {logo.name}
         </span>
       )}

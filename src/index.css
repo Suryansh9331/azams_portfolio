@@ -119,7 +119,15 @@ section[id] {
   will-change: transform;
 }
 
-/* Pause both rows while any card is being hovered — gives a graceful inspection moment */
+/* `pan-y` tells the browser this surface only responds to vertical panning —
+   so page scroll (up/down) always works even if a touch starts on a logo.
+   Horizontal gestures are not captured by the row (the auto-animation
+   handles the horizontal motion). */
+.brand-marquee-row {
+  touch-action: pan-y;
+}
+
+/* Pause a row while hovered — gives a graceful inspection moment (desktop) */
 .brand-marquee-row:hover .brand-marquee-track {
   animation-play-state: paused;
 }
@@ -189,11 +197,16 @@ section[id] {
 }
 
 .brand-marquee-reveal.in-view .brand-marquee-row:nth-of-type(1) {
-  animation: brand-marquee-row-rise 1s cubic-bezier(0.22, 1, 0.36, 1) 0.8s forwards;
+  animation: brand-marquee-row-rise 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.8s forwards;
 }
-
 .brand-marquee-reveal.in-view .brand-marquee-row:nth-of-type(2) {
-  animation: brand-marquee-row-rise 1s cubic-bezier(0.22, 1, 0.36, 1) 0.95s forwards;
+  animation: brand-marquee-row-rise 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.92s forwards;
+}
+.brand-marquee-reveal.in-view .brand-marquee-row:nth-of-type(3) {
+  animation: brand-marquee-row-rise 0.9s cubic-bezier(0.22, 1, 0.36, 1) 1.04s forwards;
+}
+.brand-marquee-reveal.in-view .brand-marquee-row:nth-of-type(4) {
+  animation: brand-marquee-row-rise 0.9s cubic-bezier(0.22, 1, 0.36, 1) 1.16s forwards;
 }
 
 /* The reveal cascade targets opacity, but the row's inner track is already */
