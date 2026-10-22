@@ -16,7 +16,7 @@ export function StatBlock({ value, label, size = "md" }: Props) {
       >
         {value}
       </span>
-      <span className="text-[11px] font-medium tracking-[0.22em] text-muted uppercase sm:text-[12px] md:text-[13px] lg:text-sm">
+      <span className="text-[11px] font-medium leading-tight tracking-[0.16em] text-muted uppercase sm:text-[12px] sm:tracking-[0.2em] md:text-[12px] lg:text-[12px] lg:tracking-[0.16em]">
         {label}
       </span>
     </div>
