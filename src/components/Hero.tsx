@@ -1,5 +1,5 @@
-import heroBanner from "../assets/hero-banner.png";
-import heroBannerMobile from "../assets/hero-banner-mobile.png";
+import heroBanner from "../assets/hero-banner.webp";
+import heroBannerMobile from "../assets/hero-banner-mobile.webp";
 
 export function Hero() {
   return (

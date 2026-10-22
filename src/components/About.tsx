@@ -1,4 +1,4 @@
-import secondSectionImg from "../assets/second-section.png";
+import secondSectionImg from "../assets/second-section.webp";
 import { StatBlock } from "./shared/StatBlock";
 import { useInView } from "../hooks/useInView";
 

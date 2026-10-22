@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import thirdSectionImg from "../assets/third-section.png";
+import thirdSectionImg from "../assets/third-section.webp";
 import { useInView } from "../hooks/useInView";
 
 type Item = {

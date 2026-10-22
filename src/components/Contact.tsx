@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import contactBg from "../assets/contact.png";
+import contactBg from "../assets/contact.webp";
 import { useInView } from "../hooks/useInView";
 
 export function Contact() {
