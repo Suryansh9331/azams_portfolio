@@ -8,7 +8,7 @@ import { About } from "./components/About";
 const Proof = lazy(() => import("./components/Proof").then((m) => ({ default: m.Proof })));
 const Social = lazy(() => import("./components/Social").then((m) => ({ default: m.Social })));
 const Reels = lazy(() => import("./components/Reels").then((m) => ({ default: m.Reels })));
-const BrandMarquee = lazy(() => import("./components/BrandMarquee").then((m) => ({ default: m.BrandMarquee })));
+const Industries = lazy(() => import("./components/Industries").then((m) => ({ default: m.Industries })));
 const WhyBrands = lazy(() => import("./components/WhyBrands").then((m) => ({ default: m.WhyBrands })));
 const Creates = lazy(() => import("./components/Creates").then((m) => ({ default: m.Creates })));
 const Formats = lazy(() => import("./components/Formats").then((m) => ({ default: m.Formats })));
@@ -35,7 +35,7 @@ function App() {
         <Reels />
       </Suspense>
       <Suspense fallback={<SectionFallback />}>
-        <BrandMarquee />
+        <Industries />
       </Suspense>
       <Suspense fallback={<SectionFallback />}>
         <WhyBrands />
