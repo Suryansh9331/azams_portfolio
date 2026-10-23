@@ -112,154 +112,127 @@ section[id] {
   color: #fff;
 }
 
-/* === The Oracle magic trick === */
+/* === Card-trick magic (21-card illusion) === */
 
-@keyframes oracle-fade-up {
+@keyframes cards-fade-up {
   from { opacity: 0; transform: translateY(14px); filter: blur(4px); }
   to   { opacity: 1; transform: translateY(0); filter: blur(0); }
 }
-@keyframes oracle-rail-draw {
+@keyframes cards-rail-draw {
   from { transform: scaleX(0); }
   to   { transform: scaleX(1); }
 }
 
-.oracle-reveal .oracle-label,
-.oracle-reveal .oracle-headline,
-.oracle-reveal .oracle-sub {
+.cards-reveal .cards-label,
+.cards-reveal .cards-headline,
+.cards-reveal .cards-sub {
   opacity: 0;
 }
-.oracle-reveal .oracle-rail {
+.cards-reveal .cards-rail {
   transform: scaleX(0);
   transform-origin: center;
 }
-.oracle-reveal.in-view .oracle-label    { animation: oracle-fade-up 0.65s cubic-bezier(0.22, 1, 0.36, 1) 0.10s forwards; }
-.oracle-reveal.in-view .oracle-rail     { animation: oracle-rail-draw 0.75s cubic-bezier(0.76, 0, 0.24, 1) 0.25s forwards; }
-.oracle-reveal.in-view .oracle-headline { animation: oracle-fade-up 0.80s cubic-bezier(0.22, 1, 0.36, 1) 0.40s forwards; }
-.oracle-reveal.in-view .oracle-sub      { animation: oracle-fade-up 0.75s cubic-bezier(0.22, 1, 0.36, 1) 0.55s forwards; }
+.cards-reveal.in-view .cards-label    { animation: cards-fade-up 0.65s cubic-bezier(0.22, 1, 0.36, 1) 0.10s forwards; }
+.cards-reveal.in-view .cards-rail     { animation: cards-rail-draw 0.75s cubic-bezier(0.76, 0, 0.24, 1) 0.25s forwards; }
+.cards-reveal.in-view .cards-headline { animation: cards-fade-up 0.80s cubic-bezier(0.22, 1, 0.36, 1) 0.40s forwards; }
+.cards-reveal.in-view .cards-sub      { animation: cards-fade-up 0.75s cubic-bezier(0.22, 1, 0.36, 1) 0.55s forwards; }
 
-.oracle-step, .oracle-intro, .oracle-circle, .oracle-reveal-wrap,
-.oracle-cta, .oracle-replay {
-  animation: oracle-fade-up 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+.cards-prompt, .cards-picker, .cards-replay {
+  animation: cards-fade-up 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-/* --- Oracle "eye" (concentric spinning rings) --- */
-.oracle-eye {
-  display: inline-block;
+/* --- Deal animation: cards fly in from a central deck position --- */
+@keyframes card-deal {
+  0%   { opacity: 0; transform: translate(0, -40vh) rotate(-180deg) scale(0.6); filter: blur(4px); }
+  60%  { opacity: 1; filter: blur(0); }
+  100% { opacity: 1; transform: translate(0, 0) rotate(0deg) scale(1); filter: blur(0); }
 }
-.oracle-ring,
-.oracle-pupil {
+.playing-card--dealing {
+  animation: card-deal 0.75s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(var(--i, 0) * 55ms);
+  transform-origin: center;
+  will-change: transform, opacity, filter;
+}
+
+/* --- Column selection highlight --- */
+.cards-column {
+  transition:
+    transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+    filter 0.4s ease-out;
+}
+.cards-column.is-selected {
+  transform: translateY(-6px);
+  filter: drop-shadow(0 10px 20px rgba(138, 160, 255, 0.35));
+}
+
+/* --- Gather: all cards fade/shrink toward center --- */
+@keyframes cards-collect {
+  from { opacity: 1; transform: scale(1); }
+  to   { opacity: 0; transform: scale(0.5) translateY(60px); filter: blur(6px); }
+}
+.cards-gathering .cards-column {
+  animation: cards-collect 0.75s cubic-bezier(0.76, 0, 0.24, 1) both;
+}
+.cards-gathering .cards-column.is-selected {
+  animation-delay: 0.1s;
+}
+
+/* --- Pick buttons: subtle glow pulse to invite interaction --- */
+@keyframes cards-pick-pulse {
+  0%, 100% { box-shadow: 0 0 0 rgba(138, 160, 255, 0); }
+  50%      { box-shadow: 0 0 24px rgba(138, 160, 255, 0.22); }
+}
+.cards-pick-btn {
+  animation: cards-pick-pulse 2.4s ease-in-out infinite;
+}
+
+/* --- Reveal: hero card lifts, glows, and sparkles --- */
+@keyframes cards-hero-rise {
+  0%   { opacity: 0; transform: translateY(60px) scale(0.4) rotate(-8deg); filter: blur(10px) brightness(1.5); }
+  60%  { opacity: 1; transform: translateY(-6px) scale(1.08) rotate(2deg); filter: blur(0) brightness(1.1); }
+  100% { opacity: 1; transform: translateY(0) scale(1) rotate(0deg); filter: blur(0) brightness(1); }
+}
+.cards-hero {
+  animation: cards-hero-rise 1.1s cubic-bezier(0.22, 1, 0.36, 1) 0.2s both;
+}
+
+@keyframes cards-ripple {
+  0%   { opacity: 0.65; transform: scale(0.4); border-color: rgba(138, 160, 255, 0.65); }
+  100% { opacity: 0;    transform: scale(2.2); border-color: rgba(138, 160, 255, 0); }
+}
+.cards-ripple {
   position: absolute;
   inset: 0;
   margin: auto;
-  border-radius: 50%;
-  pointer-events: none;
-}
-.oracle-ring {
-  border: 1px solid rgba(138, 160, 255, 0.35);
-}
-.oracle-ring-1 {
-  width: 100%; height: 100%;
-  animation: oracle-spin 14s linear infinite;
-  border-top-color: rgba(184, 186, 196, 0.7);
-}
-.oracle-ring-2 {
-  width: 72%; height: 72%;
-  animation: oracle-spin 9s linear infinite reverse;
-  border-left-color: rgba(138, 160, 255, 0.7);
-  border-right-color: rgba(138, 160, 255, 0.1);
-}
-.oracle-ring-3 {
-  width: 46%; height: 46%;
-  animation: oracle-spin 5s linear infinite;
-  border-bottom-color: rgba(220, 225, 240, 0.8);
-  border-top-color: transparent;
-}
-.oracle-pupil {
-  width: 14%; height: 14%;
-  background: radial-gradient(circle, rgba(220, 225, 240, 0.95) 0%, rgba(138, 160, 255, 0.5) 60%, transparent 100%);
-  box-shadow: 0 0 20px rgba(138, 160, 255, 0.7);
-  animation: oracle-pulse 2.2s ease-in-out infinite;
-}
-.oracle-eye.is-active .oracle-ring-1 { animation-duration: 4s; }
-.oracle-eye.is-active .oracle-ring-2 { animation-duration: 2.5s; }
-.oracle-eye.is-active .oracle-ring-3 { animation-duration: 1.5s; }
-.oracle-eye.is-active .oracle-pupil  { animation-duration: 0.8s; }
-
-@keyframes oracle-spin {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(360deg); }
-}
-@keyframes oracle-pulse {
-  0%, 100% { transform: scale(1); opacity: 0.9; box-shadow: 0 0 20px rgba(138, 160, 255, 0.7); }
-  50%      { transform: scale(1.15); opacity: 1; box-shadow: 0 0 32px rgba(138, 160, 255, 1); }
-}
-
-/* --- Rune circle --- */
-@keyframes oracle-rune-in {
-  from { opacity: 0; transform: translate(-50%, -50%) scale(0.4); filter: blur(6px); }
-  to   { opacity: 1; transform: translate(-50%, -50%) scale(1); filter: blur(0); }
-}
-.oracle-rune {
-  opacity: 0;
-  animation: oracle-rune-in 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-
-/* The "scanning sweep" during divining */
-@keyframes oracle-sweep {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(360deg); }
-}
-.oracle-sweep {
-  background: conic-gradient(
-    from 0deg,
-    transparent 0deg,
-    rgba(138, 160, 255, 0.35) 30deg,
-    transparent 60deg,
-    transparent 360deg
-  );
-  animation: oracle-sweep 2s linear infinite;
-  mask: radial-gradient(circle, transparent 40%, black 42%, black 95%, transparent 100%);
-  -webkit-mask: radial-gradient(circle, transparent 40%, black 42%, black 95%, transparent 100%);
-}
-
-/* --- Reveal orb --- */
-@keyframes oracle-star-in {
-  0%   { opacity: 0; transform: scale(0.1) rotate(-30deg); filter: blur(20px) brightness(2); }
-  60%  { opacity: 1; transform: scale(1.2) rotate(5deg); filter: blur(0) brightness(1.4); }
-  100% { opacity: 1; transform: scale(1) rotate(0deg); filter: blur(0) brightness(1); }
-}
-.oracle-star {
-  opacity: 0;
-  animation: oracle-star-in 1.1s cubic-bezier(0.22, 1, 0.36, 1) 0.2s both;
-}
-
-@keyframes oracle-ripple {
-  0%   { opacity: 0.7; transform: scale(0.4); border-color: rgba(138, 160, 255, 0.6); }
-  100% { opacity: 0;   transform: scale(1.6); border-color: rgba(138, 160, 255, 0); }
-}
-.oracle-ripple {
-  position: absolute;
-  inset: 0;
+  height: 15rem;
+  width: 15rem;
   border-radius: 50%;
   border: 1px solid rgba(138, 160, 255, 0.6);
-  animation: oracle-ripple 2.4s ease-out infinite;
+  animation: cards-ripple 2.4s ease-out infinite;
 }
-.oracle-ripple-1 { animation-delay: 0s; }
-.oracle-ripple-2 { animation-delay: 0.8s; }
-.oracle-ripple-3 { animation-delay: 1.6s; }
+.cards-ripple-1 { animation-delay: 0s; }
+.cards-ripple-2 { animation-delay: 0.8s; }
+.cards-ripple-3 { animation-delay: 1.6s; }
 
-/* --- Reused sparkles / thinking dots --- */
-@keyframes oracle-sparkle {
+@keyframes cards-sparkle {
   0%   { opacity: 0; transform: scale(0.2) rotate(0deg); }
   40%  { opacity: 1; transform: scale(1.3) rotate(90deg); }
   100% { opacity: 0; transform: scale(0.6) rotate(180deg); }
 }
-.oracle-sparkle {
+.cards-sparkle {
   opacity: 0;
-  animation: oracle-sparkle 1.8s cubic-bezier(0.22, 1, 0.36, 1) infinite both;
+  animation: cards-sparkle 1.8s cubic-bezier(0.22, 1, 0.36, 1) infinite both;
   filter: drop-shadow(0 0 6px rgba(184, 186, 196, 0.6));
 }
 
+.cards-reveal-headline,
+.cards-reveal-sub {
+  animation: cards-fade-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.cards-reveal-headline { animation-delay: 1s; }
+.cards-reveal-sub      { animation-delay: 1.4s; }
+
+/* --- Shared "thinking..." animated dots --- */
 @keyframes thinking-dot {
   0%, 60%, 100% { opacity: 0.2; transform: translateY(0); }
   30%           { opacity: 1;   transform: translateY(-2px); }
@@ -272,14 +245,14 @@ section[id] {
 .thinking-dot:nth-child(3) { animation-delay: 0.30s; }
 
 @media (prefers-reduced-motion: reduce) {
-  .oracle-reveal .oracle-label,
-  .oracle-reveal .oracle-headline,
-  .oracle-reveal .oracle-sub { opacity: 1; }
-  .oracle-reveal .oracle-rail { transform: scaleX(1); }
-  .oracle-step, .oracle-intro, .oracle-circle, .oracle-reveal-wrap,
-  .oracle-cta, .oracle-replay, .oracle-rune, .oracle-star,
-  .oracle-ring-1, .oracle-ring-2, .oracle-ring-3, .oracle-pupil,
-  .oracle-sweep, .oracle-ripple, .oracle-sparkle, .thinking-dot {
+  .cards-reveal .cards-label,
+  .cards-reveal .cards-headline,
+  .cards-reveal .cards-sub { opacity: 1; }
+  .cards-reveal .cards-rail { transform: scaleX(1); }
+  .cards-prompt, .cards-picker, .cards-replay,
+  .playing-card--dealing, .cards-column,
+  .cards-pick-btn, .cards-hero, .cards-ripple, .cards-sparkle,
+  .cards-reveal-headline, .cards-reveal-sub, .thinking-dot {
     animation: none;
     opacity: 1;
     transform: none;

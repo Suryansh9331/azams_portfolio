@@ -1,78 +1,32 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useInView } from "../hooks/useInView";
 
+type Suit = "♠" | "♥" | "♦" | "♣";
+type Card = { rank: string; suit: Suit; color: "red" | "dark" };
+
 type Phase =
   | "idle"
-  | "intro"
-  | "step-1"
-  | "step-2"
-  | "step-3"
-  | "step-4"
-  | "step-5"
-  | "circle"
-  | "divining"
-  | "reveal"
+  | "ready" // sealed card + 5 options, waiting for pick
+  | "merging" // user picked; chosen card slides to meet the prediction
+  | "revealing" // both cards flip in unison
   | "done";
 
-/* === The rune circle ===
- * 10 "mystical" runes. The user is told to find their mental number (0-9) in
- * the circle and memorise that rune. The math above guarantees their result
- * is 9 — so the rune at index 9 (★) is the one that will always match.
- *
- * The other 9 slots are decorated with visually similar but distinct glyphs
- * so no pattern is obvious. The circle is laid out non-sequentially (see
- * CIRCLE_ORDER) to add one more layer of visual noise. */
-const RUNES = ["⬡", "◈", "✦", "❖", "⟐", "⬟", "✧", "⟢", "◇", "★"];
-// Visually scattered around the ring — user has to hunt for their digit.
-const CIRCLE_ORDER = [3, 7, 1, 9, 5, 0, 8, 2, 6, 4];
-
-const STEPS: {
-  phase: Phase;
-  title: string;
-  body: string;
-  example: string;
-  cta: string;
-}[] = [
-  {
-    phase: "step-1",
-    title: "One. A number.",
-    body: "Think of any two-digit number. Any one. Hold it.",
-    example: "Example: 47",
-    cta: "Got it",
-  },
-  {
-    phase: "step-2",
-    title: "Two. The sum.",
-    body: "Add its two digits together in your head.",
-    example: "47 → 4 + 7 = 11",
-    cta: "Done",
-  },
-  {
-    phase: "step-3",
-    title: "Three. The subtraction.",
-    body: "Subtract that sum from your original number.",
-    example: "47 − 11 = 36",
-    cta: "Next",
-  },
-  {
-    phase: "step-4",
-    title: "Four. Your choice.",
-    body: "Multiply the result by any single digit between 2 and 9 — whichever one calls to you.",
-    example: "36 × 5 = 180",
-    cta: "Chosen",
-  },
-  {
-    phase: "step-5",
-    title: "Five. Collapse the digits.",
-    body: "Add the digits of your result. If it's still more than one digit, add again. Keep going until a single digit remains.",
-    example: "180 → 1 + 8 + 0 = 9",
-    cta: "I have my digit",
-  },
+/* Rotating prediction cards — each replay uses the next card so repeat
+ * players can't deduce "it's always Ace of Spades". After 5 tries the
+ * cycle restarts. Each card is dramatic/photogenic. */
+const PREDICTIONS: Card[] = [
+  { rank: "A", suit: "♠", color: "dark" },
+  { rank: "Q", suit: "♥", color: "red" },
+  { rank: "J", suit: "♦", color: "red" },
+  { rank: "K", suit: "♣", color: "dark" },
+  { rank: "10", suit: "♥", color: "red" },
 ];
 
 export function MagicTrick() {
-  const { ref, inView } = useInView<HTMLElement>({ threshold: 0.2 });
+  const { ref, inView } = useInView<HTMLElement>({ threshold: 0.25 });
   const [phase, setPhase] = useState<Phase>("idle");
+  const [round, setRound] = useState(0);
+  const [pickedIndex, setPickedIndex] = useState<number | null>(null);
   const startedRef = useRef(false);
   const timers = useRef<number[]>([]);
 
@@ -85,53 +39,40 @@ export function MagicTrick() {
     timers.current.forEach((id) => window.clearTimeout(id));
     timers.current = [];
   }, []);
+  useEffect(() => () => clearTimers(), [clearTimers]);
 
   useEffect(() => {
     if (!inView || startedRef.current) return;
     startedRef.current = true;
-    schedule(() => setPhase("intro"), 300);
-    schedule(() => setPhase("step-1"), 1600);
+    schedule(() => setPhase("ready"), 500);
   }, [inView, schedule]);
 
-  useEffect(() => () => clearTimers(), [clearTimers]);
+  const prediction = PREDICTIONS[round % PREDICTIONS.length];
 
-  const advance = () => {
-    const flow: Phase[] = [
-      "step-1",
-      "step-2",
-      "step-3",
-      "step-4",
-      "step-5",
-      "circle",
-    ];
-    const idx = flow.indexOf(phase);
-    if (idx === -1 || idx === flow.length - 1) return;
-    setPhase(flow[idx + 1]);
-  };
-
-  const divine = () => {
-    setPhase("divining");
-    schedule(() => setPhase("reveal"), 2500);
-    schedule(() => setPhase("done"), 4800);
+  const handlePick = (idx: number) => {
+    if (phase !== "ready") return;
+    setPickedIndex(idx);
+    setPhase("merging");
+    schedule(() => setPhase("revealing"), 650);
+    schedule(() => setPhase("done"), 1800);
   };
 
   const reset = () => {
     clearTimers();
-    setPhase("intro");
-    schedule(() => setPhase("step-1"), 900);
+    setPickedIndex(null);
+    setRound((r) => r + 1);
+    setPhase("ready");
   };
-
-  const currentStep = STEPS.find((s) => s.phase === phase);
 
   return (
     <section
       ref={ref}
       id="magic-trick"
-      className={`oracle-reveal relative overflow-hidden bg-ink-950 py-20 sm:py-24 md:py-28 lg:py-32 ${
+      className={`predict-reveal relative overflow-hidden bg-ink-950 py-20 sm:py-24 md:py-28 lg:py-32 ${
         inView ? "in-view" : ""
       }`}
     >
-      {/* Celestial backdrop — matches portfolio radial-glow pattern */}
+      {/* Portfolio-matched backdrop */}
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0"
@@ -140,75 +81,109 @@ export function MagicTrick() {
             "radial-gradient(ellipse 60% 50% at 50% 55%, rgba(60,100,200,0.18) 0%, rgba(30,55,130,0.08) 40%, rgba(10,16,34,0) 72%)",
         }}
       />
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 opacity-[0.06] mix-blend-screen"
-        style={{
-          backgroundImage:
-            "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>\")",
-        }}
-      />
 
       <div className="relative mx-auto w-full max-w-[1680px] px-4 sm:px-5 md:px-6 lg:px-8 xl:px-10">
         {/* Section header */}
         <div className="mx-auto max-w-2xl text-center">
-          <p className="oracle-label text-[13px] font-medium tracking-[0.24em] text-muted uppercase sm:text-[14px] md:text-[15px] lg:text-[16px]">
-            The Oracle
+          <p className="predict-label text-[13px] font-medium tracking-[0.24em] text-muted uppercase sm:text-[14px] md:text-[15px] lg:text-[16px]">
+            A Prediction
           </p>
-          <div className="oracle-rail mx-auto mt-3 h-px w-24 bg-line sm:w-32" />
-          <h3 className="oracle-headline mt-6 font-display text-3xl leading-[1.1] font-normal text-silver sm:text-4xl md:text-5xl">
-            A number tells.{" "}
-            <span className="italic text-silver-dim">We'll listen.</span>
+          <div className="predict-rail mx-auto mt-3 h-px w-24 bg-line sm:w-32" />
+          <h3 className="predict-headline mt-6 font-display text-3xl leading-[1.1] font-normal text-silver sm:text-4xl md:text-5xl">
+            One card is sealed.{" "}
+            <span className="italic text-silver-dim">
+              Pick yours — we'll see.
+            </span>
           </h3>
-          <p className="oracle-sub mt-4 text-[13px] leading-relaxed text-silver-dim sm:text-sm">
-            Five mental steps. Then find your digit in the ring. The Oracle
-            doesn't guess — it knows.
+          <p className="predict-sub mt-4 text-[13px] leading-relaxed text-silver-dim sm:text-sm">
+            The card above was chosen before you arrived. Tap any card below.
           </p>
         </div>
 
-        {/* Stage */}
-        <div className="relative mx-auto mt-12 flex min-h-120 w-full max-w-200 flex-col items-center justify-center sm:mt-16 md:min-h-144">
-          {phase === "intro" && (
-            <div className="oracle-intro flex flex-col items-center gap-5 text-center">
-              <OracleEye phase={phase} />
-              <p className="font-display text-xl italic text-silver-dim sm:text-2xl">
-                Clear your mind.
-              </p>
-            </div>
-          )}
-
-          {currentStep && (
-            <div className="oracle-step flex max-w-md flex-col items-center gap-6 text-center">
-              <StepIndex current={STEPS.indexOf(currentStep) + 1} total={STEPS.length} />
-              <h4 className="font-display text-2xl font-normal text-silver sm:text-3xl md:text-4xl">
-                {currentStep.title}
-              </h4>
-              <p className="text-[14px] leading-relaxed text-silver-dim sm:text-[15px]">
-                {currentStep.body}
-              </p>
-              <p className="font-numeric text-[13px] tracking-wide text-muted sm:text-sm">
-                {currentStep.example}
-              </p>
-              <button
-                type="button"
-                onClick={advance}
-                className="oracle-cta group mt-2 inline-flex items-center gap-2 rounded-full border border-accent/50 bg-[rgba(138,160,255,0.08)] px-6 py-2.5 text-[11px] font-medium tracking-[0.22em] text-silver uppercase shadow-[0_8px_24px_rgba(138,160,255,0.2)] backdrop-blur-md transition-all duration-300 hover:border-accent hover:bg-[rgba(138,160,255,0.14)] hover:shadow-[0_12px_30px_rgba(138,160,255,0.3)] sm:text-[12px]"
-              >
-                {currentStep.cta}
-                <ChevronRight />
-              </button>
-            </div>
-          )}
-
-          {(phase === "circle" || phase === "divining") && (
-            <RuneCircle
-              divining={phase === "divining"}
-              onConfirm={divine}
+        {/* Stage — compact, horizontal composition */}
+        <div className="relative mx-auto mt-12 flex max-w-md flex-col items-center gap-10 sm:mt-14 sm:gap-12">
+          {/* Prediction card */}
+          <div className="relative flex flex-col items-center gap-3">
+            <span className="predict-tag text-[10px] font-medium tracking-[0.32em] text-muted uppercase sm:text-[11px]">
+              Sealed Prediction
+            </span>
+            <PredictionCard
+              card={prediction}
+              revealed={phase === "revealing" || phase === "done"}
+              merging={phase === "merging"}
             />
-          )}
+            {/* Sparkles on match */}
+            {(phase === "revealing" || phase === "done") && <SparkleRing />}
+          </div>
 
-          {(phase === "reveal" || phase === "done") && (
-            <RevealOrb done={phase === "done"} onReset={reset} />
+          {/* 5 face-down options */}
+          <div className="relative w-full">
+            <div className="flex justify-center gap-2 sm:gap-3 md:gap-4">
+              {[0, 1, 2, 3, 4].map((idx) => {
+                const isPicked = pickedIndex === idx;
+                const otherPicked = pickedIndex !== null && !isPicked;
+                return (
+                  <button
+                    key={`${round}-${idx}`}
+                    type="button"
+                    onClick={() => handlePick(idx)}
+                    disabled={phase !== "ready"}
+                    aria-label={`Pick card ${idx + 1}`}
+                    className={`option-card group relative aspect-7/10 w-14 overflow-hidden rounded-md border transition-all duration-500 ease-out focus:outline-none focus-visible:ring-2 focus-visible:ring-accent sm:w-16 md:w-20 ${
+                      phase === "ready"
+                        ? "cursor-pointer border-line/80 hover:-translate-y-2 hover:border-accent/60 hover:shadow-[0_12px_30px_rgba(138,160,255,0.3)]"
+                        : "cursor-default border-line"
+                    } ${
+                      isPicked
+                        ? "z-10 scale-110 -translate-y-6 border-accent shadow-[0_18px_40px_rgba(138,160,255,0.5)]"
+                        : otherPicked
+                          ? "opacity-30 scale-90"
+                          : ""
+                    }`}
+                    style={{
+                      transitionDelay:
+                        phase === "ready"
+                          ? `${idx * 60}ms`
+                          : "0ms",
+                    }}
+                  >
+                    <CardBack revealed={isPicked && (phase === "revealing" || phase === "done")} card={prediction} />
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Prompt below options */}
+            <p className="predict-prompt mt-6 text-center text-[12px] tracking-[0.22em] text-muted uppercase sm:text-[13px]">
+              {phase === "ready" && "Tap any card"}
+              {phase === "merging" && "Watching your choice…"}
+              {(phase === "revealing" || phase === "done") &&
+                `${prediction.rank} ${prediction.suit} — exactly as predicted.`}
+            </p>
+          </div>
+
+          {/* Replay */}
+          {phase === "done" && (
+            <button
+              type="button"
+              onClick={reset}
+              className="predict-replay group inline-flex items-center gap-2 rounded-full border border-line bg-ink-900/70 px-5 py-2.5 text-[11px] font-medium tracking-[0.22em] text-silver-dim uppercase backdrop-blur-md transition-all duration-300 hover:border-accent/50 hover:text-silver sm:text-[12px]"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.7"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="h-3.5 w-3.5 transition-transform duration-500 group-hover:-rotate-180"
+                aria-hidden
+              >
+                <path d="M3 12a9 9 0 0 1 15.5-6.3L21 8" />
+                <path d="M21 3v5h-5" />
+              </svg>
+              Try another
+            </button>
           )}
         </div>
       </div>
@@ -216,246 +191,159 @@ export function MagicTrick() {
   );
 }
 
-/* === Small presentational bits === */
-
-function StepIndex({ current, total }: { current: number; total: number }) {
+/* === The sealed prediction card at top === */
+function PredictionCard({
+  card,
+  revealed,
+  merging,
+}: {
+  card: Card;
+  revealed: boolean;
+  merging: boolean;
+}) {
   return (
-    <div className="flex items-center gap-3 text-[11px] tracking-[0.3em] text-muted uppercase">
-      <span className="font-numeric text-silver-dim">
-        {String(current).padStart(2, "0")}
-      </span>
-      <span className="h-px w-10 bg-line" />
-      <span className="font-numeric">{String(total).padStart(2, "0")}</span>
+    <div
+      className={`relative aspect-7/10 w-24 overflow-visible transition-transform duration-500 sm:w-28 md:w-32 ${
+        merging ? "scale-105" : ""
+      } ${revealed ? "shadow-[0_30px_60px_rgba(138,160,255,0.4)]" : ""}`}
+    >
+      <div
+        className={`relative h-full w-full rounded-lg transition-transform duration-700 transform-3d ${
+          revealed ? "transform-[rotateY(180deg)]" : ""
+        }`}
+      >
+        {/* Back */}
+        <div className="absolute inset-0 overflow-hidden rounded-lg border border-silver-dim/25 bg-linear-to-br from-ink-800 via-ink-900 to-[#0b1030] backface-hidden">
+          <CardBackPattern />
+        </div>
+        {/* Face */}
+        <div className="absolute inset-0 overflow-hidden rounded-lg border border-silver/50 bg-linear-to-br from-white to-[#f3f3ee] transform-[rotateY(180deg)] backface-hidden">
+          <CardFace card={card} large />
+        </div>
+      </div>
     </div>
   );
 }
 
-function ChevronRight() {
+/* === The 5 face-down option cards === */
+function CardBack({ revealed, card }: { revealed: boolean; card: Card }) {
   return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-0.5"
-      aria-hidden
+    <div
+      className={`relative h-full w-full rounded-md transition-transform duration-700 transform-3d ${
+        revealed ? "transform-[rotateY(180deg)]" : ""
+      }`}
     >
-      <path d="M5 12h14M12 5l7 7-7 7" />
+      <div className="absolute inset-0 overflow-hidden rounded-md bg-linear-to-br from-ink-800 via-ink-900 to-[#0b1030] backface-hidden">
+        <CardBackPattern />
+      </div>
+      <div className="absolute inset-0 overflow-hidden rounded-md border border-silver/50 bg-linear-to-br from-white to-[#f3f3ee] transform-[rotateY(180deg)] backface-hidden">
+        <CardFace card={card} />
+      </div>
+    </div>
+  );
+}
+
+function CardBackPattern() {
+  return (
+    <svg viewBox="0 0 100 140" className="absolute inset-0 h-full w-full" aria-hidden>
+      <defs>
+        <pattern id="pb" x="0" y="0" width="7" height="7" patternUnits="userSpaceOnUse">
+          <circle cx="3.5" cy="3.5" r="0.4" fill="rgba(138,160,255,0.4)" />
+        </pattern>
+      </defs>
+      <rect width="100" height="140" fill="url(#pb)" />
+      <rect x="5" y="5" width="90" height="130" fill="none" stroke="rgba(184,186,196,0.3)" strokeWidth="0.5" rx="3" />
+      <g transform="translate(50 70)">
+        <path d="M0 -28 L20 0 L0 28 L-20 0 Z" fill="none" stroke="rgba(138,160,255,0.55)" strokeWidth="0.6" />
+        <path d="M0 -18 L13 0 L0 18 L-13 0 Z" fill="none" stroke="rgba(184,186,196,0.5)" strokeWidth="0.4" />
+        <circle cx="0" cy="0" r="3" fill="rgba(138,160,255,0.3)" />
+      </g>
     </svg>
   );
 }
 
-/* === The Oracle "eye" — spinning concentric rings === */
-function OracleEye({ phase }: { phase: Phase }) {
-  const active = phase === "divining" || phase === "intro";
+function CardFace({ card, large = false }: { card: Card; large?: boolean }) {
+  const color = card.color === "red" ? "#c22" : "#0a0e1a";
   return (
     <div
-      className={`oracle-eye relative h-24 w-24 ${active ? "is-active" : ""}`}
-      aria-hidden
+      className={`flex h-full w-full flex-col justify-between font-serif leading-none ${
+        large ? "p-2 sm:p-2.5 md:p-3" : "p-1 sm:p-1.5"
+      }`}
+      style={{ color }}
     >
-      <span className="oracle-ring oracle-ring-1" />
-      <span className="oracle-ring oracle-ring-2" />
-      <span className="oracle-ring oracle-ring-3" />
-      <span className="oracle-pupil" />
-    </div>
-  );
-}
-
-/* === Rune Circle — user finds their digit here === */
-function RuneCircle({
-  divining,
-  onConfirm,
-}: {
-  divining: boolean;
-  onConfirm: () => void;
-}) {
-  // 10 runes positioned on a circle; CIRCLE_ORDER controls which digit lives
-  // at which angular slot so numbers aren't sequential around the ring.
-  const positions = CIRCLE_ORDER.map((digit, slot) => {
-    const angle = (slot / CIRCLE_ORDER.length) * Math.PI * 2 - Math.PI / 2;
-    return {
-      digit,
-      rune: RUNES[digit],
-      x: 50 + Math.cos(angle) * 42,
-      y: 50 + Math.sin(angle) * 42,
-      slot,
-    };
-  });
-
-  return (
-    <div className="oracle-circle relative flex flex-col items-center gap-6">
-      <p className="font-display text-base italic text-silver-dim sm:text-lg">
-        {divining ? "Reading your rune" : "Find your digit. Memorise its rune."}
-        {divining && <ThinkingDots />}
-      </p>
-
-      <div className="relative aspect-square w-72 sm:w-80 md:w-96">
-        {/* Ring background */}
-        <svg viewBox="0 0 100 100" className="absolute inset-0 h-full w-full" aria-hidden>
-          <defs>
-            <radialGradient id="ring-glow" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stopColor="rgba(138,160,255,0.25)" />
-              <stop offset="60%" stopColor="rgba(60,80,160,0.08)" />
-              <stop offset="100%" stopColor="transparent" />
-            </radialGradient>
-          </defs>
-          <circle cx="50" cy="50" r="48" fill="url(#ring-glow)" />
-          <circle
-            cx="50"
-            cy="50"
-            r="46"
-            fill="none"
-            stroke="rgba(184,186,196,0.25)"
-            strokeWidth="0.3"
-          />
-          <circle
-            cx="50"
-            cy="50"
-            r="32"
-            fill="none"
-            stroke="rgba(138,160,255,0.35)"
-            strokeWidth="0.25"
-            strokeDasharray="1 2"
-          />
-          <circle
-            cx="50"
-            cy="50"
-            r="16"
-            fill="none"
-            stroke="rgba(184,186,196,0.2)"
-            strokeWidth="0.3"
-          />
-        </svg>
-
-        {/* Center oracle eye */}
-        <div className="absolute inset-0 flex items-center justify-center">
-          <OracleEye phase={divining ? "divining" : "circle"} />
-        </div>
-
-        {/* Rune positions */}
-        {positions.map(({ digit, rune, x, y, slot }) => (
-          <div
-            key={digit}
-            className="oracle-rune absolute flex -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-1"
-            style={
-              {
-                left: `${x}%`,
-                top: `${y}%`,
-                animationDelay: `${slot * 70}ms`,
-              } as React.CSSProperties
-            }
-          >
-            <span className="font-display text-2xl text-silver drop-shadow-[0_2px_8px_rgba(138,160,255,0.4)] sm:text-3xl">
-              {rune}
-            </span>
-            <span className="font-numeric text-[10px] font-medium tracking-wide text-muted sm:text-[11px]">
-              {digit}
-            </span>
-          </div>
-        ))}
-
-        {/* Scanning sweep during divining */}
-        {divining && (
-          <div
-            aria-hidden
-            className="oracle-sweep pointer-events-none absolute inset-0 rounded-full"
-          />
-        )}
-      </div>
-
-      {!divining && (
-        <button
-          type="button"
-          onClick={onConfirm}
-          className="oracle-cta group inline-flex items-center gap-2 rounded-full border border-accent/50 bg-[rgba(138,160,255,0.08)] px-6 py-2.5 text-[11px] font-medium tracking-[0.22em] text-silver uppercase shadow-[0_8px_24px_rgba(138,160,255,0.2)] backdrop-blur-md transition-all duration-300 hover:border-accent hover:bg-[rgba(138,160,255,0.14)] hover:shadow-[0_12px_30px_rgba(138,160,255,0.3)] sm:text-[12px]"
+      <div className="flex flex-col items-start">
+        <span
+          className={`font-bold ${
+            large
+              ? "text-[14px] sm:text-[16px] md:text-[18px]"
+              : "text-[9px] sm:text-[10px] md:text-[12px]"
+          }`}
         >
-          Read my rune
-          <ChevronRight />
-        </button>
-      )}
-    </div>
-  );
-}
-
-/* === Reveal: the "9" rune (★) blossoms in center === */
-function RevealOrb({ done, onReset }: { done: boolean; onReset: () => void }) {
-  const rune = RUNES[9]; // star — the forced oracle rune
-  return (
-    <div className="oracle-reveal-wrap flex flex-col items-center gap-6 text-center">
-      <p className="font-display text-lg italic text-silver-dim sm:text-xl">
-        The Oracle has your rune.
-      </p>
-
-      <div className="relative flex h-56 w-56 items-center justify-center sm:h-64 sm:w-64 md:h-72 md:w-72">
-        {/* Glow ripples */}
-        <span className="oracle-ripple oracle-ripple-1" aria-hidden />
-        <span className="oracle-ripple oracle-ripple-2" aria-hidden />
-        <span className="oracle-ripple oracle-ripple-3" aria-hidden />
-
-        {/* The star itself */}
-        <span className="oracle-star relative font-display text-8xl text-silver drop-shadow-[0_0_24px_rgba(138,160,255,0.8)] sm:text-9xl">
-          {rune}
+          {card.rank}
         </span>
-
-        {/* Sparkles around */}
-        <Sparkles />
-      </div>
-
-      <div className="flex flex-col items-center gap-1">
-        <p className="font-display text-xl text-silver sm:text-2xl">
-          Did it match?
-        </p>
-        <p className="text-[11px] tracking-[0.22em] text-muted uppercase sm:text-[12px]">
-          Every mind lands on the same rune.
-        </p>
-      </div>
-
-      {done && (
-        <button
-          type="button"
-          onClick={onReset}
-          className="oracle-replay group mt-2 inline-flex items-center gap-2 rounded-full border border-line bg-ink-900/70 px-5 py-2.5 text-[11px] font-medium tracking-[0.22em] text-silver-dim uppercase backdrop-blur-md transition-all duration-300 hover:border-accent/50 hover:text-silver sm:text-[12px]"
+        <span
+          className={
+            large
+              ? "text-[12px] sm:text-[14px] md:text-[16px]"
+              : "text-[8px] sm:text-[9px] md:text-[11px]"
+          }
         >
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.7"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="h-3.5 w-3.5 transition-transform duration-500 group-hover:-rotate-180"
-            aria-hidden
-          >
-            <path d="M3 12a9 9 0 0 1 15.5-6.3L21 8" />
-            <path d="M21 3v5h-5" />
-          </svg>
-          Again
-        </button>
-      )}
+          {card.suit}
+        </span>
+      </div>
+      <div className="flex flex-1 items-center justify-center">
+        <span
+          className={`drop-shadow-[0_1px_2px_rgba(0,0,0,0.1)] ${
+            large
+              ? "text-[32px] sm:text-[42px] md:text-[52px]"
+              : "text-[18px] sm:text-[22px] md:text-[28px]"
+          }`}
+        >
+          {card.suit}
+        </span>
+      </div>
+      <div className="flex flex-col items-end" style={{ transform: "rotate(180deg)" }}>
+        <span
+          className={`font-bold ${
+            large
+              ? "text-[14px] sm:text-[16px] md:text-[18px]"
+              : "text-[9px] sm:text-[10px] md:text-[12px]"
+          }`}
+        >
+          {card.rank}
+        </span>
+        <span
+          className={
+            large
+              ? "text-[12px] sm:text-[14px] md:text-[16px]"
+              : "text-[8px] sm:text-[9px] md:text-[11px]"
+          }
+        >
+          {card.suit}
+        </span>
+      </div>
     </div>
   );
 }
 
-/* === Sparkle burst === */
-function Sparkles() {
+/* === Sparkle ring around the prediction card on reveal === */
+function SparkleRing() {
   const stars = [
-    { x: "20%", y: "15%", size: 10, delay: 60 },
-    { x: "80%", y: "20%", size: 14, delay: 180 },
-    { x: "10%", y: "60%", size: 8, delay: 320 },
-    { x: "85%", y: "65%", size: 11, delay: 90 },
-    { x: "45%", y: "5%", size: 7, delay: 250 },
-    { x: "55%", y: "90%", size: 9, delay: 380 },
-    { x: "15%", y: "35%", size: 6, delay: 420 },
-    { x: "90%", y: "40%", size: 8, delay: 150 },
+    { x: "-20%", y: "15%", size: 10, delay: 60 },
+    { x: "115%", y: "20%", size: 14, delay: 180 },
+    { x: "-15%", y: "65%", size: 8, delay: 320 },
+    { x: "118%", y: "70%", size: 11, delay: 90 },
+    { x: "45%", y: "-15%", size: 7, delay: 250 },
+    { x: "55%", y: "108%", size: 9, delay: 380 },
+    { x: "-10%", y: "40%", size: 6, delay: 420 },
+    { x: "110%", y: "45%", size: 8, delay: 150 },
   ];
   return (
     <div className="pointer-events-none absolute inset-0 z-20" aria-hidden>
       {stars.map((s, i) => (
         <span
           key={i}
-          className="oracle-sparkle absolute block"
+          className="predict-sparkle absolute block"
           style={{
             left: s.x,
             top: s.y,
@@ -473,15 +361,5 @@ function Sparkles() {
         </span>
       ))}
     </div>
-  );
-}
-
-function ThinkingDots() {
-  return (
-    <span className="ml-1 inline-flex gap-0.5">
-      <span className="thinking-dot">.</span>
-      <span className="thinking-dot">.</span>
-      <span className="thinking-dot">.</span>
-    </span>
   );
 }
