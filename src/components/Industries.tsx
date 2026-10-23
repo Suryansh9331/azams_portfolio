@@ -70,24 +70,26 @@ export function Industries() {
     el.scrollBy({ left: step * dir, behavior: "smooth" });
   };
 
-  // When user picks an industry, scroll that tile into view (helps on mobile
-  // when the active tile is partially off-screen).
+  // When user picks an industry, horizontally centre that tile within the
+  // scroller — only on *user-driven* changes, never on initial mount. We use
+  // `scrollTo` on the scroller element directly (not `scrollIntoView`, which
+  // would also scroll the page vertically down to the Industries section on
+  // reload).
+  const industryMountRef = useRef(false);
   useEffect(() => {
+    if (!industryMountRef.current) {
+      industryMountRef.current = true;
+      return;
+    }
     const el = scrollerRef.current;
     if (!el) return;
     const tile = el.querySelector<HTMLElement>(
       `[data-industry-card="${activeId}"]`,
     );
     if (!tile) return;
-    const rect = tile.getBoundingClientRect();
-    const scrollerRect = el.getBoundingClientRect();
-    if (rect.left < scrollerRect.left + 24 || rect.right > scrollerRect.right - 24) {
-      tile.scrollIntoView({
-        behavior: "smooth",
-        block: "nearest",
-        inline: "center",
-      });
-    }
+    const targetLeft =
+      tile.offsetLeft - (el.clientWidth - tile.offsetWidth) / 2;
+    el.scrollTo({ left: targetLeft, behavior: "smooth" });
   }, [activeId]);
 
   return (
