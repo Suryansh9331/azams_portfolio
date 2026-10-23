@@ -122,9 +122,6 @@ export function Contact() {
             </ContactCol>
           </div>
 
-          <div className="mt-10 flex justify-end text-[10px] tracking-[0.3em] text-muted uppercase">
-            <span>11</span>
-          </div>
         </div>
       </div>
     </section>

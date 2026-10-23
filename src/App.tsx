@@ -13,6 +13,7 @@ const WhyBrands = lazy(() => import("./components/WhyBrands").then((m) => ({ def
 const Creates = lazy(() => import("./components/Creates").then((m) => ({ default: m.Creates })));
 const Formats = lazy(() => import("./components/Formats").then((m) => ({ default: m.Formats })));
 const Process = lazy(() => import("./components/Process").then((m) => ({ default: m.Process })));
+const MagicTrick = lazy(() => import("./components/MagicTrick").then((m) => ({ default: m.MagicTrick })));
 const Contact = lazy(() => import("./components/Contact").then((m) => ({ default: m.Contact })));
 const ScrollToTop = lazy(() => import("./components/ScrollToTop").then((m) => ({ default: m.ScrollToTop })));
 
@@ -48,6 +49,9 @@ function App() {
       </Suspense>
       <Suspense fallback={<SectionFallback />}>
         <Process />
+      </Suspense>
+      <Suspense fallback={<SectionFallback />}>
+        <MagicTrick />
       </Suspense>
       <Suspense fallback={<SectionFallback />}>
         <Contact />

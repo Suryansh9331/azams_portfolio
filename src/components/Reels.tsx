@@ -68,12 +68,6 @@ export function Reels() {
         </div>
       )}
 
-      <div className="pointer-events-none absolute right-5 bottom-5 flex flex-col items-end gap-1 text-[10px] tracking-[0.3em] text-muted uppercase sm:right-8 md:right-12 md:bottom-8 lg:right-16 lg:bottom-10">
-        <span className="font-display text-sm tracking-[0.4em] text-silver-dim">
-          AZAM
-        </span>
-        <span>05</span>
-      </div>
     </div>
   );
 }

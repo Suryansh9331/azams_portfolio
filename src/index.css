@@ -112,6 +112,100 @@ section[id] {
   color: #fff;
 }
 
+/* === Magic trick section === */
+@keyframes magic-sparkle {
+  0% {
+    opacity: 0;
+    transform: scale(0.2) rotate(0deg);
+  }
+  40% {
+    opacity: 1;
+    transform: scale(1.3) rotate(90deg);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.6) rotate(180deg);
+  }
+}
+
+@keyframes magic-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+    filter: blur(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+@keyframes magic-rail-draw {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+.magic-sparkle {
+  opacity: 0;
+  animation: magic-sparkle 1.3s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-iteration-count: infinite;
+  animation-duration: 1.8s;
+  filter: drop-shadow(0 0 6px rgba(184, 186, 196, 0.6));
+}
+
+.magic-reveal .magic-label,
+.magic-reveal .magic-headline,
+.magic-reveal .magic-sub {
+  opacity: 0;
+}
+.magic-reveal .magic-rail {
+  transform: scaleX(0);
+  transform-origin: center;
+}
+
+.magic-reveal.in-view .magic-label {
+  animation: magic-fade-up 0.65s cubic-bezier(0.22, 1, 0.36, 1) 0.1s forwards;
+}
+.magic-reveal.in-view .magic-rail {
+  animation: magic-rail-draw 0.75s cubic-bezier(0.76, 0, 0.24, 1) 0.25s forwards;
+}
+.magic-reveal.in-view .magic-headline {
+  animation: magic-fade-up 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.4s forwards;
+}
+.magic-reveal.in-view .magic-sub {
+  animation: magic-fade-up 0.75s cubic-bezier(0.22, 1, 0.36, 1) 0.55s forwards;
+}
+
+.magic-prompt-cta,
+.magic-result,
+.magic-replay {
+  animation: magic-fade-up 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .magic-sparkle,
+  .magic-prompt-cta,
+  .magic-result,
+  .magic-replay {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+  .magic-reveal .magic-label,
+  .magic-reveal .magic-headline,
+  .magic-reveal .magic-sub {
+    opacity: 1;
+  }
+  .magic-reveal .magic-rail {
+    transform: scaleX(1);
+  }
+}
+
 /* === Industries explorer — horizontal rail with snap + hidden scrollbar === */
 .industries-scroller {
   scroll-snap-type: x mandatory;
