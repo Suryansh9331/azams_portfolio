@@ -1,81 +1,84 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useInView } from "../hooks/useInView";
 
-type Phase = "idle" | "dealing" | "shuffling" | "ready" | "reveal" | "done";
+type Phase =
+  | "idle"
+  | "revealing-set-one" // cards fade in face up
+  | "setup" // user is thinking of a card
+  | "flipping" // cards flip face down
+  | "shuffling" // cards swirl / shuffle to "read mind"
+  | "removing" // cards converge / vanish
+  | "revealing-set-two" // new 5 cards appear face up
+  | "done";
 
-// Three card "slots". The visual order rotates during shuffle via `positions`.
-const CARD_IDS = [0, 1, 2] as const;
+type Card = {
+  rank: string;
+  suit: "♠" | "♥" | "♦" | "♣";
+  color: "red" | "dark";
+};
 
-// A couple of pre-planned shuffle sequences so the motion looks natural, not scripted.
-const SHUFFLE_SEQUENCES: Array<[number, number, number][]> = [
-  [
-    [1, 0, 2],
-    [1, 2, 0],
-    [0, 2, 1],
-    [2, 0, 1],
-  ],
-  [
-    [0, 2, 1],
-    [2, 0, 1],
-    [2, 1, 0],
-    [1, 0, 2],
-  ],
-  [
-    [2, 1, 0],
-    [0, 1, 2],
-    [1, 2, 0],
-    [0, 2, 1],
-  ],
+// SET ONE — the 6 cards the user picks mentally from.
+const SET_ONE: Card[] = [
+  { rank: "7", suit: "♠", color: "dark" },
+  { rank: "Q", suit: "♥", color: "red" },
+  { rank: "10", suit: "♦", color: "red" },
+  { rank: "J", suit: "♣", color: "dark" },
+  { rank: "K", suit: "♠", color: "dark" },
+  { rank: "A", suit: "♥", color: "red" },
+];
+
+// SET TWO — the 5 "mind-read" cards. **None of these appear in SET ONE** —
+// that is the magic: whichever card the user picked is guaranteed to be
+// missing from the second set, so it looks like we removed theirs.
+const SET_TWO: Card[] = [
+  { rank: "9", suit: "♣", color: "dark" },
+  { rank: "2", suit: "♥", color: "red" },
+  { rank: "5", suit: "♦", color: "red" },
+  { rank: "8", suit: "♠", color: "dark" },
+  { rank: "3", suit: "♥", color: "red" },
 ];
 
 export function MagicTrick() {
-  const { ref, inView } = useInView<HTMLElement>({ threshold: 0.3 });
+  const { ref, inView } = useInView<HTMLElement>({ threshold: 0.25 });
   const [phase, setPhase] = useState<Phase>("idle");
-  const [positions, setPositions] = useState<[number, number, number]>([0, 1, 2]);
-  const [picked, setPicked] = useState<number | null>(null);
-  const [sequenceIdx, setSequenceIdx] = useState(0);
+  const startedRef = useRef(false);
+  const timers = useRef<number[]>([]);
 
-  const runShuffle = useCallback(() => {
-    const sequence = SHUFFLE_SEQUENCES[sequenceIdx % SHUFFLE_SEQUENCES.length];
-    sequence.forEach((pos, i) => {
-      window.setTimeout(() => setPositions(pos), i * 500);
-    });
-    window.setTimeout(() => {
-      setPositions([0, 1, 2]);
-      setPhase("ready");
-    }, sequence.length * 500 + 400);
-  }, [sequenceIdx]);
+  const schedule = useCallback((fn: () => void, ms: number) => {
+    const id = window.setTimeout(fn, ms);
+    timers.current.push(id);
+    return id;
+  }, []);
 
-  // Kick the trick off when the section is first scrolled into view.
+  const clearTimers = useCallback(() => {
+    timers.current.forEach((id) => window.clearTimeout(id));
+    timers.current = [];
+  }, []);
+
+  // Start the setup phase as soon as the section enters the viewport.
   useEffect(() => {
-    if (!inView || phase !== "idle") return;
-    const t1 = window.setTimeout(() => setPhase("dealing"), 400);
-    const t2 = window.setTimeout(() => setPhase("shuffling"), 1500);
-    return () => {
-      window.clearTimeout(t1);
-      window.clearTimeout(t2);
-    };
-  }, [inView, phase]);
+    if (!inView || startedRef.current) return;
+    startedRef.current = true;
+    schedule(() => setPhase("revealing-set-one"), 300);
+    schedule(() => setPhase("setup"), 1500);
+  }, [inView, schedule]);
 
-  useEffect(() => {
-    if (phase === "shuffling") runShuffle();
-  }, [phase, runShuffle]);
+  useEffect(() => () => clearTimers(), [clearTimers]);
 
-  const handlePick = (id: number) => {
-    if (phase !== "ready") return;
-    setPicked(id);
-    setPhase("reveal");
-    window.setTimeout(() => setPhase("done"), 1200);
+  const handleThinkingDone = () => {
+    if (phase !== "setup") return;
+    setPhase("flipping");
+    schedule(() => setPhase("shuffling"), 900);
+    schedule(() => setPhase("removing"), 3200);
+    schedule(() => setPhase("revealing-set-two"), 3800);
+    schedule(() => setPhase("done"), 5500);
   };
 
   const reset = () => {
-    setPicked(null);
-    setPositions([0, 1, 2]);
-    setSequenceIdx((n) => n + 1);
-    setPhase("idle");
+    clearTimers();
+    setPhase("revealing-set-one");
+    schedule(() => setPhase("setup"), 1000);
   };
-
-  const canPick = phase === "ready";
 
   return (
     <section
@@ -85,7 +88,7 @@ export function MagicTrick() {
         inView ? "in-view" : ""
       }`}
     >
-      {/* Spotlight backdrop */}
+      {/* Stage backdrop */}
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0"
@@ -96,89 +99,118 @@ export function MagicTrick() {
       />
 
       <div className="relative mx-auto w-full max-w-[1680px] px-4 sm:px-5 md:px-6 lg:px-8 xl:px-10">
+        {/* Header */}
         <div className="mx-auto max-w-2xl text-center">
           <p className="magic-label text-[13px] font-medium tracking-[0.24em] text-muted uppercase sm:text-[14px] md:text-[15px] lg:text-[16px]">
-            A Quick Trick
+            A Small Illusion
           </p>
           <div className="magic-rail mx-auto mt-3 h-px w-24 bg-line sm:w-32" />
           <h3 className="magic-headline mt-6 font-display text-3xl leading-[1.1] font-normal text-silver sm:text-4xl md:text-5xl">
-            Pick a card.{" "}
-            <span className="italic text-silver-dim">Any card.</span>
+            Think of a card.{" "}
+            <span className="italic text-silver-dim">We'll remove it.</span>
           </h3>
           <p className="magic-sub mt-4 text-[13px] leading-relaxed text-silver-dim sm:text-sm">
-            Watch them shuffle. Trust your instinct. Tap the one that calls you.
+            Look at the six cards. Lock one into your mind — don't click it,
+            just remember it. When you're ready, tell us.
           </p>
         </div>
 
-        {/* Stage */}
-        <div className="magic-stage relative mx-auto mt-12 flex h-[260px] w-full max-w-[640px] items-end justify-center sm:mt-16 sm:h-[320px] md:h-[380px] lg:h-[420px]">
-          {/* Stage floor glow */}
-          <div
-            aria-hidden
-            className="pointer-events-none absolute inset-x-10 bottom-0 h-16 opacity-70"
-            style={{
-              backgroundImage:
-                "radial-gradient(ellipse at 50% 100%, rgba(138,160,255,0.18) 0%, transparent 70%)",
-            }}
-          />
-
-          {CARD_IDS.map((id) => {
-            const slot = positions.indexOf(id);
-            const isPicked = picked === id;
-            return (
-              <MagicCard
-                key={id}
-                id={id}
-                slot={slot}
-                phase={phase}
-                picked={isPicked}
-                anyPicked={picked !== null}
-                canPick={canPick}
-                onPick={() => handlePick(id)}
-              />
-            );
-          })}
-
-          {/* Sparkles around the picked card */}
-          {phase === "reveal" || phase === "done" ? <Sparkles /> : null}
+        {/* Instruction / prompt area — reserved height so content doesn't jump */}
+        <div className="relative mx-auto mt-10 flex min-h-18 max-w-xl flex-col items-center justify-center gap-3 text-center sm:mt-14">
+          <PromptCopy phase={phase} />
+          {phase === "setup" && (
+            <button
+              type="button"
+              onClick={handleThinkingDone}
+              className="magic-cta group inline-flex items-center gap-2 rounded-full border border-accent/50 bg-[rgba(138,160,255,0.08)] px-6 py-2.5 text-[11px] font-medium tracking-[0.22em] text-silver uppercase shadow-[0_8px_24px_rgba(138,160,255,0.2)] backdrop-blur-md transition-all duration-300 hover:border-accent hover:bg-[rgba(138,160,255,0.14)] hover:shadow-[0_12px_30px_rgba(138,160,255,0.3)] sm:text-[12px]"
+            >
+              Got my card
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-0.5"
+                aria-hidden
+              >
+                <path d="M5 12h14M12 5l7 7-7 7" />
+              </svg>
+            </button>
+          )}
+          {phase === "done" && (
+            <button
+              type="button"
+              onClick={reset}
+              className="magic-replay group mt-2 inline-flex items-center gap-2 rounded-full border border-line bg-ink-900/70 px-5 py-2.5 text-[11px] font-medium tracking-[0.22em] text-silver-dim uppercase backdrop-blur-md transition-all duration-300 hover:border-accent/50 hover:text-silver sm:text-[12px]"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.7"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="h-3.5 w-3.5 transition-transform duration-500 group-hover:-rotate-180"
+                aria-hidden
+              >
+                <path d="M3 12a9 9 0 0 1 15.5-6.3L21 8" />
+                <path d="M21 3v5h-5" />
+              </svg>
+              Try again
+            </button>
+          )}
         </div>
 
-        {/* Prompt / result area — reserved height so content doesn't jump */}
-        <div className="magic-prompt relative mx-auto mt-10 flex min-h-[80px] max-w-xl flex-col items-center justify-start text-center sm:mt-14">
-          {phase === "ready" && (
-            <p className="magic-prompt-cta font-display text-lg italic text-silver-dim sm:text-xl">
-              Pick one.
-            </p>
+        {/* The two stages — show set 1 OR set 2 depending on phase */}
+        <div className="relative mx-auto mt-10 flex min-h-55 w-full max-w-230 items-center justify-center sm:min-h-65 md:min-h-75">
+          <ReadingParticles active={phase === "shuffling"} />
+
+          {/* SET ONE */}
+          {(phase === "revealing-set-one" ||
+            phase === "setup" ||
+            phase === "flipping" ||
+            phase === "shuffling" ||
+            phase === "removing") && (
+            <div className="trick-grid grid w-full grid-cols-3 gap-3 sm:grid-cols-6 sm:gap-4 md:gap-5">
+              {SET_ONE.map((card, i) => (
+                <TrickCard
+                  key={`one-${i}`}
+                  card={card}
+                  index={i}
+                  faceDown={
+                    phase === "flipping" ||
+                    phase === "shuffling" ||
+                    phase === "removing"
+                  }
+                  mode={
+                    phase === "revealing-set-one" || phase === "setup"
+                      ? "appear"
+                      : phase === "flipping"
+                        ? "flip-down"
+                        : phase === "shuffling"
+                          ? "shuffle"
+                          : "vanish"
+                  }
+                />
+              ))}
+            </div>
           )}
-          {(phase === "reveal" || phase === "done") && (
-            <>
-              <p className="magic-result font-display text-xl leading-tight text-silver sm:text-2xl md:text-3xl">
-                That's your card.{" "}
-                <span className="italic text-silver-dim">Of course it is.</span>
-              </p>
-              {phase === "done" && (
-                <button
-                  type="button"
-                  onClick={reset}
-                  className="magic-replay group mt-6 inline-flex items-center gap-2 rounded-full border border-line bg-ink-900/70 px-5 py-2.5 text-[11px] font-medium tracking-[0.22em] text-silver-dim uppercase backdrop-blur-md transition-all duration-300 hover:border-accent/50 hover:text-silver sm:text-[12px]"
-                >
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.7"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="h-3.5 w-3.5 transition-transform duration-500 group-hover:-rotate-180"
-                    aria-hidden
-                  >
-                    <path d="M3 12a9 9 0 0 1 15.5-6.3L21 8" />
-                    <path d="M21 3v5h-5" />
-                  </svg>
-                  Try again
-                </button>
-              )}
-            </>
+
+          {/* SET TWO */}
+          {(phase === "revealing-set-two" || phase === "done") && (
+            <div className="trick-grid grid w-full grid-cols-3 gap-3 sm:grid-cols-5 sm:gap-4 md:gap-5">
+              {SET_TWO.map((card, i) => (
+                <TrickCard
+                  key={`two-${i}`}
+                  card={card}
+                  index={i}
+                  faceDown={false}
+                  mode="emerge"
+                />
+              ))}
+            </div>
           )}
         </div>
       </div>
@@ -186,309 +218,185 @@ export function MagicTrick() {
   );
 }
 
-/* === Individual card === */
+/* === Prompt copy per phase === */
+function PromptCopy({ phase }: { phase: Phase }) {
+  if (phase === "idle" || phase === "revealing-set-one") return null;
+  if (phase === "setup")
+    return (
+      <p className="magic-prompt font-display text-base italic text-silver-dim sm:text-lg">
+        Have you locked it in?
+      </p>
+    );
+  if (phase === "flipping" || phase === "shuffling")
+    return (
+      <p className="magic-prompt font-display text-base italic text-silver-dim sm:text-lg">
+        Reading your mind
+        <ThinkingDots />
+      </p>
+    );
+  if (phase === "removing")
+    return (
+      <p className="magic-prompt font-display text-base italic text-silver sm:text-lg">
+        Removing your card…
+      </p>
+    );
+  if (phase === "revealing-set-two" || phase === "done")
+    return (
+      <div className="flex flex-col items-center gap-1">
+        <p className="magic-result font-display text-xl leading-tight text-silver sm:text-2xl md:text-3xl">
+          Your card is{" "}
+          <span className="italic text-silver-dim">no longer here.</span>
+        </p>
+        <p className="text-[12px] tracking-[0.22em] text-muted uppercase sm:text-[13px]">
+          Impossible, isn't it?
+        </p>
+      </div>
+    );
+  return null;
+}
 
-type CardProps = {
-  id: number;
-  slot: number; // 0, 1, 2 — current visual position after shuffle
-  phase: Phase;
-  picked: boolean;
-  anyPicked: boolean;
-  canPick: boolean;
-  onPick: () => void;
+function ThinkingDots() {
+  return (
+    <span className="ml-1 inline-flex gap-0.5">
+      <span className="thinking-dot">.</span>
+      <span className="thinking-dot">.</span>
+      <span className="thinking-dot">.</span>
+    </span>
+  );
+}
+
+/* === Individual card === */
+type TrickCardProps = {
+  card: Card;
+  index: number;
+  faceDown: boolean;
+  mode: "appear" | "flip-down" | "shuffle" | "vanish" | "emerge";
 };
 
-function MagicCard({ id, slot, phase, picked, anyPicked, canPick, onPick }: CardProps) {
-  // Horizontal offset per slot (in rem). Centered middle, left and right.
-  const offsets = ["-9rem", "0rem", "9rem"];
-  const smOffsets = ["-11rem", "0rem", "11rem"];
-
-  // During "dealing": cards start from above and fall into position
-  const isHidden = phase === "idle";
-  const isDealing = phase === "dealing";
-
-  // During "reveal/done": picked card centers and scales up, others fly away
-  const otherFliesAway = anyPicked && !picked;
-
-  const translateX = picked
-    ? "0rem"
-    : otherFliesAway
-      ? slot === 0
-        ? "-18rem"
-        : slot === 2
-          ? "18rem"
-          : "0rem"
-      : `var(--card-offset)`;
-
-  const translateY = isHidden
-    ? "-24rem"
-    : isDealing
-      ? "0rem"
-      : picked
-        ? "-1rem"
-        : "0rem";
-
-  const scale = picked ? "1.08" : otherFliesAway ? "0.85" : "1";
-  const opacity = isHidden ? 0 : otherFliesAway ? 0 : 1;
-  const rotate = picked
-    ? "0deg"
-    : isDealing
-      ? `${(id - 1) * 2}deg`
-      : "0deg";
+function TrickCard({ card, index, faceDown, mode }: TrickCardProps) {
+  // Each mode maps to a CSS class that drives its own keyframe animation.
+  const modeClass =
+    mode === "appear"
+      ? "trick-card--appear"
+      : mode === "flip-down"
+        ? "trick-card--flip-down"
+        : mode === "shuffle"
+          ? "trick-card--shuffle"
+          : mode === "vanish"
+            ? "trick-card--vanish"
+            : "trick-card--emerge";
 
   return (
-    <button
-      type="button"
-      onClick={onPick}
-      disabled={!canPick}
-      aria-label={canPick ? `Pick card ${id + 1}` : undefined}
-      className={`magic-card group absolute bottom-0 h-[200px] w-[140px] rounded-xl transition-all duration-700 ease-out focus:outline-none focus-visible:ring-2 focus-visible:ring-accent sm:h-[240px] sm:w-[170px] md:h-[280px] md:w-[200px] lg:h-[320px] lg:w-[230px] ${
-        canPick ? "cursor-pointer hover:-translate-y-3" : "cursor-default"
-      } ${picked ? "z-20" : "z-10"}`}
+    <div
+      className={`trick-card relative aspect-7/10 rounded-xl shadow-[0_12px_30px_rgba(0,0,0,0.5)] ${modeClass}`}
       style={
         {
-          "--card-offset": slot === 0 ? offsets[0] : slot === 2 ? offsets[2] : offsets[1],
-          transform: `translateX(${translateX}) translateY(${translateY}) scale(${scale}) rotate(${rotate})`,
-          opacity,
-          transitionProperty: "transform, opacity",
-          transitionDelay: isDealing ? `${id * 140}ms` : "0ms",
+          "--i": index,
         } as React.CSSProperties
       }
     >
       <div
-        className={`card-flipper relative h-full w-full rounded-xl transition-transform duration-700 [transform-style:preserve-3d] ${
-          picked ? "[transform:rotateY(180deg)]" : ""
+        className={`card-flipper relative h-full w-full rounded-xl transition-transform duration-700 transform-3d ${
+          faceDown ? "transform-[rotateY(180deg)]" : ""
         }`}
       >
-        {/* Back of card */}
-        <div className="absolute inset-0 overflow-hidden rounded-xl border border-silver-dim/20 bg-gradient-to-br from-ink-800 via-ink-900 to-[#0b1030] shadow-[0_18px_40px_rgba(0,0,0,0.6)] [backface-visibility:hidden]">
-          <CardBack />
-          {/* Hover glow */}
-          <span
-            aria-hidden
-            className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
-            style={{
-              backgroundImage:
-                "radial-gradient(ellipse at center, rgba(138,160,255,0.25) 0%, transparent 70%)",
-            }}
-          />
+        {/* Face */}
+        <div className="absolute inset-0 overflow-hidden rounded-xl border border-silver/40 bg-linear-to-br from-white to-[#f5f5f0] backface-hidden">
+          <CardFace card={card} />
         </div>
-
-        {/* Face of card (Ace of Spades) */}
-        <div className="absolute inset-0 overflow-hidden rounded-xl border border-silver/40 bg-gradient-to-br from-white to-[#f5f5f0] shadow-[0_25px_60px_rgba(138,160,255,0.45)] [transform:rotateY(180deg)] [backface-visibility:hidden]">
-          <CardFace />
+        {/* Back */}
+        <div className="absolute inset-0 overflow-hidden rounded-xl border border-silver-dim/20 bg-linear-to-br from-ink-800 via-ink-900 to-[#0b1030] transform-[rotateY(180deg)] backface-hidden">
+          <CardBack />
         </div>
       </div>
-    </button>
+    </div>
   );
 }
 
-/* === Card back design === */
+function CardFace({ card }: { card: Card }) {
+  const color = card.color === "red" ? "#c22" : "#0a0e1a";
+  return (
+    <div
+      className="flex h-full w-full flex-col justify-between p-1.5 font-serif leading-none sm:p-2 md:p-2.5"
+      style={{ color }}
+    >
+      {/* Top-left corner */}
+      <div className="flex flex-col items-start">
+        <span className="text-[13px] font-bold sm:text-[16px] md:text-[18px]">
+          {card.rank}
+        </span>
+        <span className="text-[11px] sm:text-[14px] md:text-[16px]">
+          {card.suit}
+        </span>
+      </div>
+      {/* Center suit */}
+      <div className="flex flex-1 items-center justify-center">
+        <span className="text-[32px] drop-shadow-[0_1px_3px_rgba(0,0,0,0.1)] sm:text-[40px] md:text-[52px] lg:text-[64px]">
+          {card.suit}
+        </span>
+      </div>
+      {/* Bottom-right corner (rotated) */}
+      <div className="flex flex-col items-end" style={{ transform: "rotate(180deg)" }}>
+        <span className="text-[13px] font-bold sm:text-[16px] md:text-[18px]">
+          {card.rank}
+        </span>
+        <span className="text-[11px] sm:text-[14px] md:text-[16px]">
+          {card.suit}
+        </span>
+      </div>
+    </div>
+  );
+}
+
 function CardBack() {
   return (
-    <svg
-      viewBox="0 0 140 200"
-      className="absolute inset-0 h-full w-full"
-      aria-hidden
-    >
+    <svg viewBox="0 0 100 140" className="absolute inset-0 h-full w-full" aria-hidden>
       <defs>
-        <linearGradient id="back-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#1a2140" />
-          <stop offset="100%" stopColor="#0a0e1a" />
-        </linearGradient>
-        <pattern
-          id="back-dots"
-          x="0"
-          y="0"
-          width="10"
-          height="10"
-          patternUnits="userSpaceOnUse"
-        >
-          <circle cx="5" cy="5" r="0.5" fill="rgba(138,160,255,0.35)" />
+        <pattern id="back-pattern" x="0" y="0" width="8" height="8" patternUnits="userSpaceOnUse">
+          <circle cx="4" cy="4" r="0.4" fill="rgba(138,160,255,0.4)" />
         </pattern>
       </defs>
-      <rect width="140" height="200" fill="url(#back-grad)" />
-      <rect width="140" height="200" fill="url(#back-dots)" />
-
-      {/* Decorative inner border */}
-      <rect
-        x="8"
-        y="8"
-        width="124"
-        height="184"
-        fill="none"
-        stroke="rgba(184,186,196,0.3)"
-        strokeWidth="0.75"
-        rx="4"
-      />
-      <rect
-        x="12"
-        y="12"
-        width="116"
-        height="176"
-        fill="none"
-        stroke="rgba(138,160,255,0.25)"
-        strokeWidth="0.5"
-        rx="2"
-      />
-
-      {/* Center diamond ornament */}
-      <g transform="translate(70 100)">
-        <path
-          d="M0 -50 L35 0 L0 50 L-35 0 Z"
-          fill="none"
-          stroke="rgba(184,186,196,0.45)"
-          strokeWidth="0.75"
-        />
+      <rect width="100" height="140" fill="url(#back-pattern)" />
+      <rect x="6" y="6" width="88" height="128" fill="none" stroke="rgba(184,186,196,0.3)" strokeWidth="0.6" rx="3" />
+      <g transform="translate(50 70)">
         <path
           d="M0 -32 L22 0 L0 32 L-22 0 Z"
           fill="none"
           stroke="rgba(138,160,255,0.5)"
-          strokeWidth="0.5"
+          strokeWidth="0.6"
         />
-        <circle
-          cx="0"
-          cy="0"
-          r="6"
-          fill="rgba(138,160,255,0.15)"
-          stroke="rgba(184,186,196,0.6)"
-          strokeWidth="0.5"
-        />
-        <text
-          x="0"
-          y="3.5"
-          textAnchor="middle"
-          fontFamily="'Playfair Display', serif"
-          fontSize="7"
-          fontStyle="italic"
-          fill="rgba(232,232,236,0.8)"
-        >
-          A
-        </text>
+        <circle cx="0" cy="0" r="4" fill="rgba(138,160,255,0.2)" stroke="rgba(184,186,196,0.5)" strokeWidth="0.4" />
       </g>
-
-      {/* Corner flourishes */}
-      {[
-        [15, 20],
-        [125, 20],
-        [15, 180],
-        [125, 180],
-      ].map(([x, y], i) => (
-        <circle
-          key={i}
-          cx={x}
-          cy={y}
-          r="1.5"
-          fill="rgba(138,160,255,0.4)"
-        />
-      ))}
     </svg>
   );
 }
 
-/* === Card face: Ace of Spades + AZAM === */
-function CardFace() {
+/* === Reading particles — soft orbs that drift during the "reading" phase === */
+function ReadingParticles({ active }: { active: boolean }) {
+  if (!active) return null;
+  const orbs = Array.from({ length: 14 }, (_, i) => ({
+    left: `${8 + Math.random() * 84}%`,
+    top: `${12 + Math.random() * 76}%`,
+    delay: `${Math.random() * 600}ms`,
+    duration: `${1800 + Math.random() * 1500}ms`,
+    size: 3 + Math.random() * 5,
+    key: `${active}-${i}`,
+  }));
   return (
-    <svg
-      viewBox="0 0 140 200"
-      className="absolute inset-0 h-full w-full"
-      aria-hidden
-    >
-      {/* Corner A ♠ */}
-      <g fill="#0a0e1a">
-        <text
-          x="10"
-          y="22"
-          fontFamily="'Playfair Display', serif"
-          fontSize="18"
-          fontWeight="700"
-        >
-          A
-        </text>
-        <text x="10" y="36" fontSize="12">
-          ♠
-        </text>
-      </g>
-
-      {/* Big center spade */}
-      <g transform="translate(70 100)" fill="#0a0e1a">
-        <path
-          d="M0 -40
-             C-28 -20 -36 -2 -22 14
-             C-14 24 -4 22 -2 16
-             C-2 20 -8 32 -18 36
-             L18 36
-             C8 32 2 20 2 16
-             C4 22 14 24 22 14
-             C36 -2 28 -20 0 -40 Z"
-        />
-      </g>
-
-      {/* Corner A ♠ rotated */}
-      <g fill="#0a0e1a" transform="rotate(180 70 100)">
-        <text
-          x="10"
-          y="22"
-          fontFamily="'Playfair Display', serif"
-          fontSize="18"
-          fontWeight="700"
-        >
-          A
-        </text>
-        <text x="10" y="36" fontSize="12">
-          ♠
-        </text>
-      </g>
-
-      {/* AZAM wordmark */}
-      <text
-        x="70"
-        y="188"
-        textAnchor="middle"
-        fontFamily="'Playfair Display', serif"
-        fontSize="7"
-        letterSpacing="2.4"
-        fill="rgba(10,14,26,0.45)"
-      >
-        AZAM
-      </text>
-    </svg>
-  );
-}
-
-/* === Sparkle burst around the revealed card === */
-function Sparkles() {
-  const stars = [
-    { x: "28%", y: "20%", size: 10, delay: 50 },
-    { x: "72%", y: "25%", size: 14, delay: 180 },
-    { x: "18%", y: "55%", size: 8, delay: 320 },
-    { x: "82%", y: "60%", size: 11, delay: 90 },
-    { x: "40%", y: "15%", size: 7, delay: 250 },
-    { x: "60%", y: "80%", size: 9, delay: 380 },
-    { x: "15%", y: "35%", size: 6, delay: 420 },
-    { x: "85%", y: "45%", size: 8, delay: 150 },
-  ];
-  return (
-    <div className="pointer-events-none absolute inset-0 z-30" aria-hidden>
-      {stars.map((s, i) => (
+    <div className="pointer-events-none absolute inset-0 z-20" aria-hidden>
+      {orbs.map((o) => (
         <span
-          key={i}
-          className="magic-sparkle absolute block"
+          key={o.key}
+          className="magic-orb absolute block rounded-full"
           style={{
-            left: s.x,
-            top: s.y,
-            width: s.size,
-            height: s.size,
-            animationDelay: `${s.delay}ms`,
+            left: o.left,
+            top: o.top,
+            width: o.size,
+            height: o.size,
+            animationDelay: o.delay,
+            animationDuration: o.duration,
           }}
-        >
-          <svg viewBox="0 0 20 20" className="h-full w-full">
-            <path
-              d="M10 0 L12 8 L20 10 L12 12 L10 20 L8 12 L0 10 L8 8 Z"
-              fill="rgba(220,225,240,0.95)"
-            />
-          </svg>
-        </span>
+        />
       ))}
     </div>
   );
