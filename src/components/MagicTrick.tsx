@@ -3,43 +3,75 @@ import { useInView } from "../hooks/useInView";
 
 type Phase =
   | "idle"
-  | "revealing-set-one" // cards fade in face up
-  | "setup" // user is thinking of a card
-  | "flipping" // cards flip face down
-  | "shuffling" // cards swirl / shuffle to "read mind"
-  | "removing" // cards converge / vanish
-  | "revealing-set-two" // new 5 cards appear face up
+  | "intro"
+  | "step-1"
+  | "step-2"
+  | "step-3"
+  | "step-4"
+  | "step-5"
+  | "circle"
+  | "divining"
+  | "reveal"
   | "done";
 
-type Card = {
-  rank: string;
-  suit: "♠" | "♥" | "♦" | "♣";
-  color: "red" | "dark";
-};
+/* === The rune circle ===
+ * 10 "mystical" runes. The user is told to find their mental number (0-9) in
+ * the circle and memorise that rune. The math above guarantees their result
+ * is 9 — so the rune at index 9 (★) is the one that will always match.
+ *
+ * The other 9 slots are decorated with visually similar but distinct glyphs
+ * so no pattern is obvious. The circle is laid out non-sequentially (see
+ * CIRCLE_ORDER) to add one more layer of visual noise. */
+const RUNES = ["⬡", "◈", "✦", "❖", "⟐", "⬟", "✧", "⟢", "◇", "★"];
+// Visually scattered around the ring — user has to hunt for their digit.
+const CIRCLE_ORDER = [3, 7, 1, 9, 5, 0, 8, 2, 6, 4];
 
-// SET ONE — the 6 cards the user picks mentally from.
-const SET_ONE: Card[] = [
-  { rank: "7", suit: "♠", color: "dark" },
-  { rank: "Q", suit: "♥", color: "red" },
-  { rank: "10", suit: "♦", color: "red" },
-  { rank: "J", suit: "♣", color: "dark" },
-  { rank: "K", suit: "♠", color: "dark" },
-  { rank: "A", suit: "♥", color: "red" },
-];
-
-// SET TWO — the 5 "mind-read" cards. **None of these appear in SET ONE** —
-// that is the magic: whichever card the user picked is guaranteed to be
-// missing from the second set, so it looks like we removed theirs.
-const SET_TWO: Card[] = [
-  { rank: "9", suit: "♣", color: "dark" },
-  { rank: "2", suit: "♥", color: "red" },
-  { rank: "5", suit: "♦", color: "red" },
-  { rank: "8", suit: "♠", color: "dark" },
-  { rank: "3", suit: "♥", color: "red" },
+const STEPS: {
+  phase: Phase;
+  title: string;
+  body: string;
+  example: string;
+  cta: string;
+}[] = [
+  {
+    phase: "step-1",
+    title: "One. A number.",
+    body: "Think of any two-digit number. Any one. Hold it.",
+    example: "Example: 47",
+    cta: "Got it",
+  },
+  {
+    phase: "step-2",
+    title: "Two. The sum.",
+    body: "Add its two digits together in your head.",
+    example: "47 → 4 + 7 = 11",
+    cta: "Done",
+  },
+  {
+    phase: "step-3",
+    title: "Three. The subtraction.",
+    body: "Subtract that sum from your original number.",
+    example: "47 − 11 = 36",
+    cta: "Next",
+  },
+  {
+    phase: "step-4",
+    title: "Four. Your choice.",
+    body: "Multiply the result by any single digit between 2 and 9 — whichever one calls to you.",
+    example: "36 × 5 = 180",
+    cta: "Chosen",
+  },
+  {
+    phase: "step-5",
+    title: "Five. Collapse the digits.",
+    body: "Add the digits of your result. If it's still more than one digit, add again. Keep going until a single digit remains.",
+    example: "180 → 1 + 8 + 0 = 9",
+    cta: "I have my digit",
+  },
 ];
 
 export function MagicTrick() {
-  const { ref, inView } = useInView<HTMLElement>({ threshold: 0.25 });
+  const { ref, inView } = useInView<HTMLElement>({ threshold: 0.2 });
   const [phase, setPhase] = useState<Phase>("idle");
   const startedRef = useRef(false);
   const timers = useRef<number[]>([]);
@@ -49,46 +81,57 @@ export function MagicTrick() {
     timers.current.push(id);
     return id;
   }, []);
-
   const clearTimers = useCallback(() => {
     timers.current.forEach((id) => window.clearTimeout(id));
     timers.current = [];
   }, []);
 
-  // Start the setup phase as soon as the section enters the viewport.
   useEffect(() => {
     if (!inView || startedRef.current) return;
     startedRef.current = true;
-    schedule(() => setPhase("revealing-set-one"), 300);
-    schedule(() => setPhase("setup"), 1500);
+    schedule(() => setPhase("intro"), 300);
+    schedule(() => setPhase("step-1"), 1600);
   }, [inView, schedule]);
 
   useEffect(() => () => clearTimers(), [clearTimers]);
 
-  const handleThinkingDone = () => {
-    if (phase !== "setup") return;
-    setPhase("flipping");
-    schedule(() => setPhase("shuffling"), 900);
-    schedule(() => setPhase("removing"), 3200);
-    schedule(() => setPhase("revealing-set-two"), 3800);
-    schedule(() => setPhase("done"), 5500);
+  const advance = () => {
+    const flow: Phase[] = [
+      "step-1",
+      "step-2",
+      "step-3",
+      "step-4",
+      "step-5",
+      "circle",
+    ];
+    const idx = flow.indexOf(phase);
+    if (idx === -1 || idx === flow.length - 1) return;
+    setPhase(flow[idx + 1]);
+  };
+
+  const divine = () => {
+    setPhase("divining");
+    schedule(() => setPhase("reveal"), 2500);
+    schedule(() => setPhase("done"), 4800);
   };
 
   const reset = () => {
     clearTimers();
-    setPhase("revealing-set-one");
-    schedule(() => setPhase("setup"), 1000);
+    setPhase("intro");
+    schedule(() => setPhase("step-1"), 900);
   };
+
+  const currentStep = STEPS.find((s) => s.phase === phase);
 
   return (
     <section
       ref={ref}
       id="magic-trick"
-      className={`magic-reveal relative overflow-hidden bg-ink-950 py-20 sm:py-24 md:py-28 lg:py-32 ${
+      className={`oracle-reveal relative overflow-hidden bg-ink-950 py-20 sm:py-24 md:py-28 lg:py-32 ${
         inView ? "in-view" : ""
       }`}
     >
-      {/* Stage backdrop */}
+      {/* Celestial backdrop — matches portfolio radial-glow pattern */}
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0"
@@ -97,120 +140,75 @@ export function MagicTrick() {
             "radial-gradient(ellipse 60% 50% at 50% 55%, rgba(60,100,200,0.18) 0%, rgba(30,55,130,0.08) 40%, rgba(10,16,34,0) 72%)",
         }}
       />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 opacity-[0.06] mix-blend-screen"
+        style={{
+          backgroundImage:
+            "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>\")",
+        }}
+      />
 
       <div className="relative mx-auto w-full max-w-[1680px] px-4 sm:px-5 md:px-6 lg:px-8 xl:px-10">
-        {/* Header */}
+        {/* Section header */}
         <div className="mx-auto max-w-2xl text-center">
-          <p className="magic-label text-[13px] font-medium tracking-[0.24em] text-muted uppercase sm:text-[14px] md:text-[15px] lg:text-[16px]">
-            A Small Illusion
+          <p className="oracle-label text-[13px] font-medium tracking-[0.24em] text-muted uppercase sm:text-[14px] md:text-[15px] lg:text-[16px]">
+            The Oracle
           </p>
-          <div className="magic-rail mx-auto mt-3 h-px w-24 bg-line sm:w-32" />
-          <h3 className="magic-headline mt-6 font-display text-3xl leading-[1.1] font-normal text-silver sm:text-4xl md:text-5xl">
-            Think of a card.{" "}
-            <span className="italic text-silver-dim">We'll remove it.</span>
+          <div className="oracle-rail mx-auto mt-3 h-px w-24 bg-line sm:w-32" />
+          <h3 className="oracle-headline mt-6 font-display text-3xl leading-[1.1] font-normal text-silver sm:text-4xl md:text-5xl">
+            A number tells.{" "}
+            <span className="italic text-silver-dim">We'll listen.</span>
           </h3>
-          <p className="magic-sub mt-4 text-[13px] leading-relaxed text-silver-dim sm:text-sm">
-            Look at the six cards. Lock one into your mind — don't click it,
-            just remember it. When you're ready, tell us.
+          <p className="oracle-sub mt-4 text-[13px] leading-relaxed text-silver-dim sm:text-sm">
+            Five mental steps. Then find your digit in the ring. The Oracle
+            doesn't guess — it knows.
           </p>
         </div>
 
-        {/* Instruction / prompt area — reserved height so content doesn't jump */}
-        <div className="relative mx-auto mt-10 flex min-h-18 max-w-xl flex-col items-center justify-center gap-3 text-center sm:mt-14">
-          <PromptCopy phase={phase} />
-          {phase === "setup" && (
-            <button
-              type="button"
-              onClick={handleThinkingDone}
-              className="magic-cta group inline-flex items-center gap-2 rounded-full border border-accent/50 bg-[rgba(138,160,255,0.08)] px-6 py-2.5 text-[11px] font-medium tracking-[0.22em] text-silver uppercase shadow-[0_8px_24px_rgba(138,160,255,0.2)] backdrop-blur-md transition-all duration-300 hover:border-accent hover:bg-[rgba(138,160,255,0.14)] hover:shadow-[0_12px_30px_rgba(138,160,255,0.3)] sm:text-[12px]"
-            >
-              Got my card
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-0.5"
-                aria-hidden
-              >
-                <path d="M5 12h14M12 5l7 7-7 7" />
-              </svg>
-            </button>
-          )}
-          {phase === "done" && (
-            <button
-              type="button"
-              onClick={reset}
-              className="magic-replay group mt-2 inline-flex items-center gap-2 rounded-full border border-line bg-ink-900/70 px-5 py-2.5 text-[11px] font-medium tracking-[0.22em] text-silver-dim uppercase backdrop-blur-md transition-all duration-300 hover:border-accent/50 hover:text-silver sm:text-[12px]"
-            >
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.7"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="h-3.5 w-3.5 transition-transform duration-500 group-hover:-rotate-180"
-                aria-hidden
-              >
-                <path d="M3 12a9 9 0 0 1 15.5-6.3L21 8" />
-                <path d="M21 3v5h-5" />
-              </svg>
-              Try again
-            </button>
-          )}
-        </div>
-
-        {/* The two stages — show set 1 OR set 2 depending on phase */}
-        <div className="relative mx-auto mt-10 flex min-h-55 w-full max-w-230 items-center justify-center sm:min-h-65 md:min-h-75">
-          <ReadingParticles active={phase === "shuffling"} />
-
-          {/* SET ONE */}
-          {(phase === "revealing-set-one" ||
-            phase === "setup" ||
-            phase === "flipping" ||
-            phase === "shuffling" ||
-            phase === "removing") && (
-            <div className="trick-grid grid w-full grid-cols-3 gap-3 sm:grid-cols-6 sm:gap-4 md:gap-5">
-              {SET_ONE.map((card, i) => (
-                <TrickCard
-                  key={`one-${i}`}
-                  card={card}
-                  index={i}
-                  faceDown={
-                    phase === "flipping" ||
-                    phase === "shuffling" ||
-                    phase === "removing"
-                  }
-                  mode={
-                    phase === "revealing-set-one" || phase === "setup"
-                      ? "appear"
-                      : phase === "flipping"
-                        ? "flip-down"
-                        : phase === "shuffling"
-                          ? "shuffle"
-                          : "vanish"
-                  }
-                />
-              ))}
+        {/* Stage */}
+        <div className="relative mx-auto mt-12 flex min-h-120 w-full max-w-200 flex-col items-center justify-center sm:mt-16 md:min-h-144">
+          {phase === "intro" && (
+            <div className="oracle-intro flex flex-col items-center gap-5 text-center">
+              <OracleEye phase={phase} />
+              <p className="font-display text-xl italic text-silver-dim sm:text-2xl">
+                Clear your mind.
+              </p>
             </div>
           )}
 
-          {/* SET TWO */}
-          {(phase === "revealing-set-two" || phase === "done") && (
-            <div className="trick-grid grid w-full grid-cols-3 gap-3 sm:grid-cols-5 sm:gap-4 md:gap-5">
-              {SET_TWO.map((card, i) => (
-                <TrickCard
-                  key={`two-${i}`}
-                  card={card}
-                  index={i}
-                  faceDown={false}
-                  mode="emerge"
-                />
-              ))}
+          {currentStep && (
+            <div className="oracle-step flex max-w-md flex-col items-center gap-6 text-center">
+              <StepIndex current={STEPS.indexOf(currentStep) + 1} total={STEPS.length} />
+              <h4 className="font-display text-2xl font-normal text-silver sm:text-3xl md:text-4xl">
+                {currentStep.title}
+              </h4>
+              <p className="text-[14px] leading-relaxed text-silver-dim sm:text-[15px]">
+                {currentStep.body}
+              </p>
+              <p className="font-numeric text-[13px] tracking-wide text-muted sm:text-sm">
+                {currentStep.example}
+              </p>
+              <button
+                type="button"
+                onClick={advance}
+                className="oracle-cta group mt-2 inline-flex items-center gap-2 rounded-full border border-accent/50 bg-[rgba(138,160,255,0.08)] px-6 py-2.5 text-[11px] font-medium tracking-[0.22em] text-silver uppercase shadow-[0_8px_24px_rgba(138,160,255,0.2)] backdrop-blur-md transition-all duration-300 hover:border-accent hover:bg-[rgba(138,160,255,0.14)] hover:shadow-[0_12px_30px_rgba(138,160,255,0.3)] sm:text-[12px]"
+              >
+                {currentStep.cta}
+                <ChevronRight />
+              </button>
             </div>
+          )}
+
+          {(phase === "circle" || phase === "divining") && (
+            <RuneCircle
+              divining={phase === "divining"}
+              onConfirm={divine}
+            />
+          )}
+
+          {(phase === "reveal" || phase === "done") && (
+            <RevealOrb done={phase === "done"} onReset={reset} />
           )}
         </div>
       </div>
@@ -218,41 +216,264 @@ export function MagicTrick() {
   );
 }
 
-/* === Prompt copy per phase === */
-function PromptCopy({ phase }: { phase: Phase }) {
-  if (phase === "idle" || phase === "revealing-set-one") return null;
-  if (phase === "setup")
-    return (
-      <p className="magic-prompt font-display text-base italic text-silver-dim sm:text-lg">
-        Have you locked it in?
+/* === Small presentational bits === */
+
+function StepIndex({ current, total }: { current: number; total: number }) {
+  return (
+    <div className="flex items-center gap-3 text-[11px] tracking-[0.3em] text-muted uppercase">
+      <span className="font-numeric text-silver-dim">
+        {String(current).padStart(2, "0")}
+      </span>
+      <span className="h-px w-10 bg-line" />
+      <span className="font-numeric">{String(total).padStart(2, "0")}</span>
+    </div>
+  );
+}
+
+function ChevronRight() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-0.5"
+      aria-hidden
+    >
+      <path d="M5 12h14M12 5l7 7-7 7" />
+    </svg>
+  );
+}
+
+/* === The Oracle "eye" — spinning concentric rings === */
+function OracleEye({ phase }: { phase: Phase }) {
+  const active = phase === "divining" || phase === "intro";
+  return (
+    <div
+      className={`oracle-eye relative h-24 w-24 ${active ? "is-active" : ""}`}
+      aria-hidden
+    >
+      <span className="oracle-ring oracle-ring-1" />
+      <span className="oracle-ring oracle-ring-2" />
+      <span className="oracle-ring oracle-ring-3" />
+      <span className="oracle-pupil" />
+    </div>
+  );
+}
+
+/* === Rune Circle — user finds their digit here === */
+function RuneCircle({
+  divining,
+  onConfirm,
+}: {
+  divining: boolean;
+  onConfirm: () => void;
+}) {
+  // 10 runes positioned on a circle; CIRCLE_ORDER controls which digit lives
+  // at which angular slot so numbers aren't sequential around the ring.
+  const positions = CIRCLE_ORDER.map((digit, slot) => {
+    const angle = (slot / CIRCLE_ORDER.length) * Math.PI * 2 - Math.PI / 2;
+    return {
+      digit,
+      rune: RUNES[digit],
+      x: 50 + Math.cos(angle) * 42,
+      y: 50 + Math.sin(angle) * 42,
+      slot,
+    };
+  });
+
+  return (
+    <div className="oracle-circle relative flex flex-col items-center gap-6">
+      <p className="font-display text-base italic text-silver-dim sm:text-lg">
+        {divining ? "Reading your rune" : "Find your digit. Memorise its rune."}
+        {divining && <ThinkingDots />}
       </p>
-    );
-  if (phase === "flipping" || phase === "shuffling")
-    return (
-      <p className="magic-prompt font-display text-base italic text-silver-dim sm:text-lg">
-        Reading your mind
-        <ThinkingDots />
+
+      <div className="relative aspect-square w-72 sm:w-80 md:w-96">
+        {/* Ring background */}
+        <svg viewBox="0 0 100 100" className="absolute inset-0 h-full w-full" aria-hidden>
+          <defs>
+            <radialGradient id="ring-glow" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stopColor="rgba(138,160,255,0.25)" />
+              <stop offset="60%" stopColor="rgba(60,80,160,0.08)" />
+              <stop offset="100%" stopColor="transparent" />
+            </radialGradient>
+          </defs>
+          <circle cx="50" cy="50" r="48" fill="url(#ring-glow)" />
+          <circle
+            cx="50"
+            cy="50"
+            r="46"
+            fill="none"
+            stroke="rgba(184,186,196,0.25)"
+            strokeWidth="0.3"
+          />
+          <circle
+            cx="50"
+            cy="50"
+            r="32"
+            fill="none"
+            stroke="rgba(138,160,255,0.35)"
+            strokeWidth="0.25"
+            strokeDasharray="1 2"
+          />
+          <circle
+            cx="50"
+            cy="50"
+            r="16"
+            fill="none"
+            stroke="rgba(184,186,196,0.2)"
+            strokeWidth="0.3"
+          />
+        </svg>
+
+        {/* Center oracle eye */}
+        <div className="absolute inset-0 flex items-center justify-center">
+          <OracleEye phase={divining ? "divining" : "circle"} />
+        </div>
+
+        {/* Rune positions */}
+        {positions.map(({ digit, rune, x, y, slot }) => (
+          <div
+            key={digit}
+            className="oracle-rune absolute flex -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-1"
+            style={
+              {
+                left: `${x}%`,
+                top: `${y}%`,
+                animationDelay: `${slot * 70}ms`,
+              } as React.CSSProperties
+            }
+          >
+            <span className="font-display text-2xl text-silver drop-shadow-[0_2px_8px_rgba(138,160,255,0.4)] sm:text-3xl">
+              {rune}
+            </span>
+            <span className="font-numeric text-[10px] font-medium tracking-wide text-muted sm:text-[11px]">
+              {digit}
+            </span>
+          </div>
+        ))}
+
+        {/* Scanning sweep during divining */}
+        {divining && (
+          <div
+            aria-hidden
+            className="oracle-sweep pointer-events-none absolute inset-0 rounded-full"
+          />
+        )}
+      </div>
+
+      {!divining && (
+        <button
+          type="button"
+          onClick={onConfirm}
+          className="oracle-cta group inline-flex items-center gap-2 rounded-full border border-accent/50 bg-[rgba(138,160,255,0.08)] px-6 py-2.5 text-[11px] font-medium tracking-[0.22em] text-silver uppercase shadow-[0_8px_24px_rgba(138,160,255,0.2)] backdrop-blur-md transition-all duration-300 hover:border-accent hover:bg-[rgba(138,160,255,0.14)] hover:shadow-[0_12px_30px_rgba(138,160,255,0.3)] sm:text-[12px]"
+        >
+          Read my rune
+          <ChevronRight />
+        </button>
+      )}
+    </div>
+  );
+}
+
+/* === Reveal: the "9" rune (★) blossoms in center === */
+function RevealOrb({ done, onReset }: { done: boolean; onReset: () => void }) {
+  const rune = RUNES[9]; // star — the forced oracle rune
+  return (
+    <div className="oracle-reveal-wrap flex flex-col items-center gap-6 text-center">
+      <p className="font-display text-lg italic text-silver-dim sm:text-xl">
+        The Oracle has your rune.
       </p>
-    );
-  if (phase === "removing")
-    return (
-      <p className="magic-prompt font-display text-base italic text-silver sm:text-lg">
-        Removing your card…
-      </p>
-    );
-  if (phase === "revealing-set-two" || phase === "done")
-    return (
+
+      <div className="relative flex h-56 w-56 items-center justify-center sm:h-64 sm:w-64 md:h-72 md:w-72">
+        {/* Glow ripples */}
+        <span className="oracle-ripple oracle-ripple-1" aria-hidden />
+        <span className="oracle-ripple oracle-ripple-2" aria-hidden />
+        <span className="oracle-ripple oracle-ripple-3" aria-hidden />
+
+        {/* The star itself */}
+        <span className="oracle-star relative font-display text-8xl text-silver drop-shadow-[0_0_24px_rgba(138,160,255,0.8)] sm:text-9xl">
+          {rune}
+        </span>
+
+        {/* Sparkles around */}
+        <Sparkles />
+      </div>
+
       <div className="flex flex-col items-center gap-1">
-        <p className="magic-result font-display text-xl leading-tight text-silver sm:text-2xl md:text-3xl">
-          Your card is{" "}
-          <span className="italic text-silver-dim">no longer here.</span>
+        <p className="font-display text-xl text-silver sm:text-2xl">
+          Did it match?
         </p>
-        <p className="text-[12px] tracking-[0.22em] text-muted uppercase sm:text-[13px]">
-          Impossible, isn't it?
+        <p className="text-[11px] tracking-[0.22em] text-muted uppercase sm:text-[12px]">
+          Every mind lands on the same rune.
         </p>
       </div>
-    );
-  return null;
+
+      {done && (
+        <button
+          type="button"
+          onClick={onReset}
+          className="oracle-replay group mt-2 inline-flex items-center gap-2 rounded-full border border-line bg-ink-900/70 px-5 py-2.5 text-[11px] font-medium tracking-[0.22em] text-silver-dim uppercase backdrop-blur-md transition-all duration-300 hover:border-accent/50 hover:text-silver sm:text-[12px]"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.7"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="h-3.5 w-3.5 transition-transform duration-500 group-hover:-rotate-180"
+            aria-hidden
+          >
+            <path d="M3 12a9 9 0 0 1 15.5-6.3L21 8" />
+            <path d="M21 3v5h-5" />
+          </svg>
+          Again
+        </button>
+      )}
+    </div>
+  );
+}
+
+/* === Sparkle burst === */
+function Sparkles() {
+  const stars = [
+    { x: "20%", y: "15%", size: 10, delay: 60 },
+    { x: "80%", y: "20%", size: 14, delay: 180 },
+    { x: "10%", y: "60%", size: 8, delay: 320 },
+    { x: "85%", y: "65%", size: 11, delay: 90 },
+    { x: "45%", y: "5%", size: 7, delay: 250 },
+    { x: "55%", y: "90%", size: 9, delay: 380 },
+    { x: "15%", y: "35%", size: 6, delay: 420 },
+    { x: "90%", y: "40%", size: 8, delay: 150 },
+  ];
+  return (
+    <div className="pointer-events-none absolute inset-0 z-20" aria-hidden>
+      {stars.map((s, i) => (
+        <span
+          key={i}
+          className="oracle-sparkle absolute block"
+          style={{
+            left: s.x,
+            top: s.y,
+            width: s.size,
+            height: s.size,
+            animationDelay: `${s.delay}ms`,
+          }}
+        >
+          <svg viewBox="0 0 20 20" className="h-full w-full">
+            <path
+              d="M10 0 L12 8 L20 10 L12 12 L10 20 L8 12 L0 10 L8 8 Z"
+              fill="rgba(220,225,240,0.95)"
+            />
+          </svg>
+        </span>
+      ))}
+    </div>
+  );
 }
 
 function ThinkingDots() {
@@ -262,142 +483,5 @@ function ThinkingDots() {
       <span className="thinking-dot">.</span>
       <span className="thinking-dot">.</span>
     </span>
-  );
-}
-
-/* === Individual card === */
-type TrickCardProps = {
-  card: Card;
-  index: number;
-  faceDown: boolean;
-  mode: "appear" | "flip-down" | "shuffle" | "vanish" | "emerge";
-};
-
-function TrickCard({ card, index, faceDown, mode }: TrickCardProps) {
-  // Each mode maps to a CSS class that drives its own keyframe animation.
-  const modeClass =
-    mode === "appear"
-      ? "trick-card--appear"
-      : mode === "flip-down"
-        ? "trick-card--flip-down"
-        : mode === "shuffle"
-          ? "trick-card--shuffle"
-          : mode === "vanish"
-            ? "trick-card--vanish"
-            : "trick-card--emerge";
-
-  return (
-    <div
-      className={`trick-card relative aspect-7/10 rounded-xl shadow-[0_12px_30px_rgba(0,0,0,0.5)] ${modeClass}`}
-      style={
-        {
-          "--i": index,
-        } as React.CSSProperties
-      }
-    >
-      <div
-        className={`card-flipper relative h-full w-full rounded-xl transition-transform duration-700 transform-3d ${
-          faceDown ? "transform-[rotateY(180deg)]" : ""
-        }`}
-      >
-        {/* Face */}
-        <div className="absolute inset-0 overflow-hidden rounded-xl border border-silver/40 bg-linear-to-br from-white to-[#f5f5f0] backface-hidden">
-          <CardFace card={card} />
-        </div>
-        {/* Back */}
-        <div className="absolute inset-0 overflow-hidden rounded-xl border border-silver-dim/20 bg-linear-to-br from-ink-800 via-ink-900 to-[#0b1030] transform-[rotateY(180deg)] backface-hidden">
-          <CardBack />
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function CardFace({ card }: { card: Card }) {
-  const color = card.color === "red" ? "#c22" : "#0a0e1a";
-  return (
-    <div
-      className="flex h-full w-full flex-col justify-between p-1.5 font-serif leading-none sm:p-2 md:p-2.5"
-      style={{ color }}
-    >
-      {/* Top-left corner */}
-      <div className="flex flex-col items-start">
-        <span className="text-[13px] font-bold sm:text-[16px] md:text-[18px]">
-          {card.rank}
-        </span>
-        <span className="text-[11px] sm:text-[14px] md:text-[16px]">
-          {card.suit}
-        </span>
-      </div>
-      {/* Center suit */}
-      <div className="flex flex-1 items-center justify-center">
-        <span className="text-[32px] drop-shadow-[0_1px_3px_rgba(0,0,0,0.1)] sm:text-[40px] md:text-[52px] lg:text-[64px]">
-          {card.suit}
-        </span>
-      </div>
-      {/* Bottom-right corner (rotated) */}
-      <div className="flex flex-col items-end" style={{ transform: "rotate(180deg)" }}>
-        <span className="text-[13px] font-bold sm:text-[16px] md:text-[18px]">
-          {card.rank}
-        </span>
-        <span className="text-[11px] sm:text-[14px] md:text-[16px]">
-          {card.suit}
-        </span>
-      </div>
-    </div>
-  );
-}
-
-function CardBack() {
-  return (
-    <svg viewBox="0 0 100 140" className="absolute inset-0 h-full w-full" aria-hidden>
-      <defs>
-        <pattern id="back-pattern" x="0" y="0" width="8" height="8" patternUnits="userSpaceOnUse">
-          <circle cx="4" cy="4" r="0.4" fill="rgba(138,160,255,0.4)" />
-        </pattern>
-      </defs>
-      <rect width="100" height="140" fill="url(#back-pattern)" />
-      <rect x="6" y="6" width="88" height="128" fill="none" stroke="rgba(184,186,196,0.3)" strokeWidth="0.6" rx="3" />
-      <g transform="translate(50 70)">
-        <path
-          d="M0 -32 L22 0 L0 32 L-22 0 Z"
-          fill="none"
-          stroke="rgba(138,160,255,0.5)"
-          strokeWidth="0.6"
-        />
-        <circle cx="0" cy="0" r="4" fill="rgba(138,160,255,0.2)" stroke="rgba(184,186,196,0.5)" strokeWidth="0.4" />
-      </g>
-    </svg>
-  );
-}
-
-/* === Reading particles — soft orbs that drift during the "reading" phase === */
-function ReadingParticles({ active }: { active: boolean }) {
-  if (!active) return null;
-  const orbs = Array.from({ length: 14 }, (_, i) => ({
-    left: `${8 + Math.random() * 84}%`,
-    top: `${12 + Math.random() * 76}%`,
-    delay: `${Math.random() * 600}ms`,
-    duration: `${1800 + Math.random() * 1500}ms`,
-    size: 3 + Math.random() * 5,
-    key: `${active}-${i}`,
-  }));
-  return (
-    <div className="pointer-events-none absolute inset-0 z-20" aria-hidden>
-      {orbs.map((o) => (
-        <span
-          key={o.key}
-          className="magic-orb absolute block rounded-full"
-          style={{
-            left: o.left,
-            top: o.top,
-            width: o.size,
-            height: o.size,
-            animationDelay: o.delay,
-            animationDuration: o.duration,
-          }}
-        />
-      ))}
-    </div>
   );
 }

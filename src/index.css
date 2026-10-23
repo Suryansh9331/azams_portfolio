@@ -112,119 +112,157 @@ section[id] {
   color: #fff;
 }
 
-/* === Magic trick section === */
+/* === The Oracle magic trick === */
 
-/* Header fade + rail */
-@keyframes magic-fade-up {
-  from { opacity: 0; transform: translateY(16px); filter: blur(4px); }
+@keyframes oracle-fade-up {
+  from { opacity: 0; transform: translateY(14px); filter: blur(4px); }
   to   { opacity: 1; transform: translateY(0); filter: blur(0); }
 }
-@keyframes magic-rail-draw {
+@keyframes oracle-rail-draw {
   from { transform: scaleX(0); }
   to   { transform: scaleX(1); }
 }
 
-.magic-reveal .magic-label,
-.magic-reveal .magic-headline,
-.magic-reveal .magic-sub {
+.oracle-reveal .oracle-label,
+.oracle-reveal .oracle-headline,
+.oracle-reveal .oracle-sub {
   opacity: 0;
 }
-.magic-reveal .magic-rail {
+.oracle-reveal .oracle-rail {
   transform: scaleX(0);
   transform-origin: center;
 }
-.magic-reveal.in-view .magic-label    { animation: magic-fade-up 0.65s cubic-bezier(0.22, 1, 0.36, 1) 0.10s forwards; }
-.magic-reveal.in-view .magic-rail     { animation: magic-rail-draw 0.75s cubic-bezier(0.76, 0, 0.24, 1) 0.25s forwards; }
-.magic-reveal.in-view .magic-headline { animation: magic-fade-up 0.80s cubic-bezier(0.22, 1, 0.36, 1) 0.40s forwards; }
-.magic-reveal.in-view .magic-sub      { animation: magic-fade-up 0.75s cubic-bezier(0.22, 1, 0.36, 1) 0.55s forwards; }
+.oracle-reveal.in-view .oracle-label    { animation: oracle-fade-up 0.65s cubic-bezier(0.22, 1, 0.36, 1) 0.10s forwards; }
+.oracle-reveal.in-view .oracle-rail     { animation: oracle-rail-draw 0.75s cubic-bezier(0.76, 0, 0.24, 1) 0.25s forwards; }
+.oracle-reveal.in-view .oracle-headline { animation: oracle-fade-up 0.80s cubic-bezier(0.22, 1, 0.36, 1) 0.40s forwards; }
+.oracle-reveal.in-view .oracle-sub      { animation: oracle-fade-up 0.75s cubic-bezier(0.22, 1, 0.36, 1) 0.55s forwards; }
 
-.magic-prompt,
-.magic-cta,
-.magic-result,
-.magic-replay {
-  animation: magic-fade-up 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+.oracle-step, .oracle-intro, .oracle-circle, .oracle-reveal-wrap,
+.oracle-cta, .oracle-replay {
+  animation: oracle-fade-up 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-/* --- Card modes --- */
-
-/* Appear: cards fade in from below with slight scale, staggered by --i */
-@keyframes trick-appear {
-  from { opacity: 0; transform: translateY(28px) scale(0.92); filter: blur(6px); }
-  to   { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+/* --- Oracle "eye" (concentric spinning rings) --- */
+.oracle-eye {
+  display: inline-block;
 }
-.trick-card--appear {
+.oracle-ring,
+.oracle-pupil {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  border-radius: 50%;
+  pointer-events: none;
+}
+.oracle-ring {
+  border: 1px solid rgba(138, 160, 255, 0.35);
+}
+.oracle-ring-1 {
+  width: 100%; height: 100%;
+  animation: oracle-spin 14s linear infinite;
+  border-top-color: rgba(184, 186, 196, 0.7);
+}
+.oracle-ring-2 {
+  width: 72%; height: 72%;
+  animation: oracle-spin 9s linear infinite reverse;
+  border-left-color: rgba(138, 160, 255, 0.7);
+  border-right-color: rgba(138, 160, 255, 0.1);
+}
+.oracle-ring-3 {
+  width: 46%; height: 46%;
+  animation: oracle-spin 5s linear infinite;
+  border-bottom-color: rgba(220, 225, 240, 0.8);
+  border-top-color: transparent;
+}
+.oracle-pupil {
+  width: 14%; height: 14%;
+  background: radial-gradient(circle, rgba(220, 225, 240, 0.95) 0%, rgba(138, 160, 255, 0.5) 60%, transparent 100%);
+  box-shadow: 0 0 20px rgba(138, 160, 255, 0.7);
+  animation: oracle-pulse 2.2s ease-in-out infinite;
+}
+.oracle-eye.is-active .oracle-ring-1 { animation-duration: 4s; }
+.oracle-eye.is-active .oracle-ring-2 { animation-duration: 2.5s; }
+.oracle-eye.is-active .oracle-ring-3 { animation-duration: 1.5s; }
+.oracle-eye.is-active .oracle-pupil  { animation-duration: 0.8s; }
+
+@keyframes oracle-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+@keyframes oracle-pulse {
+  0%, 100% { transform: scale(1); opacity: 0.9; box-shadow: 0 0 20px rgba(138, 160, 255, 0.7); }
+  50%      { transform: scale(1.15); opacity: 1; box-shadow: 0 0 32px rgba(138, 160, 255, 1); }
+}
+
+/* --- Rune circle --- */
+@keyframes oracle-rune-in {
+  from { opacity: 0; transform: translate(-50%, -50%) scale(0.4); filter: blur(6px); }
+  to   { opacity: 1; transform: translate(-50%, -50%) scale(1); filter: blur(0); }
+}
+.oracle-rune {
   opacity: 0;
-  animation: trick-appear 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
-  animation-delay: calc(var(--i, 0) * 90ms);
+  animation: oracle-rune-in 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-/* Flip-down: tiny lift (the actual 180° rotation is handled on the inner
-   .card-flipper via Tailwind utilities so backface works) */
-@keyframes trick-flip-lift {
-  0%   { transform: translateY(0); }
-  50%  { transform: translateY(-10px) scale(1.02); }
-  100% { transform: translateY(0); }
+/* The "scanning sweep" during divining */
+@keyframes oracle-sweep {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
 }
-.trick-card--flip-down {
-  animation: trick-flip-lift 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
-  animation-delay: calc(var(--i, 0) * 60ms);
-}
-
-/* Shuffle: cards swirl in a small orbit — the deception phase */
-@keyframes trick-shuffle {
-  0%   { transform: translate(0, 0) rotate(0deg); }
-  25%  { transform: translate(10px, -14px) rotate(-6deg); }
-  50%  { transform: translate(-12px, 10px) rotate(5deg); }
-  75%  { transform: translate(8px, 12px) rotate(-3deg); }
-  100% { transform: translate(0, 0) rotate(0deg); }
-}
-.trick-card--shuffle {
-  animation: trick-shuffle 1.4s ease-in-out infinite;
-  animation-delay: calc(var(--i, 0) * 70ms);
+.oracle-sweep {
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg,
+    rgba(138, 160, 255, 0.35) 30deg,
+    transparent 60deg,
+    transparent 360deg
+  );
+  animation: oracle-sweep 2s linear infinite;
+  mask: radial-gradient(circle, transparent 40%, black 42%, black 95%, transparent 100%);
+  -webkit-mask: radial-gradient(circle, transparent 40%, black 42%, black 95%, transparent 100%);
 }
 
-/* Vanish: cards converge toward center then shrink + fade — "removed" */
-@keyframes trick-vanish {
-  0%   { opacity: 1; transform: translate(0, 0) scale(1); filter: blur(0); }
-  60%  { opacity: 0.6; transform: translate(0, -10px) scale(0.6) rotate(8deg); filter: blur(3px); }
-  100% { opacity: 0; transform: translate(0, -30px) scale(0.25) rotate(16deg); filter: blur(8px); }
+/* --- Reveal orb --- */
+@keyframes oracle-star-in {
+  0%   { opacity: 0; transform: scale(0.1) rotate(-30deg); filter: blur(20px) brightness(2); }
+  60%  { opacity: 1; transform: scale(1.2) rotate(5deg); filter: blur(0) brightness(1.4); }
+  100% { opacity: 1; transform: scale(1) rotate(0deg); filter: blur(0) brightness(1); }
 }
-.trick-card--vanish {
-  animation: trick-vanish 0.6s cubic-bezier(0.76, 0, 0.24, 1) both;
-  animation-delay: calc(var(--i, 0) * 40ms);
-}
-
-/* Emerge: new set of cards materialises from a point with glow */
-@keyframes trick-emerge {
-  0%   { opacity: 0; transform: translateY(20px) scale(0.4); filter: blur(10px) brightness(1.8); }
-  50%  { opacity: 1; filter: blur(0) brightness(1.2); }
-  100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0) brightness(1); }
-}
-.trick-card--emerge {
+.oracle-star {
   opacity: 0;
-  animation: trick-emerge 0.75s cubic-bezier(0.22, 1, 0.36, 1) both;
-  animation-delay: calc(var(--i, 0) * 110ms);
+  animation: oracle-star-in 1.1s cubic-bezier(0.22, 1, 0.36, 1) 0.2s both;
 }
 
-/* --- Reading orbs: drifting light motes during the "shuffle" phase --- */
-@keyframes magic-orb {
-  0%   { opacity: 0; transform: translate(0, 0) scale(0.6); }
-  30%  { opacity: 0.9; }
-  100% { opacity: 0; transform: translate(var(--dx, 10px), -40px) scale(1.3); }
+@keyframes oracle-ripple {
+  0%   { opacity: 0.7; transform: scale(0.4); border-color: rgba(138, 160, 255, 0.6); }
+  100% { opacity: 0;   transform: scale(1.6); border-color: rgba(138, 160, 255, 0); }
 }
-.magic-orb {
-  background: radial-gradient(circle, rgba(184,195,255,0.95) 0%, rgba(138,160,255,0.5) 50%, transparent 100%);
-  box-shadow: 0 0 10px rgba(138, 160, 255, 0.7);
-  animation: magic-orb linear infinite both;
+.oracle-ripple {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1px solid rgba(138, 160, 255, 0.6);
+  animation: oracle-ripple 2.4s ease-out infinite;
 }
-.magic-orb:nth-child(3n)   { --dx: -14px; }
-.magic-orb:nth-child(3n+1) { --dx: 12px; }
-.magic-orb:nth-child(3n+2) { --dx: -4px; }
+.oracle-ripple-1 { animation-delay: 0s; }
+.oracle-ripple-2 { animation-delay: 0.8s; }
+.oracle-ripple-3 { animation-delay: 1.6s; }
 
-/* --- "Reading your mind..." animated dots --- */
+/* --- Reused sparkles / thinking dots --- */
+@keyframes oracle-sparkle {
+  0%   { opacity: 0; transform: scale(0.2) rotate(0deg); }
+  40%  { opacity: 1; transform: scale(1.3) rotate(90deg); }
+  100% { opacity: 0; transform: scale(0.6) rotate(180deg); }
+}
+.oracle-sparkle {
+  opacity: 0;
+  animation: oracle-sparkle 1.8s cubic-bezier(0.22, 1, 0.36, 1) infinite both;
+  filter: drop-shadow(0 0 6px rgba(184, 186, 196, 0.6));
+}
+
 @keyframes thinking-dot {
   0%, 60%, 100% { opacity: 0.2; transform: translateY(0); }
-  30%           { opacity: 1; transform: translateY(-2px); }
+  30%           { opacity: 1;   transform: translateY(-2px); }
 }
 .thinking-dot {
   display: inline-block;
@@ -234,21 +272,14 @@ section[id] {
 .thinking-dot:nth-child(3) { animation-delay: 0.30s; }
 
 @media (prefers-reduced-motion: reduce) {
-  .magic-reveal .magic-label,
-  .magic-reveal .magic-headline,
-  .magic-reveal .magic-sub { opacity: 1; }
-  .magic-reveal .magic-rail { transform: scaleX(1); }
-  .magic-prompt,
-  .magic-cta,
-  .magic-result,
-  .magic-replay,
-  .trick-card--appear,
-  .trick-card--flip-down,
-  .trick-card--shuffle,
-  .trick-card--vanish,
-  .trick-card--emerge,
-  .magic-orb,
-  .thinking-dot {
+  .oracle-reveal .oracle-label,
+  .oracle-reveal .oracle-headline,
+  .oracle-reveal .oracle-sub { opacity: 1; }
+  .oracle-reveal .oracle-rail { transform: scaleX(1); }
+  .oracle-step, .oracle-intro, .oracle-circle, .oracle-reveal-wrap,
+  .oracle-cta, .oracle-replay, .oracle-rune, .oracle-star,
+  .oracle-ring-1, .oracle-ring-2, .oracle-ring-3, .oracle-pupil,
+  .oracle-sweep, .oracle-ripple, .oracle-sparkle, .thinking-dot {
     animation: none;
     opacity: 1;
     transform: none;
