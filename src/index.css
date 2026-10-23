@@ -22,8 +22,24 @@
 
 html {
   scroll-behavior: smooth;
+  /* Any `scrollIntoView` or anchor jump leaves 24px breathing room */
+  scroll-padding-top: 24px;
   --about-image-bleed: 0px;
   --section-left-gap: 1.25rem;
+}
+
+/* Smoother native inertia scrolling on iOS/macOS trackpads */
+body {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Reusable: hide scrollbars on horizontal rails while keeping scroll functional */
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
 }
 
 @media (min-width: 640px) {
@@ -96,7 +112,24 @@ section[id] {
   color: #fff;
 }
 
-/* === Industries explorer — tab-based brand selector === */
+/* === Industries explorer — horizontal rail with snap + hidden scrollbar === */
+.industries-scroller {
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+  touch-action: pan-x pan-y;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.industries-scroller::-webkit-scrollbar {
+  display: none;
+}
+.industries-scroller [data-industry-card] {
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
+
 @keyframes industries-fade-up {
   from {
     opacity: 0;
