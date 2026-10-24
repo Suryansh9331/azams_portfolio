@@ -21,7 +21,7 @@ export function Reels() {
   return (
     <div
       ref={ref}
-      className={`reels-reveal relative overflow-hidden bg-ink-950 py-20 sm:py-24 md:py-28 lg:py-32 ${
+      className={`reels-reveal relative overflow-hidden bg-ink-950 py-12 sm:py-14 md:py-16 lg:py-20 ${
         inView ? "in-view" : ""
       }`}
     >

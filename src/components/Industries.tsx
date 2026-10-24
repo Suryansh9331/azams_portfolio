@@ -96,7 +96,7 @@ export function Industries() {
     <section
       ref={ref}
       id="industries"
-      className={`industries-reveal relative overflow-hidden bg-ink-950 py-16 sm:py-20 md:py-24 lg:py-28 ${
+      className={`industries-reveal relative overflow-hidden bg-ink-950 py-12 sm:py-14 md:py-16 lg:py-20 ${
         inView ? "in-view" : ""
       }`}
     >

@@ -68,7 +68,7 @@ export function MagicTrick() {
     <section
       ref={ref}
       id="magic-trick"
-      className={`predict-reveal relative overflow-hidden bg-ink-950 pt-6 pb-20 sm:pt-8 sm:pb-24 md:pt-10 md:pb-28 lg:pt-12 lg:pb-32 ${
+      className={`predict-reveal relative overflow-hidden bg-ink-950 pt-6 pb-12 sm:pt-8 sm:pb-14 md:pt-10 md:pb-16 lg:pt-12 lg:pb-20 ${
         inView ? "in-view" : ""
       }`}
     >
