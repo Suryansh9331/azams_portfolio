@@ -3,34 +3,34 @@ import { useInView } from "../hooks/useInView";
 import { SectionHeader } from "./shared/SectionHeader";
 
 type Suit = "♠" | "♥" | "♦" | "♣";
-type Card = { rank: string; suit: Suit; color: "red" | "dark" };
+type Rank = "A" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" | "10" | "J" | "Q" | "K";
 
 type Phase =
-  | "idle" //  hidden
-  | "dealing" // 3 cards cascade in from above
-  | "waiting" // user is thinking, cards wait
-  | "revealing-pick" // user clicked; chosen card lifts + flips
-  | "paused" // picked card settled, prompting to reveal the others
-  | "revealing-rest" // other 2 cards flip
-  | "done"; // all three shown, offer replay
+  | "idle" //              nothing shown yet
+  | "intro" //             envelope sits, pickers hidden
+  | "pickers" //           user selects suit, rank, position
+  | "dealing" //           10 cards fly out of the envelope
+  | "counting" //          counter counts 1..N with each card lifting
+  | "revealing" //         chosen position's card flips to show user's card
+  | "done"; //             match confirmed, replay button
 
-/* The forced reveal — rotated per play. Each entry picks a card that will
- * appear on BOTH the user's chosen slot and the other two when they flip.
- * The trick: "no matter which card you choose, it's always the same card." */
-const FORCED_CARDS: Card[] = [
-  { rank: "A", suit: "♠", color: "dark" },
-  { rank: "Q", suit: "♥", color: "red" },
-  { rank: "K", suit: "♦", color: "red" },
-  { rank: "J", suit: "♣", color: "dark" },
+const SUITS: { suit: Suit; color: "red" | "dark"; label: string }[] = [
+  { suit: "♠", color: "dark", label: "Spades" },
+  { suit: "♥", color: "red", label: "Hearts" },
+  { suit: "♦", color: "red", label: "Diamonds" },
+  { suit: "♣", color: "dark", label: "Clubs" },
 ];
-
-const SLOT_IDS = [0, 1, 2] as const;
+const RANKS: Rank[] = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
+const POSITIONS = Array.from({ length: 10 }, (_, i) => i + 1);
+const DECK_SIZE = 10;
 
 export function MagicTrick() {
-  const { ref, inView } = useInView<HTMLElement>({ threshold: 0.25 });
+  const { ref, inView } = useInView<HTMLElement>({ threshold: 0.2 });
   const [phase, setPhase] = useState<Phase>("idle");
-  const [picked, setPicked] = useState<number | null>(null);
-  const [round, setRound] = useState(0);
+  const [suit, setSuit] = useState<Suit | null>(null);
+  const [rank, setRank] = useState<Rank | null>(null);
+  const [position, setPosition] = useState<number | null>(null);
+  const [countAt, setCountAt] = useState(0);
   const startedRef = useRef(false);
   const timers = useRef<number[]>([]);
 
@@ -48,51 +48,66 @@ export function MagicTrick() {
   useEffect(() => {
     if (!inView || startedRef.current) return;
     startedRef.current = true;
-    schedule(() => setPhase("dealing"), 400);
-    schedule(() => setPhase("waiting"), 1800);
+    schedule(() => setPhase("intro"), 400);
+    schedule(() => setPhase("pickers"), 1300);
   }, [inView, schedule]);
 
-  const card = FORCED_CARDS[round % FORCED_CARDS.length];
+  const canReveal = suit !== null && rank !== null && position !== null;
 
-  const handlePick = (slot: number) => {
-    if (phase !== "waiting") return;
-    setPicked(slot);
-    setPhase("revealing-pick");
-    schedule(() => setPhase("paused"), 1200);
-  };
+  const handleReveal = () => {
+    if (!canReveal || phase !== "pickers") return;
+    setPhase("dealing");
+    setCountAt(0);
 
-  const revealAll = () => {
-    if (phase !== "paused") return;
-    setPhase("revealing-rest");
-    schedule(() => setPhase("done"), 1400);
+    // Deal animation: 10 cards cascade out of the envelope
+    schedule(() => setPhase("counting"), DECK_SIZE * 90 + 400);
+
+    // Counter advances 1..position
+    const COUNT_STEP = 320;
+    for (let i = 1; i <= position!; i++) {
+      schedule(() => setCountAt(i), DECK_SIZE * 90 + 400 + i * COUNT_STEP);
+    }
+
+    // Reveal at the chosen position
+    schedule(
+      () => setPhase("revealing"),
+      DECK_SIZE * 90 + 400 + position! * COUNT_STEP + 400,
+    );
+    schedule(
+      () => setPhase("done"),
+      DECK_SIZE * 90 + 400 + position! * COUNT_STEP + 2200,
+    );
   };
 
   const reset = () => {
     clearTimers();
-    setPicked(null);
-    setRound((n) => n + 1);
-    setPhase("dealing");
-    schedule(() => setPhase("waiting"), 1400);
+    setSuit(null);
+    setRank(null);
+    setPosition(null);
+    setCountAt(0);
+    setPhase("pickers");
   };
+
+  const chosenColor: "red" | "dark" =
+    suit === "♥" || suit === "♦" ? "red" : "dark";
 
   return (
     <section
       ref={ref}
       id="magic-trick"
-      className={`trick-reveal relative overflow-hidden bg-ink-950 pt-6 pb-12 sm:pt-8 sm:pb-14 md:pt-10 md:pb-16 lg:pt-12 lg:pb-20 ${
+      className={`dealer-reveal relative overflow-hidden bg-ink-950 pt-6 pb-12 sm:pt-8 sm:pb-14 md:pt-10 md:pb-16 lg:pt-12 lg:pb-20 ${
         inView ? "in-view" : ""
       }`}
     >
-      {/* Stage lighting */}
+      {/* Themed backdrop */}
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0"
         style={{
           backgroundImage:
-            "radial-gradient(ellipse 55% 45% at 50% 55%, rgba(60,100,200,0.2) 0%, rgba(30,55,130,0.08) 42%, rgba(10,16,34,0) 72%)",
+            "radial-gradient(ellipse 55% 50% at 50% 55%, rgba(60,100,200,0.2) 0%, rgba(30,55,130,0.08) 42%, rgba(10,16,34,0) 72%)",
         }}
       />
-      {/* Subtle vignette so the stage reads as a lit area */}
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0"
@@ -105,70 +120,78 @@ export function MagicTrick() {
       <div className="relative mx-auto w-full max-w-[1680px] px-4 sm:px-5 md:px-6 lg:px-8 xl:px-10">
         <SectionHeader
           align="center"
-          maxWidth="xl"
+          maxWidth="2xl"
           eyebrow="A Small Illusion"
           headline={
             <>
-              Three cards.{" "}
-              <span className="italic text-silver-dim">One truth.</span>
+              Any card.{" "}
+              <span className="italic text-silver-dim">Any number.</span>
             </>
           }
-          sub="Pick any card. We've already chosen it for you."
+          sub="Name a suit, a rank, and a position. We'll deal to it."
         />
 
-        {/* The stage */}
-        <div className="trick-stage relative mx-auto mt-14 flex min-h-75 w-full max-w-xl items-end justify-center sm:min-h-85 md:mt-18 md:min-h-95 lg:min-h-105">
-          {/* Floor glow */}
-          <div
-            aria-hidden
-            className="pointer-events-none absolute inset-x-10 bottom-0 h-20 opacity-70"
-            style={{
-              backgroundImage:
-                "radial-gradient(ellipse at 50% 100%, rgba(138,160,255,0.22) 0%, transparent 70%)",
-            }}
-          />
+        {/* The envelope + deal row */}
+        <div className="relative mx-auto mt-10 flex min-h-80 w-full max-w-3xl flex-col items-center sm:mt-12 md:min-h-90">
+          <Envelope opening={phase === "dealing" || phase === "counting" || phase === "revealing" || phase === "done"} />
 
-          {SLOT_IDS.map((slot) => (
-            <TrickCard
-              key={`${round}-${slot}`}
-              slot={slot}
-              card={card}
+          {(phase === "dealing" || phase === "counting" || phase === "revealing" || phase === "done") && (
+            <DealRow
+              count={countAt}
+              position={position!}
+              suit={suit!}
+              rank={rank!}
+              color={chosenColor}
               phase={phase}
-              picked={picked}
-              onPick={() => handlePick(slot)}
             />
-          ))}
-
-          {/* Sparkles over the chosen card during reveal */}
-          {(phase === "revealing-pick" || phase === "paused") && picked !== null && (
-            <Sparkles slot={picked} />
           )}
         </div>
 
-        {/* Prompt + controls */}
-        <div className="relative mx-auto mt-10 flex min-h-20 max-w-xl flex-col items-center justify-start gap-4 text-center sm:mt-12">
-          <PromptCopy phase={phase} card={card} />
+        {/* Pickers */}
+        {phase === "pickers" && (
+          <div className="dealer-pickers mx-auto mt-10 flex max-w-3xl flex-col gap-6 sm:mt-12 sm:gap-7">
+            <SuitPicker value={suit} onChange={setSuit} />
+            <RankPicker value={rank} onChange={setRank} />
+            <PositionPicker value={position} onChange={setPosition} />
 
-          {phase === "paused" && (
-            <button
-              type="button"
-              onClick={revealAll}
-              className="trick-cta group inline-flex items-center gap-2 rounded-full border border-accent/50 bg-[rgba(138,160,255,0.08)] px-6 py-2.5 text-[11px] font-medium tracking-[0.22em] text-silver uppercase shadow-[0_8px_24px_rgba(138,160,255,0.2)] backdrop-blur-md transition-all duration-300 hover:border-accent hover:bg-[rgba(138,160,255,0.14)] hover:shadow-[0_12px_30px_rgba(138,160,255,0.3)] sm:text-[12px]"
-            >
-              Flip the others
-              <ChevronRight />
-            </button>
-          )}
+            {/* Reveal CTA */}
+            <div className="mt-2 flex items-center justify-center">
+              <button
+                type="button"
+                onClick={handleReveal}
+                disabled={!canReveal}
+                className={`dealer-cta group inline-flex items-center gap-2 rounded-full border px-6 py-2.5 text-[11px] font-medium tracking-[0.22em] uppercase backdrop-blur-md transition-all duration-300 sm:text-[12px] ${
+                  canReveal
+                    ? "border-accent/60 bg-[rgba(138,160,255,0.12)] text-silver shadow-[0_10px_28px_rgba(138,160,255,0.25)] hover:border-accent hover:bg-[rgba(138,160,255,0.2)] hover:shadow-[0_14px_34px_rgba(138,160,255,0.35)]"
+                    : "cursor-not-allowed border-line bg-ink-900/70 text-muted"
+                }`}
+              >
+                {canReveal ? "Deal" : "Pick all three"}
+                <ChevronRight />
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Reveal copy + replay */}
+        <div className="relative mx-auto mt-6 flex min-h-16 max-w-xl flex-col items-center gap-4 text-center">
+          <CountingLabel countAt={countAt} position={position} phase={phase} />
 
           {phase === "done" && (
-            <button
-              type="button"
-              onClick={reset}
-              className="trick-replay group inline-flex items-center gap-2 rounded-full border border-line bg-ink-900/70 px-5 py-2.5 text-[11px] font-medium tracking-[0.22em] text-silver-dim uppercase backdrop-blur-md transition-all duration-300 hover:border-accent/50 hover:text-silver sm:text-[12px]"
-            >
-              <RefreshIcon />
-              Again
-            </button>
+            <>
+              <p className="dealer-result font-display text-xl leading-tight text-silver sm:text-2xl">
+                {rank} {suit} at position {position}.{" "}
+                <span className="italic text-silver-dim">Exactly as called.</span>
+              </p>
+              <button
+                type="button"
+                onClick={reset}
+                className="dealer-replay group inline-flex items-center gap-2 rounded-full border border-line bg-ink-900/70 px-5 py-2.5 text-[11px] font-medium tracking-[0.22em] text-silver-dim uppercase backdrop-blur-md transition-all duration-300 hover:border-accent/50 hover:text-silver sm:text-[12px]"
+              >
+                <RefreshIcon />
+                Call another
+              </button>
+            </>
           )}
         </div>
       </div>
@@ -176,304 +199,418 @@ export function MagicTrick() {
   );
 }
 
-/* === The individual card === */
-function TrickCard({
-  slot,
-  card,
-  phase,
-  picked,
-  onPick,
-}: {
-  slot: number;
-  card: Card;
-  phase: Phase;
-  picked: number | null;
-  onPick: () => void;
-}) {
-  const isHidden = phase === "idle";
-  const isDealing = phase === "dealing";
-  const canPick = phase === "waiting";
-  const isPicked = picked === slot;
-
-  // Reveal timing per card
-  const isRevealed =
-    (isPicked && (phase === "revealing-pick" || phase === "paused" || phase === "revealing-rest" || phase === "done")) ||
-    (!isPicked && (phase === "revealing-rest" || phase === "done"));
-
-  // Rotation for fan feel (idle state only). Horizontal offset is driven
-  // by CSS variables set via `data-slot` so it responds to breakpoints
-  // without needing `window.innerWidth` on render.
-  const idleRotate = slot === 0 ? -6 : slot === 2 ? 6 : 0;
-
-  // Transform states
-  const translateX = isPicked
-    ? "0rem"
-    : "var(--card-x)";
-  const translateY = isHidden
-    ? "-30rem"
-    : isPicked
-      ? "-2.5rem"
-      : "0rem";
-  const scale = isPicked ? "1.08" : "1";
-  const rotate =
-    phase === "waiting" || phase === "revealing-pick" || phase === "paused" || phase === "revealing-rest" || phase === "done"
-      ? isPicked
-        ? "0deg"
-        : phase === "revealing-rest" || phase === "done"
-          ? "0deg"
-          : `${idleRotate}deg`
-      : `${idleRotate * 2}deg`;
-
-  const dealDelay = isDealing ? slot * 160 : 0;
-
+/* === Envelope component === */
+function Envelope({ opening }: { opening: boolean }) {
   return (
-    <button
-      type="button"
-      onClick={onPick}
-      disabled={!canPick}
-      data-slot={slot}
-      aria-label={canPick ? `Pick card ${slot + 1}` : undefined}
-      className={`trick-card group absolute bottom-4 h-56 w-40 rounded-xl transition-all duration-700 ease-out focus:outline-none focus-visible:ring-2 focus-visible:ring-accent sm:h-64 sm:w-44 md:h-72 md:w-52 lg:h-80 lg:w-60 ${
-        canPick ? "cursor-pointer hover:-translate-y-3" : "cursor-default"
-      } ${isPicked ? "z-20" : "z-10"}`}
-      style={{
-        transform: `translateX(${translateX}) translateY(${translateY}) scale(${scale}) rotate(${rotate})`,
-        transitionDelay: isDealing ? `${dealDelay}ms` : "0ms",
-        opacity: isHidden ? 0 : 1,
-      }}
+    <div
+      className={`envelope relative h-32 w-48 shrink-0 sm:h-40 sm:w-60 md:h-44 md:w-72 ${
+        opening ? "is-opening" : ""
+      }`}
+      aria-hidden
     >
-      <div
-        className={`card-flipper relative h-full w-full rounded-xl transition-transform duration-900 transform-3d ${
-          isRevealed ? "transform-[rotateY(180deg)]" : ""
-        }`}
-        style={{
-          transitionDelay: !isPicked && phase === "revealing-rest" ? `${slot * 90}ms` : "0ms",
-        }}
-      >
-        {/* Back */}
-        <div className="absolute inset-0 overflow-hidden rounded-xl border border-silver-dim/25 bg-linear-to-br from-ink-800 via-ink-900 to-[#0b1030] shadow-[0_18px_40px_rgba(0,0,0,0.55)] backface-hidden">
-          <CardBack />
-          {/* Hover glow */}
-          <span
-            aria-hidden
-            className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
-            style={{
-              backgroundImage:
-                "radial-gradient(ellipse at center, rgba(138,160,255,0.3) 0%, transparent 70%)",
-            }}
+      <svg viewBox="0 0 240 160" className="absolute inset-0 h-full w-full">
+        <defs>
+          <linearGradient id="env-body" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#1a2140" />
+            <stop offset="100%" stopColor="#0a0e1a" />
+          </linearGradient>
+          <linearGradient id="env-flap" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stopColor="#141a2e" />
+            <stop offset="100%" stopColor="#1a2140" />
+          </linearGradient>
+          <radialGradient id="wax-grad" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="#d94848" />
+            <stop offset="60%" stopColor="#8a2020" />
+            <stop offset="100%" stopColor="#4a0808" />
+          </radialGradient>
+        </defs>
+
+        {/* Envelope body */}
+        <rect
+          x="4"
+          y="30"
+          width="232"
+          height="124"
+          rx="4"
+          fill="url(#env-body)"
+          stroke="rgba(184,186,196,0.3)"
+          strokeWidth="0.6"
+        />
+
+        {/* Flap (triangle) */}
+        <g className="envelope-flap">
+          <polygon
+            points="4,30 236,30 120,110"
+            fill="url(#env-flap)"
+            stroke="rgba(184,186,196,0.35)"
+            strokeWidth="0.6"
           />
-        </div>
-
-        {/* Face */}
-        <div
-          className={`absolute inset-0 overflow-hidden rounded-xl border bg-linear-to-br from-white to-[#f3f3ee] transform-[rotateY(180deg)] backface-hidden ${
-            isPicked
-              ? "border-accent/70 shadow-[0_25px_60px_rgba(138,160,255,0.5)]"
-              : "border-silver/50 shadow-[0_18px_40px_rgba(138,160,255,0.25)]"
-          }`}
-        >
-          <CardFace card={card} />
-        </div>
-      </div>
-    </button>
-  );
-}
-
-/* === Card back design === */
-function CardBack() {
-  return (
-    <svg viewBox="0 0 140 200" className="absolute inset-0 h-full w-full" aria-hidden>
-      <defs>
-        <pattern id="back-dots" x="0" y="0" width="8" height="8" patternUnits="userSpaceOnUse">
-          <circle cx="4" cy="4" r="0.4" fill="rgba(138,160,255,0.4)" />
-        </pattern>
-        <linearGradient id="back-sheen" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="rgba(255,255,255,0.03)" />
-          <stop offset="50%" stopColor="rgba(255,255,255,0)" />
-          <stop offset="100%" stopColor="rgba(138,160,255,0.08)" />
-        </linearGradient>
-      </defs>
-      <rect width="140" height="200" fill="url(#back-dots)" />
-      <rect width="140" height="200" fill="url(#back-sheen)" />
-      {/* Double border */}
-      <rect x="7" y="7" width="126" height="186" fill="none" stroke="rgba(184,186,196,0.3)" strokeWidth="0.6" rx="4" />
-      <rect x="11" y="11" width="118" height="178" fill="none" stroke="rgba(138,160,255,0.3)" strokeWidth="0.4" rx="2" />
-      {/* Center ornament */}
-      <g transform="translate(70 100)">
-        <path d="M0 -48 L34 0 L0 48 L-34 0 Z" fill="none" stroke="rgba(184,186,196,0.4)" strokeWidth="0.7" />
-        <path d="M0 -32 L22 0 L0 32 L-22 0 Z" fill="none" stroke="rgba(138,160,255,0.45)" strokeWidth="0.5" />
-        <path d="M0 -18 L13 0 L0 18 L-13 0 Z" fill="none" stroke="rgba(184,186,196,0.3)" strokeWidth="0.35" />
-        <circle cx="0" cy="0" r="5" fill="rgba(138,160,255,0.18)" stroke="rgba(184,186,196,0.6)" strokeWidth="0.4" />
-        <text
-          x="0"
-          y="3"
-          textAnchor="middle"
-          fontFamily="'Playfair Display', serif"
-          fontSize="6"
-          fontStyle="italic"
-          fill="rgba(232,232,236,0.75)"
-        >
-          A
-        </text>
-      </g>
-      {/* Corner markers */}
-      {[
-        [16, 20],
-        [124, 20],
-        [16, 180],
-        [124, 180],
-      ].map(([x, y], i) => (
-        <g key={i} transform={`translate(${x} ${y})`}>
-          <circle r="1" fill="rgba(138,160,255,0.45)" />
-          <circle r="2.5" fill="none" stroke="rgba(184,186,196,0.25)" strokeWidth="0.3" />
+          {/* Wax seal (center-bottom of flap) */}
+          <g className="envelope-wax" transform="translate(120 92)">
+            <circle r="14" fill="url(#wax-grad)" />
+            <circle
+              r="14"
+              fill="none"
+              stroke="rgba(0,0,0,0.4)"
+              strokeWidth="1"
+            />
+            <text
+              textAnchor="middle"
+              y="4"
+              fontFamily="'Playfair Display', serif"
+              fontSize="12"
+              fontStyle="italic"
+              fontWeight="700"
+              fill="rgba(255,230,220,0.75)"
+            >
+              A
+            </text>
+          </g>
         </g>
-      ))}
-    </svg>
+
+        {/* Decorative corners on body */}
+        {[
+          [16, 44],
+          [224, 44],
+          [16, 140],
+          [224, 140],
+        ].map(([x, y], i) => (
+          <g key={i} transform={`translate(${x} ${y})`}>
+            <circle r="1.5" fill="rgba(138,160,255,0.5)" />
+            <circle r="4" fill="none" stroke="rgba(184,186,196,0.2)" strokeWidth="0.3" />
+          </g>
+        ))}
+      </svg>
+    </div>
   );
 }
 
-/* === Card face: classic playing-card style === */
-function CardFace({ card }: { card: Card }) {
-  const color = card.color === "red" ? "#c22" : "#0a0e1a";
+/* === DealRow: 10 cards slide out of the envelope === */
+function DealRow({
+  count,
+  position,
+  suit,
+  rank,
+  color,
+  phase,
+}: {
+  count: number;
+  position: number;
+  suit: Suit;
+  rank: Rank;
+  color: "red" | "dark";
+  phase: Phase;
+}) {
   return (
-    <svg viewBox="0 0 140 200" className="absolute inset-0 h-full w-full" aria-hidden>
-      {/* Corner rank + suit (top-left) */}
-      <g fill={color}>
-        <text
-          x="12"
-          y="26"
-          fontFamily="'Playfair Display', serif"
-          fontSize="22"
-          fontWeight="700"
-        >
-          {card.rank}
-        </text>
-        <text x="12" y="42" fontSize="14">
-          {card.suit}
-        </text>
-      </g>
+    <div className="dealer-row mt-8 grid w-full grid-cols-5 gap-2 sm:grid-cols-10 sm:gap-3">
+      {POSITIONS.map((i) => {
+        const isCurrent = count === i && (phase === "counting" || phase === "revealing" || phase === "done");
+        const isChosen = i === position;
+        const shouldReveal = isChosen && (phase === "revealing" || phase === "done");
 
-      {/* Big centered suit */}
-      <g transform="translate(70 100)" fill={color}>
-        <text
-          textAnchor="middle"
-          dominantBaseline="central"
-          fontSize="76"
-        >
-          {card.suit}
-        </text>
-      </g>
+        return (
+          <div
+            key={i}
+            className={`dealer-slot relative flex aspect-7/10 items-center justify-center transition-transform duration-300 ${
+              isCurrent ? "scale-110 -translate-y-2" : ""
+            }`}
+            style={{ animationDelay: `${i * 90}ms` }}
+          >
+            <div
+              className={`relative h-full w-full rounded-md transition-transform duration-700 transform-3d ${
+                shouldReveal ? "transform-[rotateY(180deg)]" : ""
+              }`}
+            >
+              {/* Back */}
+              <div
+                className={`absolute inset-0 overflow-hidden rounded-md border bg-linear-to-br from-ink-800 via-ink-900 to-[#0b1030] backface-hidden ${
+                  isCurrent ? "border-accent/70 shadow-[0_8px_20px_rgba(138,160,255,0.5)]" : "border-silver-dim/25"
+                }`}
+              >
+                <MiniCardBack />
+              </div>
+              {/* Face */}
+              <div
+                className={`absolute inset-0 overflow-hidden rounded-md border bg-linear-to-br from-white to-[#f3f3ee] transform-[rotateY(180deg)] backface-hidden ${
+                  shouldReveal
+                    ? "border-accent shadow-[0_18px_40px_rgba(138,160,255,0.6)]"
+                    : "border-silver/40"
+                }`}
+              >
+                <MiniCardFace rank={rank} suit={suit} color={color} />
+              </div>
+            </div>
+            {/* Position number below */}
+            <span
+              className={`absolute -bottom-5 text-[9px] font-medium tracking-[0.22em] uppercase transition-colors sm:text-[10px] ${
+                isCurrent
+                  ? "text-accent"
+                  : isChosen && (phase === "revealing" || phase === "done")
+                    ? "text-silver"
+                    : "text-muted"
+              }`}
+            >
+              {i}
+            </span>
+          </div>
+        );
+      })}
 
-      {/* Corner rank + suit (bottom-right, rotated) */}
-      <g fill={color} transform="rotate(180 70 100)">
-        <text
-          x="12"
-          y="26"
-          fontFamily="'Playfair Display', serif"
-          fontSize="22"
-          fontWeight="700"
-        >
-          {card.rank}
-        </text>
-        <text x="12" y="42" fontSize="14">
-          {card.suit}
-        </text>
-      </g>
-
-      {/* Subtle AZAM wordmark along bottom */}
-      <text
-        x="70"
-        y="188"
-        textAnchor="middle"
-        fontFamily="'Playfair Display', serif"
-        fontSize="6"
-        letterSpacing="2.2"
-        fill="rgba(10,14,26,0.4)"
-      >
-        AZAM
-      </text>
-    </svg>
+      {/* Sparkles on chosen card */}
+      {(phase === "revealing" || phase === "done") && (
+        <Sparkles position={position} />
+      )}
+    </div>
   );
 }
 
-/* === Prompt copy per phase === */
-function PromptCopy({ phase, card }: { phase: Phase; card: Card }) {
-  if (phase === "idle" || phase === "dealing") return null;
-  if (phase === "waiting")
-    return (
-      <p className="trick-prompt font-display text-lg italic text-silver-dim sm:text-xl">
-        Choose one.
-      </p>
-    );
-  if (phase === "revealing-pick")
-    return (
-      <p className="trick-prompt text-[12px] tracking-[0.22em] text-muted uppercase sm:text-[13px]">
-        Watching…
-      </p>
-    );
-  if (phase === "paused")
-    return (
-      <div className="flex flex-col items-center gap-1">
-        <p className="trick-result font-display text-xl leading-tight text-silver sm:text-2xl md:text-3xl">
-          Your card:{" "}
-          <span
-            className="font-serif font-bold"
-            style={{ color: card.color === "red" ? "#ff6b6b" : undefined }}
-          >
-            {card.rank} {card.suit}
-          </span>
-        </p>
-        <p className="text-[12px] tracking-[0.22em] text-muted uppercase sm:text-[13px]">
-          Want to see something stranger?
-        </p>
+/* === Picker UIs === */
+function SuitPicker({
+  value,
+  onChange,
+}: {
+  value: Suit | null;
+  onChange: (s: Suit) => void;
+}) {
+  return (
+    <div>
+      <PickerLabel step="1" label="Suit" />
+      <div className="grid grid-cols-4 gap-2 sm:gap-3">
+        {SUITS.map(({ suit, color, label }) => {
+          const active = value === suit;
+          return (
+            <button
+              key={suit}
+              type="button"
+              onClick={() => onChange(suit)}
+              aria-label={label}
+              className={`picker-btn flex flex-col items-center justify-center gap-1 rounded-lg border px-3 py-3 transition-all duration-300 sm:gap-2 sm:py-4 ${
+                active
+                  ? "border-accent/70 bg-[rgba(138,160,255,0.1)] shadow-[0_8px_20px_rgba(138,160,255,0.25)]"
+                  : "border-line bg-ink-900/60 hover:border-silver-dim/50 hover:bg-ink-800/70"
+              }`}
+            >
+              <span
+                className={`text-2xl sm:text-3xl ${
+                  color === "red" ? "text-[#ff6b6b]" : "text-silver"
+                }`}
+              >
+                {suit}
+              </span>
+              <span className="text-[9px] font-medium tracking-[0.18em] text-silver-dim uppercase sm:text-[10px]">
+                {label}
+              </span>
+            </button>
+          );
+        })}
       </div>
-    );
-  if (phase === "revealing-rest")
+    </div>
+  );
+}
+
+function RankPicker({
+  value,
+  onChange,
+}: {
+  value: Rank | null;
+  onChange: (r: Rank) => void;
+}) {
+  return (
+    <div>
+      <PickerLabel step="2" label="Rank" />
+      <div className="grid grid-cols-7 gap-1.5 sm:grid-cols-13 sm:gap-2">
+        {RANKS.map((r) => {
+          const active = value === r;
+          return (
+            <button
+              key={r}
+              type="button"
+              onClick={() => onChange(r)}
+              className={`picker-btn aspect-square rounded-md border font-serif font-semibold transition-all duration-300 ${
+                active
+                  ? "border-accent/70 bg-[rgba(138,160,255,0.1)] text-silver shadow-[0_6px_14px_rgba(138,160,255,0.3)]"
+                  : "border-line bg-ink-900/60 text-silver-dim hover:border-silver-dim/50 hover:bg-ink-800/70 hover:text-silver"
+              }`}
+            >
+              {r}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function PositionPicker({
+  value,
+  onChange,
+}: {
+  value: number | null;
+  onChange: (n: number) => void;
+}) {
+  return (
+    <div>
+      <PickerLabel step="3" label="Position (1–10)" />
+      <div className="grid grid-cols-5 gap-1.5 sm:grid-cols-10 sm:gap-2">
+        {POSITIONS.map((n) => {
+          const active = value === n;
+          return (
+            <button
+              key={n}
+              type="button"
+              onClick={() => onChange(n)}
+              className={`picker-btn font-numeric aspect-square rounded-md border font-medium transition-all duration-300 ${
+                active
+                  ? "border-accent/70 bg-[rgba(138,160,255,0.1)] text-silver shadow-[0_6px_14px_rgba(138,160,255,0.3)]"
+                  : "border-line bg-ink-900/60 text-silver-dim hover:border-silver-dim/50 hover:bg-ink-800/70 hover:text-silver"
+              }`}
+            >
+              {n}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function PickerLabel({ step, label }: { step: string; label: string }) {
+  return (
+    <div className="mb-2.5 flex items-center gap-3 sm:mb-3">
+      <span className="font-numeric text-[11px] font-medium tracking-[0.26em] text-muted uppercase sm:text-[12px]">
+        {step.padStart(2, "0")}
+      </span>
+      <span className="h-px flex-1 bg-line/60" />
+      <span className="text-[11px] font-medium tracking-[0.22em] text-silver-dim uppercase sm:text-[12px]">
+        {label}
+      </span>
+    </div>
+  );
+}
+
+/* === Counting label === */
+function CountingLabel({
+  countAt,
+  position,
+  phase,
+}: {
+  countAt: number;
+  position: number | null;
+  phase: Phase;
+}) {
+  if (phase === "dealing")
     return (
-      <p className="trick-prompt text-[12px] tracking-[0.22em] text-muted uppercase sm:text-[13px]">
-        Watching…
+      <p className="dealer-prompt text-[12px] tracking-[0.22em] text-muted uppercase sm:text-[13px]">
+        Dealing
+        <Dots />
       </p>
     );
-  if (phase === "done")
+  if (phase === "counting")
     return (
-      <div className="flex flex-col items-center gap-1">
-        <p className="trick-result font-display text-xl leading-tight text-silver sm:text-2xl md:text-3xl">
-          There is only{" "}
-          <span className="italic text-silver-dim">one card.</span>
-        </p>
-        <p className="text-[12px] tracking-[0.22em] text-muted uppercase sm:text-[13px]">
-          And it was always yours.
-        </p>
-      </div>
+      <p className="dealer-prompt font-display text-xl text-silver-dim italic sm:text-2xl">
+        Counting<span className="not-italic">: </span>
+        <span className="font-numeric text-silver">{countAt}</span>
+        <span className="text-muted"> / {position}</span>
+      </p>
+    );
+  if (phase === "revealing")
+    return (
+      <p className="dealer-prompt text-[12px] tracking-[0.22em] text-muted uppercase sm:text-[13px]">
+        Reading
+        <Dots />
+      </p>
     );
   return null;
 }
 
-/* === Sparkles over picked card === */
-function Sparkles({ slot }: { slot: number }) {
-  const positions = ["25%", "50%", "75%"];
-  const left = positions[slot] ?? "50%";
+function Dots() {
+  return (
+    <span className="ml-1 inline-flex gap-0.5">
+      <span className="thinking-dot">.</span>
+      <span className="thinking-dot">.</span>
+      <span className="thinking-dot">.</span>
+    </span>
+  );
+}
+
+/* === Mini card art for the dealt row === */
+function MiniCardBack() {
+  return (
+    <svg viewBox="0 0 70 100" className="absolute inset-0 h-full w-full" aria-hidden>
+      <defs>
+        <pattern id="mini-dots" x="0" y="0" width="6" height="6" patternUnits="userSpaceOnUse">
+          <circle cx="3" cy="3" r="0.3" fill="rgba(138,160,255,0.4)" />
+        </pattern>
+      </defs>
+      <rect width="70" height="100" fill="url(#mini-dots)" />
+      <rect x="4" y="4" width="62" height="92" fill="none" stroke="rgba(184,186,196,0.3)" strokeWidth="0.4" rx="2" />
+      <g transform="translate(35 50)">
+        <path d="M0 -20 L14 0 L0 20 L-14 0 Z" fill="none" stroke="rgba(138,160,255,0.5)" strokeWidth="0.4" />
+        <circle r="2.5" fill="rgba(138,160,255,0.25)" />
+      </g>
+    </svg>
+  );
+}
+
+function MiniCardFace({ rank, suit, color }: { rank: Rank; suit: Suit; color: "red" | "dark" }) {
+  const fill = color === "red" ? "#c22" : "#0a0e1a";
+  return (
+    <svg viewBox="0 0 70 100" className="absolute inset-0 h-full w-full" aria-hidden>
+      <g fill={fill}>
+        <text x="6" y="16" fontFamily="'Playfair Display', serif" fontSize="12" fontWeight="700">
+          {rank}
+        </text>
+        <text x="6" y="26" fontSize="8">
+          {suit}
+        </text>
+      </g>
+      <text
+        x="35"
+        y="60"
+        textAnchor="middle"
+        fontSize="34"
+        fill={fill}
+      >
+        {suit}
+      </text>
+      <g fill={fill} transform="rotate(180 35 50)">
+        <text x="6" y="16" fontFamily="'Playfair Display', serif" fontSize="12" fontWeight="700">
+          {rank}
+        </text>
+        <text x="6" y="26" fontSize="8">
+          {suit}
+        </text>
+      </g>
+    </svg>
+  );
+}
+
+/* === Sparkles === */
+function Sparkles({ position }: { position: number }) {
+  // position is 1-10; compute horizontal center of the column in the grid
+  const col = ((position - 1) % 10) / 10;
+  const left = `${col * 100 + 5}%`;
   const stars = [
-    { x: "-18%", y: "20%", size: 10, delay: 60 },
-    { x: "115%", y: "25%", size: 14, delay: 180 },
-    { x: "-12%", y: "60%", size: 8, delay: 320 },
-    { x: "118%", y: "65%", size: 11, delay: 90 },
-    { x: "40%", y: "-10%", size: 7, delay: 250 },
-    { x: "60%", y: "95%", size: 9, delay: 380 },
+    { dx: -20, dy: -10, size: 10, delay: 60 },
+    { dx: 20, dy: -5, size: 14, delay: 180 },
+    { dx: -15, dy: 20, size: 8, delay: 320 },
+    { dx: 25, dy: 15, size: 11, delay: 90 },
+    { dx: 0, dy: -25, size: 7, delay: 250 },
+    { dx: 5, dy: 30, size: 9, delay: 380 },
   ];
   return (
     <div
-      className="pointer-events-none absolute top-1/2 z-30 h-56 w-40 -translate-x-1/2 -translate-y-1/2 sm:h-64 sm:w-44 md:h-72 md:w-52 lg:h-80 lg:w-60"
+      className="pointer-events-none absolute inset-y-0 z-30"
       style={{ left }}
       aria-hidden
     >
       {stars.map((s, i) => (
         <span
           key={i}
-          className="trick-sparkle absolute block"
+          className="dealer-sparkle absolute block"
           style={{
-            left: s.x,
-            top: s.y,
+            left: `${s.dx}px`,
+            top: `calc(50% + ${s.dy}px)`,
             width: s.size,
             height: s.size,
             animationDelay: `${s.delay}ms`,
@@ -491,7 +628,7 @@ function Sparkles({ slot }: { slot: number }) {
   );
 }
 
-/* === Icon components === */
+/* === Icons === */
 function ChevronRight() {
   return (
     <svg
@@ -508,7 +645,6 @@ function ChevronRight() {
     </svg>
   );
 }
-
 function RefreshIcon() {
   return (
     <svg
