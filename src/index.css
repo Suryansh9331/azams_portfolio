@@ -152,89 +152,81 @@ section[id] {
   .section-header-rail { transform: scaleX(1); }
 }
 
-/* === The Dealer — ACAAN card trick === */
+/* === "Say when" — the Stopper trick === */
 
-/* Envelope flap opens on reveal */
-@keyframes envelope-flap-open {
-  0%   { transform-origin: 50% 25%; transform: rotateX(0deg); }
-  100% { transform-origin: 50% 25%; transform: rotateX(180deg); }
+/* Card during the shuffle: tiny wiggle to suggest motion while the inner
+   face flickers through random cards. Pulsing accent glow underneath. */
+@keyframes stopper-wiggle {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  25%      { transform: translateY(-1px) rotate(-0.6deg); }
+  50%      { transform: translateY(1px) rotate(0deg); }
+  75%      { transform: translateY(-1px) rotate(0.6deg); }
 }
-@keyframes wax-crack {
-  0%   { transform: scale(1); opacity: 1; }
-  40%  { transform: scale(1.15) rotate(-6deg); opacity: 1; }
-  70%  { transform: scale(0.95) rotate(8deg); opacity: 0.7; }
-  100% { transform: scale(0.4) rotate(14deg); opacity: 0; }
+@keyframes stopper-pulse-glow {
+  0%, 100% { box-shadow: 0 18px 40px rgba(138,160,255,0.3); }
+  50%      { box-shadow: 0 22px 50px rgba(138,160,255,0.5); }
 }
-@keyframes envelope-settle {
-  0%   { transform: translateY(0); opacity: 1; }
-  40%  { transform: translateY(-6px) scale(1.03); }
-  100% { transform: translateY(10px) scale(0.96); opacity: 0.75; }
-}
-.envelope.is-opening .envelope-flap {
-  animation: envelope-flap-open 0.7s cubic-bezier(0.76, 0, 0.24, 1) 0.1s both;
-  transform-origin: 50% 25%;
-}
-.envelope.is-opening .envelope-wax {
-  animation: wax-crack 0.5s cubic-bezier(0.76, 0, 0.24, 1) 0.05s both;
-}
-.envelope.is-opening {
-  animation: envelope-settle 1.4s cubic-bezier(0.22, 1, 0.36, 1) 0.9s both;
-}
-
-/* Dealt cards cascade out one by one */
-@keyframes dealer-slot-in {
-  from { opacity: 0; transform: translateY(-30px) scale(0.6) rotate(-6deg); filter: blur(4px); }
-  to   { opacity: 1; transform: translateY(0) scale(1) rotate(0deg); filter: blur(0); }
-}
-.dealer-slot {
-  opacity: 0;
-  animation: dealer-slot-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-
-/* Pickers fade in together */
-@keyframes dealer-prompt-in {
-  from { opacity: 0; transform: translateY(8px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-.dealer-pickers,
-.dealer-prompt,
-.dealer-result,
-.dealer-cta,
-.dealer-replay {
-  animation: dealer-prompt-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-
-/* Picker button hover micro-interaction */
-.picker-btn {
+.stopper-card-wrap.is-shuffling .stopper-card {
+  animation:
+    stopper-wiggle 0.9s ease-in-out infinite,
+    stopper-pulse-glow 1.4s ease-in-out infinite;
   will-change: transform, box-shadow;
 }
 
-/* Sparkles at reveal */
-@keyframes dealer-sparkle {
+/* On reveal: card locks into place, scales up, glows hard */
+@keyframes stopper-lock {
+  0%   { transform: scale(1); filter: blur(2px); }
+  40%  { transform: scale(1.14) rotate(-2deg); filter: blur(0); }
+  100% { transform: scale(1.08) rotate(0deg); filter: blur(0); }
+}
+.stopper-card-wrap.is-revealed .stopper-card {
+  animation: stopper-lock 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  box-shadow: 0 30px 60px rgba(138,160,255,0.5);
+}
+
+/* STOP button halo pulse */
+@keyframes stopper-pulse {
+  0%   { box-shadow: 0 0 0 0 rgba(138,160,255,0.35); }
+  70%  { box-shadow: 0 0 0 16px rgba(138,160,255,0); }
+  100% { box-shadow: 0 0 0 0 rgba(138,160,255,0); }
+}
+
+/* Prompt + result fade */
+@keyframes stopper-prompt-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.stopper-prompt,
+.stopper-result,
+.stopper-stop,
+.stopper-replay {
+  animation: stopper-prompt-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Sparkles */
+@keyframes stopper-sparkle {
   0%   { opacity: 0; transform: scale(0.2) rotate(0deg); }
   40%  { opacity: 1; transform: scale(1.3) rotate(90deg); }
   100% { opacity: 0; transform: scale(0.6) rotate(180deg); }
 }
-.dealer-sparkle {
+.stopper-sparkle {
   opacity: 0;
-  animation: dealer-sparkle 1.6s cubic-bezier(0.22, 1, 0.36, 1) infinite both;
+  animation: stopper-sparkle 1.6s cubic-bezier(0.22, 1, 0.36, 1) infinite both;
   filter: drop-shadow(0 0 6px rgba(184, 186, 196, 0.6));
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .envelope.is-opening .envelope-flap,
-  .envelope.is-opening .envelope-wax,
-  .envelope.is-opening,
-  .dealer-slot,
-  .dealer-pickers,
-  .dealer-prompt,
-  .dealer-result,
-  .dealer-cta,
-  .dealer-replay,
-  .dealer-sparkle {
+  .stopper-card-wrap.is-shuffling .stopper-card,
+  .stopper-card-wrap.is-revealed .stopper-card,
+  .stopper-prompt,
+  .stopper-result,
+  .stopper-stop,
+  .stopper-replay,
+  .stopper-sparkle {
     animation: none;
     opacity: 1;
     transform: none;
+    box-shadow: 0 18px 40px rgba(138,160,255,0.3);
   }
 }
 

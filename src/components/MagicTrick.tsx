@@ -3,36 +3,45 @@ import { useInView } from "../hooks/useInView";
 import { SectionHeader } from "./shared/SectionHeader";
 
 type Suit = "♠" | "♥" | "♦" | "♣";
-type Rank = "A" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" | "10" | "J" | "Q" | "K";
+type Card = { rank: string; suit: Suit; color: "red" | "dark" };
 
 type Phase =
-  | "idle" //              nothing shown yet
-  | "intro" //             envelope sits, pickers hidden
-  | "pickers" //           user selects suit, rank, position
-  | "dealing" //           10 cards fly out of the envelope
-  | "counting" //          counter counts 1..N with each card lifting
-  | "revealing" //         chosen position's card flips to show user's card
-  | "done"; //             match confirmed, replay button
+  | "idle" //        hidden
+  | "intro" //       card settles face-down, briefly waiting
+  | "shuffling" //   card face-up, rank/suit cycles rapidly, STOP button visible
+  | "revealing" //   STOP tapped, card locks to the forced value with a dramatic flourish
+  | "done"; //       result shown, offer replay
 
-const SUITS: { suit: Suit; color: "red" | "dark"; label: string }[] = [
-  { suit: "♠", color: "dark", label: "Spades" },
-  { suit: "♥", color: "red", label: "Hearts" },
-  { suit: "♦", color: "red", label: "Diamonds" },
-  { suit: "♣", color: "dark", label: "Clubs" },
+/* Rotating forced reveal — a different card each play so repeat players
+ * can't call the pattern. The user is told "we stopped where you did",
+ * but we actually always land on whichever card is next in this list. */
+const FORCED: Card[] = [
+  { rank: "7", suit: "♥", color: "red" },
+  { rank: "A", suit: "♠", color: "dark" },
+  { rank: "Q", suit: "♦", color: "red" },
+  { rank: "K", suit: "♣", color: "dark" },
+  { rank: "10", suit: "♠", color: "dark" },
 ];
-const RANKS: Rank[] = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
-const POSITIONS = Array.from({ length: 10 }, (_, i) => i + 1);
-const DECK_SIZE = 10;
+
+/* Pool used only for the rapid flicker during the shuffle phase */
+const ALL_SUITS: Suit[] = ["♠", "♥", "♦", "♣"];
+const ALL_RANKS = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
+
+function randomCard(): Card {
+  const suit = ALL_SUITS[Math.floor(Math.random() * ALL_SUITS.length)];
+  const rank = ALL_RANKS[Math.floor(Math.random() * ALL_RANKS.length)];
+  const color: "red" | "dark" = suit === "♥" || suit === "♦" ? "red" : "dark";
+  return { rank, suit, color };
+}
 
 export function MagicTrick() {
-  const { ref, inView } = useInView<HTMLElement>({ threshold: 0.2 });
+  const { ref, inView } = useInView<HTMLElement>({ threshold: 0.25 });
   const [phase, setPhase] = useState<Phase>("idle");
-  const [suit, setSuit] = useState<Suit | null>(null);
-  const [rank, setRank] = useState<Rank | null>(null);
-  const [position, setPosition] = useState<number | null>(null);
-  const [countAt, setCountAt] = useState(0);
+  const [card, setCard] = useState<Card>(() => randomCard());
+  const [round, setRound] = useState(0);
   const startedRef = useRef(false);
   const timers = useRef<number[]>([]);
+  const shuffleIntervalRef = useRef<number | null>(null);
 
   const schedule = useCallback((fn: () => void, ms: number) => {
     const id = window.setTimeout(fn, ms);
@@ -43,69 +52,71 @@ export function MagicTrick() {
     timers.current.forEach((id) => window.clearTimeout(id));
     timers.current = [];
   }, []);
-  useEffect(() => () => clearTimers(), [clearTimers]);
+  const stopShuffle = useCallback(() => {
+    if (shuffleIntervalRef.current !== null) {
+      window.clearInterval(shuffleIntervalRef.current);
+      shuffleIntervalRef.current = null;
+    }
+  }, []);
 
+  useEffect(
+    () => () => {
+      clearTimers();
+      stopShuffle();
+    },
+    [clearTimers, stopShuffle],
+  );
+
+  // Kick off: idle → intro → shuffling once the section is on screen
   useEffect(() => {
     if (!inView || startedRef.current) return;
     startedRef.current = true;
     schedule(() => setPhase("intro"), 400);
-    schedule(() => setPhase("pickers"), 1300);
+    schedule(() => setPhase("shuffling"), 1400);
   }, [inView, schedule]);
 
-  const canReveal = suit !== null && rank !== null && position !== null;
+  // Rapid card flicker during shuffle (~11 updates/second)
+  useEffect(() => {
+    if (phase !== "shuffling") return;
+    shuffleIntervalRef.current = window.setInterval(() => {
+      setCard(randomCard());
+    }, 90);
+    return stopShuffle;
+  }, [phase, stopShuffle]);
 
-  const handleReveal = () => {
-    if (!canReveal || phase !== "pickers") return;
-    setPhase("dealing");
-    setCountAt(0);
-
-    // Deal animation: 10 cards cascade out of the envelope
-    schedule(() => setPhase("counting"), DECK_SIZE * 90 + 400);
-
-    // Counter advances 1..position
-    const COUNT_STEP = 320;
-    for (let i = 1; i <= position!; i++) {
-      schedule(() => setCountAt(i), DECK_SIZE * 90 + 400 + i * COUNT_STEP);
-    }
-
-    // Reveal at the chosen position
-    schedule(
-      () => setPhase("revealing"),
-      DECK_SIZE * 90 + 400 + position! * COUNT_STEP + 400,
-    );
-    schedule(
-      () => setPhase("done"),
-      DECK_SIZE * 90 + 400 + position! * COUNT_STEP + 2200,
-    );
+  const handleStop = () => {
+    if (phase !== "shuffling") return;
+    stopShuffle();
+    // Lock in the forced card for this round
+    const forced = FORCED[round % FORCED.length];
+    setCard(forced);
+    setPhase("revealing");
+    schedule(() => setPhase("done"), 1500);
   };
 
   const reset = () => {
     clearTimers();
-    setSuit(null);
-    setRank(null);
-    setPosition(null);
-    setCountAt(0);
-    setPhase("pickers");
+    stopShuffle();
+    setRound((n) => n + 1);
+    setCard(randomCard());
+    setPhase("shuffling");
   };
-
-  const chosenColor: "red" | "dark" =
-    suit === "♥" || suit === "♦" ? "red" : "dark";
 
   return (
     <section
       ref={ref}
       id="magic-trick"
-      className={`dealer-reveal relative overflow-hidden bg-ink-950 pt-6 pb-12 sm:pt-8 sm:pb-14 md:pt-10 md:pb-16 lg:pt-12 lg:pb-20 ${
+      className={`stopper-reveal relative overflow-hidden bg-ink-950 pt-6 pb-12 sm:pt-8 sm:pb-14 md:pt-10 md:pb-16 lg:pt-12 lg:pb-20 ${
         inView ? "in-view" : ""
       }`}
     >
-      {/* Themed backdrop */}
+      {/* Stage lighting */}
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0"
         style={{
           backgroundImage:
-            "radial-gradient(ellipse 55% 50% at 50% 55%, rgba(60,100,200,0.2) 0%, rgba(30,55,130,0.08) 42%, rgba(10,16,34,0) 72%)",
+            "radial-gradient(ellipse 50% 45% at 50% 55%, rgba(60,100,200,0.2) 0%, rgba(30,55,130,0.08) 42%, rgba(10,16,34,0) 72%)",
         }}
       />
       <div
@@ -120,497 +131,198 @@ export function MagicTrick() {
       <div className="relative mx-auto w-full max-w-[1680px] px-4 sm:px-5 md:px-6 lg:px-8 xl:px-10">
         <SectionHeader
           align="center"
-          maxWidth="2xl"
+          maxWidth="xl"
           eyebrow="A Small Illusion"
           headline={
             <>
-              Any card.{" "}
-              <span className="italic text-silver-dim">Any number.</span>
+              Say when.{" "}
+              <span className="italic text-silver-dim">We'll stop there.</span>
             </>
           }
-          sub="Name a suit, a rank, and a position. We'll deal to it."
+          sub="Watch the deck shuffle. Tap stop whenever you like — we'll land right where you did."
         />
 
-        {/* The envelope + deal row */}
-        <div className="relative mx-auto mt-10 flex min-h-80 w-full max-w-3xl flex-col items-center sm:mt-12 md:min-h-90">
-          <Envelope opening={phase === "dealing" || phase === "counting" || phase === "revealing" || phase === "done"} />
+        {/* Stage */}
+        <div className="relative mx-auto mt-10 flex min-h-80 w-full max-w-sm flex-col items-center sm:mt-12 md:min-h-90">
+          {/* Floor glow */}
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-x-6 bottom-0 h-20 opacity-70"
+            style={{
+              backgroundImage:
+                "radial-gradient(ellipse at 50% 100%, rgba(138,160,255,0.22) 0%, transparent 70%)",
+            }}
+          />
 
-          {(phase === "dealing" || phase === "counting" || phase === "revealing" || phase === "done") && (
-            <DealRow
-              count={countAt}
-              position={position!}
-              suit={suit!}
-              rank={rank!}
-              color={chosenColor}
-              phase={phase}
-            />
-          )}
-        </div>
-
-        {/* Pickers */}
-        {phase === "pickers" && (
-          <div className="dealer-pickers mx-auto mt-10 flex max-w-3xl flex-col gap-6 sm:mt-12 sm:gap-7">
-            <SuitPicker value={suit} onChange={setSuit} />
-            <RankPicker value={rank} onChange={setRank} />
-            <PositionPicker value={position} onChange={setPosition} />
-
-            {/* Reveal CTA */}
-            <div className="mt-2 flex items-center justify-center">
-              <button
-                type="button"
-                onClick={handleReveal}
-                disabled={!canReveal}
-                className={`dealer-cta group inline-flex items-center gap-2 rounded-full border px-6 py-2.5 text-[11px] font-medium tracking-[0.22em] uppercase backdrop-blur-md transition-all duration-300 sm:text-[12px] ${
-                  canReveal
-                    ? "border-accent/60 bg-[rgba(138,160,255,0.12)] text-silver shadow-[0_10px_28px_rgba(138,160,255,0.25)] hover:border-accent hover:bg-[rgba(138,160,255,0.2)] hover:shadow-[0_14px_34px_rgba(138,160,255,0.35)]"
-                    : "cursor-not-allowed border-line bg-ink-900/70 text-muted"
-                }`}
-              >
-                {canReveal ? "Deal" : "Pick all three"}
-                <ChevronRight />
-              </button>
-            </div>
+          {/* Card */}
+          <div
+            className={`stopper-card-wrap relative mb-8 ${
+              phase === "shuffling" ? "is-shuffling" : ""
+            } ${phase === "revealing" || phase === "done" ? "is-revealed" : ""}`}
+            aria-live="polite"
+            aria-atomic
+          >
+            <SingleCard card={card} />
+            {(phase === "revealing" || phase === "done") && <SparkleBurst />}
           </div>
-        )}
 
-        {/* Reveal copy + replay */}
-        <div className="relative mx-auto mt-6 flex min-h-16 max-w-xl flex-col items-center gap-4 text-center">
-          <CountingLabel countAt={countAt} position={position} phase={phase} />
-
-          {phase === "done" && (
-            <>
-              <p className="dealer-result font-display text-xl leading-tight text-silver sm:text-2xl">
-                {rank} {suit} at position {position}.{" "}
-                <span className="italic text-silver-dim">Exactly as called.</span>
+          {/* Action area — fixed slot so page doesn't jump */}
+          <div className="relative flex min-h-28 w-full flex-col items-center justify-start gap-3 text-center">
+            {phase === "intro" && (
+              <p className="stopper-prompt font-display text-base italic text-silver-dim sm:text-lg">
+                Watch the deck
+                <Dots />
               </p>
+            )}
+
+            {phase === "shuffling" && (
               <button
                 type="button"
-                onClick={reset}
-                className="dealer-replay group inline-flex items-center gap-2 rounded-full border border-line bg-ink-900/70 px-5 py-2.5 text-[11px] font-medium tracking-[0.22em] text-silver-dim uppercase backdrop-blur-md transition-all duration-300 hover:border-accent/50 hover:text-silver sm:text-[12px]"
+                onClick={handleStop}
+                className="stopper-stop group relative inline-flex items-center gap-2 rounded-full border border-accent/60 bg-[rgba(138,160,255,0.12)] px-8 py-3 text-[12px] font-medium tracking-[0.3em] text-silver uppercase shadow-[0_12px_30px_rgba(138,160,255,0.3)] backdrop-blur-md transition-all duration-300 hover:border-accent hover:bg-[rgba(138,160,255,0.2)] hover:shadow-[0_16px_38px_rgba(138,160,255,0.4)] sm:text-[13px]"
               >
-                <RefreshIcon />
-                Call another
+                <span
+                  aria-hidden
+                  className="absolute inset-0 rounded-full"
+                  style={{
+                    boxShadow:
+                      "0 0 0 0 rgba(138,160,255,0.4)",
+                    animation:
+                      "stopper-pulse 2s cubic-bezier(0.22, 1, 0.36, 1) infinite",
+                  }}
+                />
+                <span className="relative flex h-2 w-2 shrink-0 rounded-full bg-accent">
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent opacity-75" />
+                </span>
+                Stop
               </button>
-            </>
-          )}
+            )}
+
+            {phase === "revealing" && (
+              <p className="stopper-prompt text-[12px] tracking-[0.3em] text-muted uppercase sm:text-[13px]">
+                Locked in
+              </p>
+            )}
+
+            {phase === "done" && (
+              <>
+                <p className="stopper-result font-display text-xl leading-tight text-silver sm:text-2xl md:text-3xl">
+                  Your card:{" "}
+                  <span
+                    className="font-serif font-bold"
+                    style={{
+                      color: card.color === "red" ? "#ff6b6b" : undefined,
+                    }}
+                  >
+                    {card.rank} {card.suit}
+                  </span>
+                </p>
+                <p className="text-[11px] tracking-[0.24em] text-muted uppercase sm:text-[12px]">
+                  Stopped exactly where we needed you to.
+                </p>
+                <button
+                  type="button"
+                  onClick={reset}
+                  className="stopper-replay group mt-3 inline-flex items-center gap-2 rounded-full border border-line bg-ink-900/70 px-5 py-2.5 text-[11px] font-medium tracking-[0.22em] text-silver-dim uppercase backdrop-blur-md transition-all duration-300 hover:border-accent/50 hover:text-silver sm:text-[12px]"
+                >
+                  <RefreshIcon />
+                  Again
+                </button>
+              </>
+            )}
+          </div>
         </div>
       </div>
     </section>
   );
 }
 
-/* === Envelope component === */
-function Envelope({ opening }: { opening: boolean }) {
+/* === Single card === */
+function SingleCard({ card }: { card: Card }) {
   return (
-    <div
-      className={`envelope relative h-32 w-48 shrink-0 sm:h-40 sm:w-60 md:h-44 md:w-72 ${
-        opening ? "is-opening" : ""
-      }`}
-      aria-hidden
-    >
-      <svg viewBox="0 0 240 160" className="absolute inset-0 h-full w-full">
-        <defs>
-          <linearGradient id="env-body" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#1a2140" />
-            <stop offset="100%" stopColor="#0a0e1a" />
-          </linearGradient>
-          <linearGradient id="env-flap" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor="#141a2e" />
-            <stop offset="100%" stopColor="#1a2140" />
-          </linearGradient>
-          <radialGradient id="wax-grad" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#d94848" />
-            <stop offset="60%" stopColor="#8a2020" />
-            <stop offset="100%" stopColor="#4a0808" />
-          </radialGradient>
-        </defs>
-
-        {/* Envelope body */}
-        <rect
-          x="4"
-          y="30"
-          width="232"
-          height="124"
-          rx="4"
-          fill="url(#env-body)"
-          stroke="rgba(184,186,196,0.3)"
-          strokeWidth="0.6"
-        />
-
-        {/* Flap (triangle) */}
-        <g className="envelope-flap">
-          <polygon
-            points="4,30 236,30 120,110"
-            fill="url(#env-flap)"
-            stroke="rgba(184,186,196,0.35)"
-            strokeWidth="0.6"
-          />
-          {/* Wax seal (center-bottom of flap) */}
-          <g className="envelope-wax" transform="translate(120 92)">
-            <circle r="14" fill="url(#wax-grad)" />
-            <circle
-              r="14"
-              fill="none"
-              stroke="rgba(0,0,0,0.4)"
-              strokeWidth="1"
-            />
-            <text
-              textAnchor="middle"
-              y="4"
-              fontFamily="'Playfair Display', serif"
-              fontSize="12"
-              fontStyle="italic"
-              fontWeight="700"
-              fill="rgba(255,230,220,0.75)"
-            >
-              A
-            </text>
-          </g>
-        </g>
-
-        {/* Decorative corners on body */}
-        {[
-          [16, 44],
-          [224, 44],
-          [16, 140],
-          [224, 140],
-        ].map(([x, y], i) => (
-          <g key={i} transform={`translate(${x} ${y})`}>
-            <circle r="1.5" fill="rgba(138,160,255,0.5)" />
-            <circle r="4" fill="none" stroke="rgba(184,186,196,0.2)" strokeWidth="0.3" />
-          </g>
-        ))}
-      </svg>
+    <div className="stopper-card relative aspect-7/10 w-36 overflow-hidden rounded-xl border border-silver/40 bg-linear-to-br from-white to-[#f3f3ee] shadow-[0_18px_40px_rgba(138,160,255,0.3)] sm:w-40 md:w-44 lg:w-48">
+      <CardFace card={card} />
     </div>
   );
 }
 
-/* === DealRow: 10 cards slide out of the envelope === */
-function DealRow({
-  count,
-  position,
-  suit,
-  rank,
-  color,
-  phase,
-}: {
-  count: number;
-  position: number;
-  suit: Suit;
-  rank: Rank;
-  color: "red" | "dark";
-  phase: Phase;
-}) {
+function CardFace({ card }: { card: Card }) {
+  const color = card.color === "red" ? "#c22" : "#0a0e1a";
   return (
-    <div className="dealer-row mt-8 grid w-full grid-cols-5 gap-2 sm:grid-cols-10 sm:gap-3">
-      {POSITIONS.map((i) => {
-        const isCurrent = count === i && (phase === "counting" || phase === "revealing" || phase === "done");
-        const isChosen = i === position;
-        const shouldReveal = isChosen && (phase === "revealing" || phase === "done");
-
-        return (
-          <div
-            key={i}
-            className={`dealer-slot relative flex aspect-7/10 items-center justify-center transition-transform duration-300 ${
-              isCurrent ? "scale-110 -translate-y-2" : ""
-            }`}
-            style={{ animationDelay: `${i * 90}ms` }}
-          >
-            <div
-              className={`relative h-full w-full rounded-md transition-transform duration-700 transform-3d ${
-                shouldReveal ? "transform-[rotateY(180deg)]" : ""
-              }`}
-            >
-              {/* Back */}
-              <div
-                className={`absolute inset-0 overflow-hidden rounded-md border bg-linear-to-br from-ink-800 via-ink-900 to-[#0b1030] backface-hidden ${
-                  isCurrent ? "border-accent/70 shadow-[0_8px_20px_rgba(138,160,255,0.5)]" : "border-silver-dim/25"
-                }`}
-              >
-                <MiniCardBack />
-              </div>
-              {/* Face */}
-              <div
-                className={`absolute inset-0 overflow-hidden rounded-md border bg-linear-to-br from-white to-[#f3f3ee] transform-[rotateY(180deg)] backface-hidden ${
-                  shouldReveal
-                    ? "border-accent shadow-[0_18px_40px_rgba(138,160,255,0.6)]"
-                    : "border-silver/40"
-                }`}
-              >
-                <MiniCardFace rank={rank} suit={suit} color={color} />
-              </div>
-            </div>
-            {/* Position number below */}
-            <span
-              className={`absolute -bottom-5 text-[9px] font-medium tracking-[0.22em] uppercase transition-colors sm:text-[10px] ${
-                isCurrent
-                  ? "text-accent"
-                  : isChosen && (phase === "revealing" || phase === "done")
-                    ? "text-silver"
-                    : "text-muted"
-              }`}
-            >
-              {i}
-            </span>
-          </div>
-        );
-      })}
-
-      {/* Sparkles on chosen card */}
-      {(phase === "revealing" || phase === "done") && (
-        <Sparkles position={position} />
-      )}
-    </div>
-  );
-}
-
-/* === Picker UIs === */
-function SuitPicker({
-  value,
-  onChange,
-}: {
-  value: Suit | null;
-  onChange: (s: Suit) => void;
-}) {
-  return (
-    <div>
-      <PickerLabel step="1" label="Suit" />
-      <div className="grid grid-cols-4 gap-2 sm:gap-3">
-        {SUITS.map(({ suit, color, label }) => {
-          const active = value === suit;
-          return (
-            <button
-              key={suit}
-              type="button"
-              onClick={() => onChange(suit)}
-              aria-label={label}
-              className={`picker-btn flex flex-col items-center justify-center gap-1 rounded-lg border px-3 py-3 transition-all duration-300 sm:gap-2 sm:py-4 ${
-                active
-                  ? "border-accent/70 bg-[rgba(138,160,255,0.1)] shadow-[0_8px_20px_rgba(138,160,255,0.25)]"
-                  : "border-line bg-ink-900/60 hover:border-silver-dim/50 hover:bg-ink-800/70"
-              }`}
-            >
-              <span
-                className={`text-2xl sm:text-3xl ${
-                  color === "red" ? "text-[#ff6b6b]" : "text-silver"
-                }`}
-              >
-                {suit}
-              </span>
-              <span className="text-[9px] font-medium tracking-[0.18em] text-silver-dim uppercase sm:text-[10px]">
-                {label}
-              </span>
-            </button>
-          );
-        })}
-      </div>
-    </div>
-  );
-}
-
-function RankPicker({
-  value,
-  onChange,
-}: {
-  value: Rank | null;
-  onChange: (r: Rank) => void;
-}) {
-  return (
-    <div>
-      <PickerLabel step="2" label="Rank" />
-      <div className="grid grid-cols-7 gap-1.5 sm:grid-cols-13 sm:gap-2">
-        {RANKS.map((r) => {
-          const active = value === r;
-          return (
-            <button
-              key={r}
-              type="button"
-              onClick={() => onChange(r)}
-              className={`picker-btn aspect-square rounded-md border font-serif font-semibold transition-all duration-300 ${
-                active
-                  ? "border-accent/70 bg-[rgba(138,160,255,0.1)] text-silver shadow-[0_6px_14px_rgba(138,160,255,0.3)]"
-                  : "border-line bg-ink-900/60 text-silver-dim hover:border-silver-dim/50 hover:bg-ink-800/70 hover:text-silver"
-              }`}
-            >
-              {r}
-            </button>
-          );
-        })}
-      </div>
-    </div>
-  );
-}
-
-function PositionPicker({
-  value,
-  onChange,
-}: {
-  value: number | null;
-  onChange: (n: number) => void;
-}) {
-  return (
-    <div>
-      <PickerLabel step="3" label="Position (1–10)" />
-      <div className="grid grid-cols-5 gap-1.5 sm:grid-cols-10 sm:gap-2">
-        {POSITIONS.map((n) => {
-          const active = value === n;
-          return (
-            <button
-              key={n}
-              type="button"
-              onClick={() => onChange(n)}
-              className={`picker-btn font-numeric aspect-square rounded-md border font-medium transition-all duration-300 ${
-                active
-                  ? "border-accent/70 bg-[rgba(138,160,255,0.1)] text-silver shadow-[0_6px_14px_rgba(138,160,255,0.3)]"
-                  : "border-line bg-ink-900/60 text-silver-dim hover:border-silver-dim/50 hover:bg-ink-800/70 hover:text-silver"
-              }`}
-            >
-              {n}
-            </button>
-          );
-        })}
-      </div>
-    </div>
-  );
-}
-
-function PickerLabel({ step, label }: { step: string; label: string }) {
-  return (
-    <div className="mb-2.5 flex items-center gap-3 sm:mb-3">
-      <span className="font-numeric text-[11px] font-medium tracking-[0.26em] text-muted uppercase sm:text-[12px]">
-        {step.padStart(2, "0")}
-      </span>
-      <span className="h-px flex-1 bg-line/60" />
-      <span className="text-[11px] font-medium tracking-[0.22em] text-silver-dim uppercase sm:text-[12px]">
-        {label}
-      </span>
-    </div>
-  );
-}
-
-/* === Counting label === */
-function CountingLabel({
-  countAt,
-  position,
-  phase,
-}: {
-  countAt: number;
-  position: number | null;
-  phase: Phase;
-}) {
-  if (phase === "dealing")
-    return (
-      <p className="dealer-prompt text-[12px] tracking-[0.22em] text-muted uppercase sm:text-[13px]">
-        Dealing
-        <Dots />
-      </p>
-    );
-  if (phase === "counting")
-    return (
-      <p className="dealer-prompt font-display text-xl text-silver-dim italic sm:text-2xl">
-        Counting<span className="not-italic">: </span>
-        <span className="font-numeric text-silver">{countAt}</span>
-        <span className="text-muted"> / {position}</span>
-      </p>
-    );
-  if (phase === "revealing")
-    return (
-      <p className="dealer-prompt text-[12px] tracking-[0.22em] text-muted uppercase sm:text-[13px]">
-        Reading
-        <Dots />
-      </p>
-    );
-  return null;
-}
-
-function Dots() {
-  return (
-    <span className="ml-1 inline-flex gap-0.5">
-      <span className="thinking-dot">.</span>
-      <span className="thinking-dot">.</span>
-      <span className="thinking-dot">.</span>
-    </span>
-  );
-}
-
-/* === Mini card art for the dealt row === */
-function MiniCardBack() {
-  return (
-    <svg viewBox="0 0 70 100" className="absolute inset-0 h-full w-full" aria-hidden>
-      <defs>
-        <pattern id="mini-dots" x="0" y="0" width="6" height="6" patternUnits="userSpaceOnUse">
-          <circle cx="3" cy="3" r="0.3" fill="rgba(138,160,255,0.4)" />
-        </pattern>
-      </defs>
-      <rect width="70" height="100" fill="url(#mini-dots)" />
-      <rect x="4" y="4" width="62" height="92" fill="none" stroke="rgba(184,186,196,0.3)" strokeWidth="0.4" rx="2" />
-      <g transform="translate(35 50)">
-        <path d="M0 -20 L14 0 L0 20 L-14 0 Z" fill="none" stroke="rgba(138,160,255,0.5)" strokeWidth="0.4" />
-        <circle r="2.5" fill="rgba(138,160,255,0.25)" />
-      </g>
-    </svg>
-  );
-}
-
-function MiniCardFace({ rank, suit, color }: { rank: Rank; suit: Suit; color: "red" | "dark" }) {
-  const fill = color === "red" ? "#c22" : "#0a0e1a";
-  return (
-    <svg viewBox="0 0 70 100" className="absolute inset-0 h-full w-full" aria-hidden>
-      <g fill={fill}>
-        <text x="6" y="16" fontFamily="'Playfair Display', serif" fontSize="12" fontWeight="700">
-          {rank}
+    <svg viewBox="0 0 140 200" className="absolute inset-0 h-full w-full" aria-hidden>
+      {/* Top-left corner */}
+      <g fill={color}>
+        <text
+          x="12"
+          y="26"
+          fontFamily="'Playfair Display', serif"
+          fontSize="22"
+          fontWeight="700"
+        >
+          {card.rank}
         </text>
-        <text x="6" y="26" fontSize="8">
-          {suit}
+        <text x="12" y="42" fontSize="14">
+          {card.suit}
         </text>
       </g>
+      {/* Big centered suit */}
+      <g transform="translate(70 100)" fill={color}>
+        <text textAnchor="middle" dominantBaseline="central" fontSize="76">
+          {card.suit}
+        </text>
+      </g>
+      {/* Bottom-right corner (rotated) */}
+      <g fill={color} transform="rotate(180 70 100)">
+        <text
+          x="12"
+          y="26"
+          fontFamily="'Playfair Display', serif"
+          fontSize="22"
+          fontWeight="700"
+        >
+          {card.rank}
+        </text>
+        <text x="12" y="42" fontSize="14">
+          {card.suit}
+        </text>
+      </g>
+      {/* AZAM wordmark */}
       <text
-        x="35"
-        y="60"
+        x="70"
+        y="188"
         textAnchor="middle"
-        fontSize="34"
-        fill={fill}
+        fontFamily="'Playfair Display', serif"
+        fontSize="6"
+        letterSpacing="2.2"
+        fill="rgba(10,14,26,0.4)"
       >
-        {suit}
+        AZAM
       </text>
-      <g fill={fill} transform="rotate(180 35 50)">
-        <text x="6" y="16" fontFamily="'Playfair Display', serif" fontSize="12" fontWeight="700">
-          {rank}
-        </text>
-        <text x="6" y="26" fontSize="8">
-          {suit}
-        </text>
-      </g>
     </svg>
   );
 }
 
-/* === Sparkles === */
-function Sparkles({ position }: { position: number }) {
-  // position is 1-10; compute horizontal center of the column in the grid
-  const col = ((position - 1) % 10) / 10;
-  const left = `${col * 100 + 5}%`;
+/* === Sparkle burst on reveal === */
+function SparkleBurst() {
   const stars = [
-    { dx: -20, dy: -10, size: 10, delay: 60 },
-    { dx: 20, dy: -5, size: 14, delay: 180 },
-    { dx: -15, dy: 20, size: 8, delay: 320 },
-    { dx: 25, dy: 15, size: 11, delay: 90 },
-    { dx: 0, dy: -25, size: 7, delay: 250 },
-    { dx: 5, dy: 30, size: 9, delay: 380 },
+    { x: "-15%", y: "15%", size: 10, delay: 60 },
+    { x: "108%", y: "20%", size: 14, delay: 180 },
+    { x: "-10%", y: "60%", size: 8, delay: 320 },
+    { x: "110%", y: "65%", size: 11, delay: 90 },
+    { x: "40%", y: "-10%", size: 7, delay: 250 },
+    { x: "60%", y: "100%", size: 9, delay: 380 },
+    { x: "-5%", y: "40%", size: 6, delay: 420 },
+    { x: "105%", y: "45%", size: 8, delay: 150 },
   ];
   return (
-    <div
-      className="pointer-events-none absolute inset-y-0 z-30"
-      style={{ left }}
-      aria-hidden
-    >
+    <div className="pointer-events-none absolute inset-0 z-20" aria-hidden>
       {stars.map((s, i) => (
         <span
           key={i}
-          className="dealer-sparkle absolute block"
+          className="stopper-sparkle absolute block"
           style={{
-            left: `${s.dx}px`,
-            top: `calc(50% + ${s.dy}px)`,
+            left: s.x,
+            top: s.y,
             width: s.size,
             height: s.size,
             animationDelay: `${s.delay}ms`,
@@ -628,23 +340,16 @@ function Sparkles({ position }: { position: number }) {
   );
 }
 
-/* === Icons === */
-function ChevronRight() {
+function Dots() {
   return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-0.5"
-      aria-hidden
-    >
-      <path d="M5 12h14M12 5l7 7-7 7" />
-    </svg>
+    <span className="ml-1 inline-flex gap-0.5">
+      <span className="thinking-dot">.</span>
+      <span className="thinking-dot">.</span>
+      <span className="thinking-dot">.</span>
+    </span>
   );
 }
+
 function RefreshIcon() {
   return (
     <svg
